@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #f8fafc;
-}
-
-html, body {
-  height: 100%;
-}
-
-body {
-  background: var(--bg);
-}
+:root { --bg: #f8fafc; }
+html, body { height: 100%; }
+body { background: var(--bg); }

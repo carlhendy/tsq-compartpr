@@ -1,3 +1,5 @@
+import "./globals.css";
+
 export const metadata = {
   title: "TQS Scorecard Comparator",
   description: "Compare up to five stores' public Google Store Pages signals by region.",

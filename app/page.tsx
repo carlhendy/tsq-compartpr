@@ -75,7 +75,7 @@ async function fetchStorePage(domain: string, country: string): Promise<StoreRow
 }
 
 export default function Page() {
-  const [country, setCountry] = useState("US"); // default US for richer details
+  const [country, setCountry] = useState("US"); // default US
   const [domains, setDomains] = useState<string[]>(["", "", "", "", ""]);
   const [rows, setRows] = useState<StoreRow[] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -209,7 +209,7 @@ export default function Page() {
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((r, i) => (
+                  {rows?.map((r, i) => (
                     <tr key={i} className="border-t border-slate-100">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
