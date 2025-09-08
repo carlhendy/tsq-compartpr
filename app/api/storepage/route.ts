@@ -25,91 +25,90 @@ function pickFirst(text: string, patterns: RegExp[], groupIndex = 1): string {
   return "";
 }
 
-function allMatches(text: string, re: RegExp): number[] {
-  const idxs: number[] = [];
+function idxOfAll(text: string, re: RegExp) {
+  const out: number[] = [];
   const g = new RegExp(re.source, re.flags.includes("g") ? re.flags : re.flags + "g");
   let m: RegExpExecArray | null;
-  while ((m = g.exec(text))) {
-    idxs.push(m.index);
-    if (m.index === g.lastIndex) g.lastIndex++;
-  }
-  return idxs;
+  while ((m = g.exec(text))) out.push(m.index);
+  return out;
 }
 
-function windowAround(s: string, i: number, radius: number) {
-  const start = Math.max(0, i - radius);
-  const end = Math.min(s.length, i + radius);
-  return s.slice(start, end);
+function sliceWin(s: string, center: number, radius: number) {
+  const start = Math.max(0, center - radius);
+  const end = Math.min(s.length, center + radius);
+  return { start, end, text: s.slice(start, end) };
 }
 
 function extractSignalsFromHtml(html: string, domain: string, debugMode = false) {
-  const notes: string[] = [];
   const visibleAll = stripVisible(html);
   const domRe = new RegExp("\\b(?:https?:\\/\\/)?(?:www\\.)?" + escapeRe(domain) + "\\b", "i");
-  const hits = allMatches(visibleAll, domRe);
-  if (hits.length === 0) notes.push("domain not found in visible text; falling back to whole page");
+  const domIdxs = idxOfAll(visibleAll, domRe);
 
-  // Build windows around each domain mention and analyze the best one
-  const windows = (hits.length ? hits : [0]).map((i) => {
-    const vis = windowAround(visibleAll, i, 3000);
-    const rawIdx = Math.max(0, html.search(domRe));
-    const raw = windowAround(html, rawIdx, 5000);
-    return { i, vis, raw };
-  });
-
-  // Choose the window that contains the most relevant keywords
-  let best = windows[0];
-  let bestScore = -1;
-  for (const w of windows) {
-    let score = 0;
-    if (/\bTop\s+Quality\s+Store\b/i.test(w.vis)) score += 3;
-    if (/store\s*rating/i.test(w.vis)) score += 2;
-    if (/\breviews?\b/i.test(w.vis)) score += 2;
-    if (/Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna/i.test(w.vis)) score += 1;
-    if (score > bestScore) { best = w; bestScore = score; }
+  // window near domain
+  let visNear = visibleAll;
+  let htmlNear = html;
+  let domIdx = -1;
+  if (domIdxs.length) {
+    domIdx = domIdxs[0];
+    const v = sliceWin(visibleAll, domIdx, 1200);
+    visNear = v.text;
+    const rawIdx = html.search(domRe);
+    const h = sliceWin(html, rawIdx >= 0 ? rawIdx : 0, 3000);
+    htmlNear = h.text;
   }
 
-  // TQS must be within a tight window near the domain so other cards don't leak
-  const nearVis = windowAround(best.vis, Math.max(0, best.i - 1500), 2000);
-  const nearRaw = best.raw;
-  const tqs_badge =
-    /\baria-label\s*=\s*["']Top\s+Quality\s+Store["']/i.test(nearRaw) ||
-    /\balt\s*=\s*["']Top\s+Quality\s+Store["']/i.test(nearRaw) ||
-    /\bTop\s+Quality\s+Store\b/.test(nearVis);
+  // --- TQS detection (very strict) ---
+  // 1) Find "Top Quality Store" in nearby text
+  const tqsIdxVisible = visNear.search(/\bTop\s+Quality\s+Store\b/i);
 
-  // Delivery / Shipping
-  const delivery_time = pickFirst(nearVis, [
-    /(\d+\s*(?:–|-|to)?\s*\d*\s*(?:business\s*)?(?:working\s*)?day[s]?)[^\n]{0,60}?(delivery|shipping)/i,
-    /(delivery|shipping)[^\n]{0,100}?(?:time|speed)[^\n]{0,40}?(\d+\s*(?:–|-|to)?\s*\d*\s*(?:business\s*)?(?:working\s*)?day[s]?)/i
+  // Consider it a badge only if:
+  // - the phrase is within 120 characters of the domain mention (proximity),
+  // - and not inside boilerplate "About this page" / "badge is earned" text,
+  // - OR appears as alt/aria attributes in raw HTML near the domain.
+  let tqs_badge = false;
+  if (tqsIdxVisible >= 0 && domIdx >= 0) {
+    const proximity = Math.abs(tqsIdxVisible - Math.min(tqsIdxVisible, 120)); // local index within window
+    const rawSnippet = visNear.slice(Math.max(0, tqsIdxVisible - 160), tqsIdxVisible + 160);
+    const isBoilerplate = /About this (store|page)|badge is earned|Store ratings are based/i.test(rawSnippet);
+    const isVeryClose = tqsIdxVisible <= 120; // because window starts near domain
+    if (isVeryClose && !isBoilerplate) tqs_badge = true;
+  }
+  // alt/aria near domain
+  if (!tqs_badge) {
+    const ariaAltNear = htmlNear.match(/\b(?:aria-label|alt)\s*=\s*["']Top\s+Quality\s+Store["']/i);
+    if (ariaAltNear) tqs_badge = true;
+  }
+
+  // --- Other fields (use near window first, then fallback to full page bounded by domain) ---
+  const delivery_time = pickFirst(visNear, [
+    /(\d+\s*(?:–|-|to)?\s*\d*\s*(?:business\s*)?(?:working\s*)?day[s]?)[^\n]{0,80}?(delivery|shipping)/i,
+    /(delivery|shipping)[^\n]{0,120}?(?:time|speed)[^\n]{0,60}?(\d+\s*(?:–|-|to)?\s*\d*\s*(?:business\s*)?(?:working\s*)?day[s]?)/i
   ], 1);
 
-  const shipping_cost_free = /\bfree\s+(?:shipping|delivery)\b/i.test(nearVis);
+  const shipping_cost_free = /\bfree\s+(?:shipping|delivery)\b/i.test(visNear);
 
-  // Returns
-  const return_window = pickFirst(nearVis, [
-    /(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)[^\n]{0,60}?\breturn/i,
-    /(return|refund)[^\n]{0,80}?(window|period)[^\n]{0,40}?(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i
-  ], 1) || pickFirst(nearVis, [/\b([0-9]+\s*day[s]?)\s*returns?\b/i], 1);
+  const return_window = pickFirst(visNear, [
+    /(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)[^\n]{0,80}?\breturn/i,
+    /(return|refund)[^\n]{0,120}?(window|period)[^\n]{0,60}?(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i
+  ], 1) || pickFirst(visNear, [/\b([0-9]+\s*day[s]?)\s*returns?\b/i], 1);
 
-  const return_cost_free = /\bfree\s+returns?\b|\bfree\s+return\s+shipping\b/i.test(nearVis);
+  const return_cost_free = /\bfree\s+returns?\b|\bfree\s+return\s+shipping\b/i.test(visNear);
 
-  // Wallets
-  const walletsSet = new Set(Array.from(nearVis.matchAll(/(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)/gi)).map(m => m[1]));
+  const walletsSet = new Set(Array.from(visNear.matchAll(/(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)/gi)).map(m => m[1]));
   const e_wallets = Array.from(walletsSet).join(", ");
 
-  // Rating and reviews — try near window first
-  let store_rating = pickFirst(nearVis, [
+  // Ratings / reviews near domain first
+  let store_rating = pickFirst(visNear, [
     /(\d\.\d)\s*★/,
     /(\d\.\d)\s*\/\s*5/,
-    /store\s*rating[^]{0,60}?(\d\.\d)/i
+    /store\s*rating[^]{0,80}?(\d\.\d)/i
   ], 1);
-
-  let review_count = pickFirst(nearVis, [
+  let review_count = pickFirst(visNear, [
     /(\d{1,3}(?:,\d{3})*)\s*(?:reviews|ratings)/i,
     /based\s+on\s+(\d{1,3}(?:,\d{3})*)\s*(?:reviews|ratings)/i
   ], 1);
 
-  // Fallback: domain-bounded search across the whole visible page
+  // Fallback: domain-bounded search across whole page
   if (!store_rating) {
     const m = visibleAll.match(new RegExp("(?:\\b" + escapeRe(domain) + "\\b)[\\s\\S]{0,800}?(\\d\\.\\d)\\s*(?:★|/\\s*5)", "i"));
     if (m) store_rating = m[1];
@@ -127,15 +126,14 @@ function extractSignalsFromHtml(html: string, domain: string, debugMode = false)
     return_cost_free,
     e_wallets,
     store_rating,
-    review_count,
+    review_count
   };
 
   if (debugMode) {
     payload.debug = {
-      notes,
-      domainHits: hits.length,
-      pickedScore: bestScore,
-      nearSample: nearVis.slice(0, 240)
+      visNearSample: visNear.slice(0, 260),
+      domFound: domIdx >= 0,
+      tqsMatched: tqs_badge
     };
   }
   return payload;
