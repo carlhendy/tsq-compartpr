@@ -13,7 +13,7 @@ type ScoreSignals = {
   e_wallets: string;
   store_rating: string;
   review_count: string;
-  debug?: { matchedPhrases: string[] };
+  debug?: { notes: string[]; domainHits: number; pickedScore: number; nearSample: string };
 };
 
 type StoreRow = {
@@ -155,36 +155,40 @@ export default function Page() {
 
                   {r.signals && (
                     <div>
-                      <h3 className="mt-2 mb-1 text-sm font-semibold text-slate-700">Shipping experience</h3>
+                      <SectionTitle>Shipping experience</SectionTitle>
                       <div className="grid grid-cols-2 gap-2">
                         <Metric label="Delivery time" value={<span className={isFast(r.signals.delivery_time) ? "text-emerald-700" : ""}>{r.signals.delivery_time || ""}</span>} good={isFast(r.signals.delivery_time)} />
                         <Metric label="Free shipping" value={r.signals.shipping_cost_free ? <Badge ok label="Yes"/> : <Badge ok={false} label="No"/>} good={r.signals.shipping_cost_free} />
                       </div>
 
-                      <h3 className="mt-4 mb-1 text-sm font-semibold text-slate-700">Return experience</h3>
+                      <SectionTitle>Return experience</SectionTitle>
                       <div className="grid grid-cols-2 gap-2">
                         <Metric label="Return window" value={<span className={longReturn(r.signals.return_window) ? "text-emerald-700" : ""}>{r.signals.return_window || ""}</span>} good={longReturn(r.signals.return_window)} />
                         <Metric label="Free returns" value={r.signals.return_cost_free ? <Badge ok label="Yes"/> : <Badge ok={false} label="No"/>} good={r.signals.return_cost_free} />
                       </div>
 
-                      <h3 className="mt-4 mb-1 text-sm font-semibold text-slate-700">Browsing & purchase</h3>
+                      <SectionTitle>Browsing & purchase</SectionTitle>
                       <div className="grid grid-cols-2 gap-2">
                         <Metric label="Wallets" value={r.signals.e_wallets} />
                         <Metric label="Promo disapprovals" value={<span className="text-slate-400">— (not public)</span>} />
                       </div>
 
-                      <h3 className="mt-4 mb-1 text-sm font-semibold text-slate-700">Store rating</h3>
+                      <SectionTitle>Store rating</SectionTitle>
                       <div className="grid grid-cols-2 gap-2">
                         <Metric label="Rating" value={<span className={strongRating(r.signals.store_rating) ? "text-emerald-700" : ""}>{r.signals.store_rating || ""}</span>} good={strongRating(r.signals.store_rating)} />
                         <Metric label="Reviews" value={<span className={manyReviews(r.signals.review_count) ? "text-emerald-700" : ""}>{r.signals.review_count || ""}</span>} good={manyReviews(r.signals.review_count)} />
                       </div>
 
-                      {r.signals?.debug && r.signals.debug.matchedPhrases?.length > 0 && (
-                        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">
-                          <div className="mb-1 font-semibold">Debug matches</div>
-                          <ul className="list-disc pl-5 space-y-1">
-                            {r.signals.debug.matchedPhrases.map((p, i) => <li key={i}><code>{p}</code></li>)}
-                          </ul>
+                      {r.signals?.debug && (
+                        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+                          <div className="font-semibold mb-1 flex items-center gap-1"><Bug className="h-3 w-3" /> Debug</div>
+                          <div>domainHits: {r.signals.debug.domainHits} &middot; pickedScore: {r.signals.debug.pickedScore}</div>
+                          {r.signals.debug.notes?.length > 0 && (
+                            <ul className="list-disc pl-5 mt-1">
+                              {r.signals.debug.notes.map((n, i) => <li key={i}>{n}</li>)}
+                            </ul>
+                          )}
+                          {r.signals.debug.nearSample && <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap">{r.signals.debug.nearSample}</pre>}
                         </div>
                       )}
                     </div>
