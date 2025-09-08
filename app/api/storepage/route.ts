@@ -16,7 +16,7 @@ function stripTags(html: string) {
 function sanitizeNoise(s: string) { return s.replace(/\+\s*\d+\s*more/gi, ""); }
 function textContent(html: string) { return sanitizeNoise(stripTags(html)); }
 function pick(text: string, res: RegExp[], gi = 1) {
-  for (const re of res) { const m = text.match(re); if (m && m[gi]) return m[gi].trim(); }
+  for (const re of res) { const m = text.match(re); if (m && m[gi]) return (""+m[gi]).trim(); }
   return "";
 }
 function allIdx(text: string, re: RegExp) {
@@ -30,7 +30,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
 
   function afterHeader(seg: string, headerPattern: string) {
     const re = new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,220}?<(?:(?:div)|(?:span))[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|span)>`,
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<(?:(?:div)|(?:span))[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|span)>`,
       "i"
     );
     const m = seg.match(re);
@@ -42,7 +42,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   let paymentsRaw = "";
   const payBlock = segment.match(
     new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Payment\\s+options|Payment\\s+methods)\\s*<\\/(?:div|span)>[\\s\\S]{0,220}?<span[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`,
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Payment\\s+options|Payment\\s+methods)\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<span[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`,
       "i"
     )
   );
@@ -54,7 +54,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
 
   function gradeFor(seg: string, headerPattern: string): string {
     const re = new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,320}?<span[^>]*class=["']rMOWke-uDEFge\\s+hnGZye[^"']*["'][^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\\/span>`,
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,420}?<span[^>]*class=["']rMOWke-uDEFge\\s+hnGZye[^"']*["'][^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\\/span>`,
       "i"
     );
     const m = seg.match(re);
@@ -71,7 +71,6 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     ],
     1
   );
-  // NEW: if no numeric delivery time but text mentions free delivery, show that explicitly
   if (!delivery_time && /\bfree\s+delivery\b/i.test(shippingRaw)) {
     delivery_time = "Free delivery";
   }
@@ -107,67 +106,64 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   return { delivery_time, shipping_cost_free, return_window, return_cost_free, e_wallets, section_grades };
 }
 
-function escDomain(domain: string) {
-  return "\\b(?:https?:\\/\\/)?(?:www\\.)?" + esc(domain) + "\\b";
-}
-
 function extractSignalsFromHtml(html: string, domain: string) {
   const visAll = textContent(html);
-  const domRe = new RegExp(escDomain(domain), "i");
+  const domRe = new RegExp("\\b(?:https?:\\/\\/)?(?:www\\.)?" + esc(domain) + "\\b", "i");
   const domIdxVis = visAll.search(domRe);
   const domIdxRaw = html.search(domRe);
 
-  const near = domIdxRaw >= 0 ? ((s: string) => ({ start: Math.max(0, domIdxRaw - 25000), end: Math.min(s.length, domIdxRaw + 25000) }))(html) : null;
+  const near = domIdxRaw >= 0 ? ((s: string) => ({ start: Math.max(0, domIdxRaw - 32000), end: Math.min(s.length, domIdxRaw + 32000) }))(html) : null;
   const htmlNear = near ? html.slice(near.start, near.end) : html;
 
   // Logo (page image) or favicon fallback
-  let logoMatch = htmlNear.match(/<img[^>]*class=["']Kl6mye-l4eHX["'][^>]*src=["']([^"']+)["'][^>]*>/i) || html.match(/<img[^>]*class=["']Kl6mye-l4eHX["'][^>]*src=["']([^"']+)["'][^>]*>/i);
+  let logoMatch = htmlNear.match(/<img[^>]*class=["'][^"']*Kl6mye-l4eHX[^"']*["'][^>]*src=["']([^"']+)["'][^>]*>/i) || html.match(/<img[^>]*class=["'][^"']*Kl6mye-l4eHX[^"']*["'][^>]*src=["']([^"']+)["'][^>]*>/i);
   let logo_url = logoMatch ? logoMatch[1] : `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
 
-  // TQS near same segment
+  // TQS
   const tqsMarkers: number[] = [];
   for (const re of [
     /<span[^>]*class=["'][^"']*gmceHc-V1ur5d-fmcmS[^"']*["'][^>]*>Top\s+Quality\s+Store<\/span>/gi,
     /\b(?:aria-label|alt)\s*=\s*["']Top\s+Quality\s+Store["']/gi
   ]) tqsMarkers.push(...allIdx(html, re));
   let tqs_badge = false;
-  for (const p of tqsMarkers) {
-    const wnd = win(html, p, 2000);
-    if (domRe.test(wnd)) { tqs_badge = true; break; }
-  }
+  for (const p of tqsMarkers) { const wnd = win(html, p, 2200); if (domRe.test(wnd)) { tqs_badge = true; break; } }
 
   // Insights
   let ins = extractStructuredInsights(html, near || undefined);
-  if (!ins.delivery_time && !ins.return_window && !ins.e_wallets) {
-    ins = extractStructuredInsights(html);
-  }
+  if (!ins.delivery_time && !ins.return_window && !ins.e_wallets) ins = extractStructuredInsights(html);
 
-  // Rating / Reviews: support both classic and aria-label variant
-  const h1Win = domIdxVis >= 0 ? win(visAll, domIdxVis, 5000) : visAll;
-  let ariaRating = pick(htmlNear, [
-    /aria-label=["'][^"']*overall\s+score[^"']*?(\d(?:\.\d)?)\s+out\s+of\s+5[^"']*["']/i
-  ], 1);
-  let ariaReviews = pick(htmlNear, [
-    /store\s+rating\s*\(\s*<[^>]*>\s*([\d,]+)\s+reviews?\s*<\/span>\s*\)/i,
-    /store\s+rating\s*\(\s*([\d,]+)\s+reviews?\s*\)/i
-  ], 1);
+  // Ratings/Reviews — robust Next-style fallbacks
+  const h1Win = domIdxVis >= 0 ? win(visAll, domIdxVis, 9000) : visAll;
 
-  let store_rating = ariaRating || pick(h1Win, [
-    /(?:^|\b)(\d\.\d|\d)\s*[★⭐]\s*store\s*rating\b/i,
-    /(?:^|\b)(\d\.\d|\d)\s*\/\s*5\s*store\s*rating\b/i,
-    /\bstore\s*rating\b[^0-9]{0,10}(\d\.\d|\d)(?=\s*(?:[★⭐]|\/\s*5|\b))/i
-  ], 1);
+  // Rating candidates:
+  let store_rating =
+    // aria-label anywhere: “overall score ... X out of 5”
+    pick(htmlNear, [/aria-label=["'][^"']*overall\s+score[^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["']/i], 1) ||
+    pick(html,     [/aria-label=["'][^"']*overall\s+score[^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["']/i], 1) ||
+    // Visible within TRyy9 block (with or without aria-label)
+    pick(htmlNear, [/<div[^>]*class=["'][^"']*TRyy9-sM5MNb[^"']*["'][\s\S]{0,800}?<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*?(?:aria-label=["'][^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["'][^>]*)?[^>]*>\s*(\d+(?:\.\d+)?)?\s*<\/span>/i], 1) ||
+    pick(html,     [/<div[^>]*class=["'][^"']*TRyy9-sM5MNb[^"']*["'][\s\S]{0,800}?<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*?(?:aria-label=["'][^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["'][^>]*)?[^>]*>\s*(\d+(?:\.\d+)?)?\s*<\/span>/i], 1) ||
+    // Classic variants
+    pick(h1Win, [
+      /(?:^|\b)(\d\.\d|\d)\s*[★⭐]\s*store\s*rating\b/i,
+      /(?:^|\b)(\d\.\d|\d)\s*\/\s*5\s*store\s*rating\b/i,
+      /\bstore\s*rating\b[^0-9]{0,10}(\d\.\d|\d)(?=\s*(?:[★⭐]|\/\s*5|\b))/i
+    ], 1) ||
+    pick(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,4000}?(\\d\\.\\d|\\d)\\s*(?:[★⭐]|/\\s*5)?\\s*store\\s*rating\\b", "i")], 1);
 
-  let review_count = ariaReviews || pick(h1Win, [
-    /\(\s*(\d{1,3}(?:,\d{3})*)\s*reviews?\s*\)/i,
-    /(\d{1,3}(?:,\d{3})*)\s*(?:reviews|ratings)/i
-  ], 1);
+  // Reviews candidates:
+  let review_count =
+    pick(htmlNear, [/store\s+rating\s*\(\s*<[^>]*>\s*([\d,]+)\s+reviews?\s*<\/span>\s*\)/i, /store\s+rating\s*\(\s*([\d,]+)\s+reviews?\s*\)/i], 1) ||
+    pick(html,     [/<span[^>]*class=["'][^"']*dXIow-NnAfwf[^"']*["'][^>]*>\s*([\d,]+)\s+reviews?\s*<\/span>/i], 1) ||
+    pick(h1Win,    [/\(\s*(\d{1,3}(?:,\d{3})*)\s*reviews?\s*\)/i, /(\d{1,3}(?:,\d{3})*)\s*(?:reviews|ratings)/i], 1) ||
+    pick(visAll,   [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,5000}?(\\d{1,3}(?:,\\d{3})*)\\s*(?:reviews|ratings)", "i")], 1);
 
+  // Prefer numeric text inside span if aria-label wasn't captured
   if (!store_rating) {
-    store_rating = pick(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,2500}?(\\d\\.\\d|\\d)\\s*(?:[★⭐]|/\\s*5)?\\s*store\\s*rating\\b", "i")], 1);
-  }
-  if (!review_count) {
-    review_count = pick(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,3000}?(\\d{1,3}(?:,\\d{3})*)\\s*(?:reviews|ratings)", "i")], 1);
+    const numericInSpan =
+      pick(htmlNear, [/<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*>\s*(\d+(?:\.\d+)?)\s*<\/span>/i], 1) ||
+      pick(html,     [/<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*>\s*(\d+(?:\.\d+)?)\s*<\/span>/i], 1);
+    if (numericInSpan) store_rating = numericInSpan;
   }
 
   return {
