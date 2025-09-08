@@ -5,23 +5,11 @@ export const preferredRegion = ["iad1", "sfo1"];
 import { NextRequest } from "next/server";
 
 function esc(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
-function stripVisible(html: string) {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<\/?[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-function sanitizeNoise(s: string) {
-  // remove "+ 2 more" etc so it can't be mistaken for rating
-  return s.replace(/\+\s*\d+\s*more/gi, "");
-}
-function pickFirst(text: string, patterns: RegExp[], groupIndex = 1): string {
-  for (const re of patterns) {
-    const m = text.match(re);
-    if (m && m[groupIndex]) return (m[groupIndex] + "").trim();
-  } return "";
+function stripTags(html: string) { return html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "").replace(/<\/?[^>]+>/g, " ").replace(/\s+/g, " ").trim(); }
+function sanitizeNoise(s: string) { return s.replace(/\+\s*\d+\s*more/gi, ""); }
+function pick(text: string, res: RegExp[], gi = 1) {
+  for (const re of res) { const m = text.match(re); if (m && m[gi]) return m[gi].trim(); }
+  return "";
 }
 function allIdx(text: string, re: RegExp) {
   const out: number[] = []; const g = new RegExp(re.source, re.flags.includes("g") ? re.flags : re.flags + "g");
@@ -29,13 +17,55 @@ function allIdx(text: string, re: RegExp) {
 }
 function win(s: string, i: number, radius: number) { const a = Math.max(0, i - radius); const b = Math.min(s.length, i + radius); return s.slice(a, b); }
 
-function extractSignalsFromHtml(html: string, domain: string) {
-  const visAllRaw = stripVisible(html);
-  const visAll = sanitizeNoise(visAllRaw);
-  const domRe = new RegExp("\\b(?:https?:\\/\\/)?(?:www\\.)?" + esc(domain) + "\\b", "i");
-  const domIdx = visAll.search(domRe);
+function textContent(html: string) { return sanitizeNoise(stripTags(html)); }
 
-  // TQS strict near domain
+function extractStructuredInsights(htmlNear: string) {
+  // Shipping
+  const shipBlock = htmlNear.match(/<div[^>]*class=["']hnGZye["'][^>]*>\s*Shipping\s*<\/div>\s*<div[^>]*class=["']KtbsVc-ij8cu-fmcmS["'][^>]*>([\s\S]*?)<\/div>/i);
+  const shippingRaw = shipBlock ? stripTags(shipBlock[1]) : "";
+  // Returns
+  const retBlock  = htmlNear.match(/<div[^>]*class=["']hnGZye["'][^>]*>\s*Returns?\s*<\/div>\s*<div[^>]*class=["']KtbsVc-ij8cu-fmcmS["'][^>]*>([\s\S]*?)<\/div>/i);
+  const returnsRaw = retBlock ? stripTags(retBlock[1]) : "";
+  // Payment options: prefer the "NBMhyb" (expanded) span if present, else visible jsname=u5tB8
+  let paymentsRaw = "";
+  const payBlock = htmlNear.match(/<div[^>]*class=["']hnGZye["'][^>]*>\s*Payment options\s*<\/div>\s*<span[^>]*class=["']KtbsVc-ij8cu-fmcmS["'][^>]*>([\s\S]*?)<\/span>/i);
+  if (payBlock) {
+    const expanded = payBlock[1].match(/<span[^>]*class=["']NBMhyb["'][^>]*>([\s\S]*?)<\/span>/i);
+    const primary  = payBlock[1].match(/<span[^>]*jsname=["']u5tB8["'][^>]*>([\s\S]*?)<\/span>/i);
+    paymentsRaw = stripTags((expanded && expanded[1]) || (primary && primary[1]) || payBlock[1]);
+  }
+
+  // Delivery time extraction
+  const delivery_time = pick([shippingRaw, returnsRaw, paymentsRaw].join(" "), [
+    /(?:£|\$|€)\s*\d+(?:\.\d{2})?[^a-zA-Z]{0,6}(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)\s*(?:delivery|ship|shipping)/i,
+    /(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)\s*(?:delivery|ship|shipping)/i,
+    /deliver[s]?\s+in\s+(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i
+  ], 1);
+
+  const shipping_cost_free = /(^|\b)free\s+(delivery|shipping)\b/i.test(shippingRaw);
+
+  const return_window = pick(returnsRaw, [
+    /(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)\s*returns?\b/i,
+    /returns?\s*(?:within|in)?\s*(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i,
+    /return\s*(?:window|period)[:\s-]*\s*(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i
+  ], 1);
+  const return_cost_free = /\bfree\s+returns?\b/i.test(returnsRaw) || /\breturn\s*(?:shipping|cost)[:\s-]*\s*free\b/i.test(returnsRaw);
+
+  // Wallets list
+  const wallets = Array.from(new Set(Array.from(paymentsRaw.matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)\b/gi)).map(m => m[1])));
+  const e_wallets = wallets.join(", ");
+
+  return { delivery_time, shipping_cost_free, return_window, return_cost_free, e_wallets };
+}
+
+function extractSignalsFromHtml(html: string, domain: string) {
+  const visAll = textContent(html);
+  const domRe = new RegExp("\\b(?:https?:\\/\\/)?(?:www\\.)?" + esc(domain) + "\\b", "i");
+  const domIdxVis = visAll.search(domRe);
+  const domIdxRaw = html.search(domRe);
+  const htmlNear = domIdxRaw >= 0 ? win(html, domIdxRaw, 8000) : html;
+
+  // TQS: specific span or aria/alt near the same segment
   const tqsMarkers: number[] = [];
   for (const re of [
     /<span[^>]*class=["'][^"']*gmceHc-V1ur5d-fmcmS[^"']*["'][^>]*>Top\s+Quality\s+Store<\/span>/gi,
@@ -43,69 +73,40 @@ function extractSignalsFromHtml(html: string, domain: string) {
   ]) tqsMarkers.push(...allIdx(html, re));
   let tqs_badge = false;
   for (const p of tqsMarkers) {
-    const wnd = win(html, p, 1200);
-    const wndVis = stripVisible(wnd);
-    if (domRe.test(wnd) || domRe.test(wndVis)) { tqs_badge = true; break; }
+    const wnd = win(html, p, 1500);
+    if (domRe.test(wnd)) { tqs_badge = true; break; }
   }
 
-  const visNear = domIdx >= 0 ? sanitizeNoise(stripVisible(win(visAll, domIdx, 6000))) : visAll;
+  // Parse the structured "Store Insights" HTML in the same segment
+  const ins = extractStructuredInsights(htmlNear);
 
-  // ---- H1 rating extraction (robust) ----
-  // Only accept digits that are adjacent to "store rating" context and stars or /5
-  const h1Win = domIdx >= 0 ? sanitizeNoise(stripVisible(win(visAll, domIdx, 3000))) : visNear;
-
-  let store_rating = pickFirst(h1Win, [
-    /(?:\b|^)(\d\.\d|\d)\s*[★⭐]\s*store\s*rating\b/i,
-    /(?:\b|^)(\d\.\d|\d)\s*\/\s*5\s*store\s*rating\b/i,
+  // H1 rating next to domain (authoritative)
+  const h1Win = domIdxVis >= 0 ? win(visAll, domIdxVis, 3500) : visAll;
+  let store_rating = pick(h1Win, [
+    /(?:^|\b)(\d\.\d|\d)\s*[★⭐]\s*store\s*rating\b/i,
+    /(?:^|\b)(\d\.\d|\d)\s*\/\s*5\s*store\s*rating\b/i,
     /\bstore\s*rating\b[^0-9]{0,10}(\d\.\d|\d)(?=\s*(?:[★⭐]|\/\s*5|\b))/i
   ], 1);
+  let review_count = pick(h1Win, [/\(\s*(\d{1,3}(?:,\d{3})*)\s*reviews?\s*\)/i, /(\d{1,3}(?:,\d{3})*)\s*(?:reviews|ratings)/i], 1);
 
-  let review_count = pickFirst(h1Win, [
-    /\(\s*(\d{1,3}(?:,\d{3})*)\s*reviews?\s*\)/i,
-    /(\d{1,3}(?:,\d{3})*)\s*(?:reviews|ratings)/i
-  ], 1);
-
-  // Fallbacks bounded by domain
+  // Fallbacks
   if (!store_rating) {
-    store_rating = pickFirst(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,1500}?(\\d\\.\\d|\\d)\\s*(?:[★⭐]|/\\s*5)?\\s*store\\s*rating\\b", "i")], 1);
+    store_rating = pick(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,1600}?(\\d\\.\\d|\\d)\\s*(?:[★⭐]|/\\s*5)?\\s*store\\s*rating\\b", "i")], 1);
   }
   if (!review_count) {
-    review_count = pickFirst(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,1500}?(\\d{1,3}(?:,\\d{3})*)\\s*(?:reviews|ratings)", "i")], 1);
+    review_count = pick(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,2000}?(\\d{1,3}(?:,\\d{3})*)\\s*(?:reviews|ratings)", "i")], 1);
   }
 
-  // ---- Insights (reuse previous GB parser lite) ----
-  const nearForInsights = domIdx >= 0 ? win(visAll, domIdx, 6000) : visAll;
-  const header = nearForInsights.search(/\b(Store\s+Insights|Shopping\s+experience|Experience\s+scorecard)\b/i);
-  let insights = "";
-  if (header >= 0) insights = nearForInsights.slice(header);
-
-  function pick(text: string, patterns: RegExp[], gi = 1) { return pickFirst(text || "", patterns, gi); }
-  function bool(text: string, re: RegExp) { return re.test(text || ""); }
-
-  let delivery_time = "", shipping_cost_free = false, return_window = "", return_cost_free = false, e_wallets = "";
-  if (insights) {
-    const shipping = pick(insights, [/\bShipping\b\s*(.*?)(?=\bReturns?\b|\bPayment options\b|$)/i], 1);
-    const returns = pick(insights, [/\bReturns?\b\s*(.*?)(?=\bPayment options\b|\bWebsite quality\b|$)/i], 1);
-    const payments = pick(insights, [/\bPayment options\b\s*(.*?)(?=\bWebsite quality\b|$)/i], 1);
-
-    delivery_time = pick(shipping, [
-      /(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)\s*(?:delivery|ship|shipping)/i,
-      /deliver[s]?\s+in\s+(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i
-    ], 1);
-    shipping_cost_free = bool(shipping, /\bfree\s+(?:delivery|shipping)\b/i) || bool(shipping, /\b(?:delivery|shipping)\s*(?:cost|price)?[:\s-]*\s*free\b/i);
-
-    return_window = pick(returns, [
-      /(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)\s*returns?\b/i,
-      /returns?\s*(?:within|in)?\s*(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i,
-      /return\s*(?:window|period)[:\s-]*\s*(\d+\s*(?:–|-|to)?\s*\d*\s*day[s]?)/i
-    ], 1);
-    return_cost_free = bool(returns, /\bfree\s+returns?\b/i) || bool(returns, /\breturn\s*(?:shipping|cost)[:\s-]*\s*free\b/i);
-
-    const walletsSet = new Set(Array.from((payments || "").matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)\b/gi)).map(m => m[1]));
-    e_wallets = Array.from(walletsSet).join(", ");
-  }
-
-  return { tqs_badge, delivery_time, shipping_cost_free, return_window, return_cost_free, e_wallets, store_rating, review_count };
+  return {
+    tqs_badge: tqs_badge,
+    delivery_time: ins.delivery_time || "",
+    shipping_cost_free: ins.shipping_cost_free || false,
+    return_window: ins.return_window || "",
+    return_cost_free: ins.return_cost_free || false,
+    e_wallets: ins.e_wallets || "",
+    store_rating: store_rating || "",
+    review_count: review_count || ""
+  };
 }
 
 export async function GET(req: NextRequest) {
