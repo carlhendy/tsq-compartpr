@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root { --bg: #f8fafc; }
+html, body { height: 100%; }
+body { background: var(--bg); }
+
+/* Improve inputs/buttons a bit */
+input, select, button { outline: none; }
