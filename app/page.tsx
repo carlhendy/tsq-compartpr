@@ -1,242 +1,291 @@
+// app/page.tsx
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { CheckCircle2, XCircle, AlertTriangle, Globe2, Crown, Loader2, Bug } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 
-type ScoreSignals = {
+type SectionGrades = {
+  shipping?: string;
+  returns?: string;
+  payments?: string;
+  pricing?: string;
+  website?: string;
+};
+
+type ApiSignals = {
   tqs_badge: boolean;
-  delivery_time: string;
-  shipping_cost_free: boolean;
-  return_window: string;
-  return_cost_free: boolean;
-  e_wallets: string;
-  store_rating: string;
-  review_count: string;
-  debug?: { notes: string[]; domainHits: number; pickedScore: number; nearSample: string };
+  delivery_time?: string;
+  shipping_cost_free?: boolean;
+  return_window?: string;
+  return_cost_free?: boolean;
+  e_wallets?: string;
+  store_rating?: string;
+  review_count?: string;
+  section_grades?: SectionGrades;
+  logo_url?: string;
 };
 
-type StoreRow = {
+type Row = {
+  country: "US" | "GB";
   domain: string;
-  country: string;
-  url: string;
-  signals: ScoreSignals | null;
-  error?: string;
+  signals: ApiSignals;
 };
 
-const API_BASE = "/api";
+const COUNTRIES: Array<"US" | "GB"> = ["US", "GB"];
 
-function Metric({ label, value, good }: { label: string; value: React.ReactNode; good?: boolean }) {
+function Pill({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`flex items-center justify-between gap-3 rounded-xl border p-3 ${
-      good === true ? "border-green-300 bg-green-50" : good === false ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"
-    }`}>
-      <span className="text-sm text-slate-600">{label}</span>
-      <span className="text-sm font-medium text-slate-900">{value || <span className="text-slate-400">—</span>}</span>
-    </div>
-  );
-}
-
-function Badge({ ok, label }: { ok: boolean; label: string }) {
-  const Icon = ok ? CheckCircle2 : XCircle;
-  return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
-      ok ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-    }`}>
-      <Icon className="h-4 w-4" /> {label}
+    <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+      {children}
     </span>
   );
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="mt-6 mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">{children}</h3>;
+function YesNoChip({ yes }: { yes: boolean }) {
+  return (
+    <span
+      className={[
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
+        yes ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800",
+      ].join(" ")}
+    >
+      {yes ? (
+        <>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 111.414-1.414l2.543 2.543 6.543-6.543a1 1 0 011.414 0z" />
+          </svg>
+          Yes
+        </>
+      ) : (
+        <>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 8.586l4.95-4.95a1 1 0 111.414 1.414L11.414 10l4.95 4.95a1 1 0 11-1.414 1.414L10 11.414l-4.95 4.95a1 1 0 11-1.414-1.414L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z" />
+          </svg>
+          No
+        </>
+      )}
+    </span>
+  );
 }
 
-function isFast(delivery: string) { return /^(0|1|2|3)/.test(delivery); }
-function longReturn(windowStr: string) { const n = parseInt(windowStr.replace(/[^0-9]/g, ""), 10); return !Number.isNaN(n) && n >= 30; }
-function manyReviews(countStr: string) { const n = parseInt(countStr.replace(/,/g, ""), 10); return !Number.isNaN(n) && n >= 1000; }
-function strongRating(r: string) { const n = parseFloat(r); return !Number.isNaN(n) && n >= 4.5; }
-
-async function fetchStorePage(domain: string, country: string, debug = false): Promise<StoreRow> {
-  const url = `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${country}&v=19`;
-  try {
-    const res = await fetch(`${API_BASE}/storepage?domain=${encodeURIComponent(domain)}&country=${country}${debug ? "&debug=1" : ""}`, {
-      method: "GET", headers: { "Accept": "application/json" },
-    });
-    if (!res.ok) throw new Error(`API ${res.status}`);
-    const data = await res.json();
-    return { domain, country, url, signals: data.signals, error: data.error };
-  } catch (e: any) {
-    return { domain, country, url, signals: null, error: e.message };
-  }
+function GradeChip({ grade }: { grade?: string }) {
+  if (!grade) return <span>—</span>;
+  const color =
+    grade === "Exceptional"
+      ? "bg-emerald-100 text-emerald-800"
+      : grade === "Great"
+      ? "bg-green-100 text-green-800"
+      : grade === "Good"
+      ? "bg-yellow-100 text-yellow-800"
+      : grade === "Fair"
+      ? "bg-orange-100 text-orange-800"
+      : "bg-rose-100 text-rose-800"; // Poor or unknown
+  return (
+    <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${color}`}>
+      {grade}
+    </span>
+  );
 }
 
 export default function Page() {
-  const [country, setCountry] = useState("US");
+  const [country, setCountry] = useState<"US" | "GB">("GB");
   const [domains, setDomains] = useState<string[]>(["", "", "", "", ""]);
-  const [rows, setRows] = useState<StoreRow[] | null>(null);
+  const [rows, setRows] = useState<Row[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const [debug, setDebug] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  const activeDomains = useMemo(() => domains.map((d) => d.trim()).filter(Boolean).slice(0, 5), [domains]);
+  const canCompare = useMemo(
+    () => domains.some((d) => d.trim().length > 0),
+    [domains]
+  );
 
-  async function onCompare(e: React.FormEvent) {
-    e.preventDefault();
+  const onChangeDomain = (i: number, v: string) => {
+    const next = [...domains];
+    next[i] = v;
+    setDomains(next);
+  };
+
+  const fetchSignals = useCallback(async (d: string, c: "US" | "GB") => {
+    const url = `/api/storepage?domain=${encodeURIComponent(d)}&country=${c}`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`API error for ${d}: ${res.status}`);
+    const data = (await res.json()) as { signals: ApiSignals } | { error: string };
+    if ("error" in data) throw new Error(data.error);
+    return data.signals;
+  }, []);
+
+  const onCompare = useCallback(async () => {
+    setErr(null);
     setLoading(true);
     try {
-      const results = await Promise.all(activeDomains.map((d) => fetchStorePage(d, country, debug)));
+      const inputDomains = domains
+        .map((d) => d.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, ""))
+        .filter(Boolean)
+        .slice(0, 5);
+
+      const results = await Promise.all(
+        inputDomains.map(async (d) => {
+          const signals = await fetchSignals(d, country);
+          return { country, domain: d, signals } as Row;
+        })
+      );
       setRows(results);
+    } catch (e: any) {
+      setErr(e?.message ?? "Something went wrong");
+      setRows(null);
     } finally {
       setLoading(false);
     }
-  }
+  }, [domains, country, fetchSignals]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <motion.header initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Top Quality Store — Scorecard Comparator</h1>
-            <p className="mt-1 text-sm text-slate-600">Enter up to five store domains and compare public signals Google surfaces on their Store pages per region.</p>
-          </div>
-          <div className="flex items-center gap-3 rounded-xl bg-white px-3 py-2 text-sm shadow-sm ring-1 ring-slate-200">
-            <Globe2 className="h-4 w-4" />
-            <label className="sr-only" htmlFor="country">Region</label>
-            <select id="country" value={country} onChange={(e) => setCountry(e.target.value)} className="rounded-md border border-slate-200 bg-white px-2 py-1 text-sm focus:outline-none">
-              {"US,GB,AU,NZ,CA,DE".split(",").map((c) => (<option key={c} value={c}>{c}</option>))}
-            </select>
-            <label className="inline-flex items-center gap-2 ml-3">
-              <input type="checkbox" checked={debug} onChange={(e) => setDebug(e.target.checked)} />
-              <span className="text-slate-600 inline-flex items-center gap-1"><Bug className="h-4 w-4"/> Debug</span>
-            </label>
-          </div>
-        </motion.header>
-
-        <form onSubmit={onCompare} className="mb-6 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {domains.map((d, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-medium text-slate-700">{i + 1}</span>
-                <input
-                  value={d}
-                  onChange={(e) => setDomains((arr) => arr.map((v, idx) => (idx === i ? e.target.value : v)))}
-                  placeholder={i === 0 ? "example.com" : "optional"}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
-                />
-              </div>
+    <main className="mx-auto max-w-6xl px-4 py-8">
+      <header className="mb-6 flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold">Top Quality Store — Scorecard Comparator</h1>
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-gray-600">Region</label>
+          <select
+            value={country}
+            onChange={(e) => setCountry(e.target.value as "US" | "GB")}
+            className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm"
+          >
+            {COUNTRIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
-          </div>
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-xs text-slate-500">We’ll query <code className="rounded bg-slate-100 px-1">google.com/storepages</code> for each domain (per region) via a US-based serverless API.</p>
-            <button type="submit" className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800">
-              {loading ? <Loader2 className="h-4 w-4 animate-spin"/> : <span>Compare</span>}
-            </button>
-          </div>
-        </form>
+          </select>
+        </div>
+      </header>
 
-        {rows && rows.length > 0 && (
-          <div className="space-y-8">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {rows.map((r, idx) => (
-                <motion.div key={idx} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <div className="mb-3 flex items-center justify-between">
-                    <div className="min-w-0">
-                      <h2 className="truncate text-base font-semibold text-slate-900">{r.domain} <span className="text-slate-400">· {r.country}</span></h2>
-                      <a className="block truncate text-xs text-slate-500 hover:underline" href={r.url} target="_blank" rel="noreferrer">{r.url}</a>
-                    </div>
-                    {r.signals?.tqs_badge ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-900"><Crown className="h-4 w-4"/> TQS</span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"><AlertTriangle className="h-4 w-4"/> No TQS</span>
-                    )}
-                  </div>
+      <section className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {domains.map((d, i) => (
+          <input
+            key={i}
+            value={d}
+            onChange={(e) => onChangeDomain(i, e.target.value)}
+            placeholder={i === 0 ? "domain.com" : "optional"}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          />
+        ))}
+      </section>
 
-                  {!r.signals && <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">{r.error || "No data."}</div>}
-
-                  {r.signals && (
-                    <div>
-                      <SectionTitle>Shipping experience</SectionTitle>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Metric label="Delivery time" value={<span className={isFast(r.signals.delivery_time) ? "text-emerald-700" : ""}>{r.signals.delivery_time || ""}</span>} good={isFast(r.signals.delivery_time)} />
-                        <Metric label="Free shipping" value={r.signals.shipping_cost_free ? <Badge ok label="Yes"/> : <Badge ok={false} label="No"/>} good={r.signals.shipping_cost_free} />
-                      </div>
-
-                      <SectionTitle>Return experience</SectionTitle>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Metric label="Return window" value={<span className={longReturn(r.signals.return_window) ? "text-emerald-700" : ""}>{r.signals.return_window || ""}</span>} good={longReturn(r.signals.return_window)} />
-                        <Metric label="Free returns" value={r.signals.return_cost_free ? <Badge ok label="Yes"/> : <Badge ok={false} label="No"/>} good={r.signals.return_cost_free} />
-                      </div>
-
-                      <SectionTitle>Browsing & purchase</SectionTitle>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Metric label="Wallets" value={r.signals.e_wallets} />
-                        <Metric label="Promo disapprovals" value={<span className="text-slate-400">— (not public)</span>} />
-                      </div>
-
-                      <SectionTitle>Store rating</SectionTitle>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Metric label="Rating" value={<span className={strongRating(r.signals.store_rating) ? "text-emerald-700" : ""}>{r.signals.store_rating || ""}</span>} good={strongRating(r.signals.store_rating)} />
-                        <Metric label="Reviews" value={<span className={manyReviews(r.signals.review_count) ? "text-emerald-700" : ""}>{r.signals.review_count || ""}</span>} good={manyReviews(r.signals.review_count)} />
-                      </div>
-
-                      {r.signals?.debug && (
-                        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
-                          <div className="font-semibold mb-1 flex items-center gap-1"><Bug className="h-3 w-3" /> Debug</div>
-                          <div>domainHits: {r.signals.debug.domainHits} &middot; pickedScore: {r.signals.debug.pickedScore}</div>
-                          {r.signals.debug.notes?.length > 0 && (
-                            <ul className="list-disc pl-5 mt-1">
-                              {r.signals.debug.notes.map((n, i) => <li key={i}>{n}</li>)}
-                            </ul>
-                          )}
-                          {r.signals.debug.nearSample && <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap">{r.signals.debug.nearSample}</pre>}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="bg-slate-50 text-left text-slate-600">
-                    <th className="px-4 py-3 font-semibold">Store</th>
-                    <th className="px-4 py-3 font-semibold">TQS</th>
-                    <th className="px-4 py-3 font-semibold">Delivery time</th>
-                    <th className="px-4 py-3 font-semibold">Free shipping</th>
-                    <th className="px-4 py-3 font-semibold">Return window</th>
-                    <th className="px-4 py-3 font-semibold">Free returns</th>
-                    <th className="px-4 py-3 font-semibold">Wallets</th>
-                    <th className="px-4 py-3 font-semibold">Rating</th>
-                    <th className="px-4 py-3 font-semibold">Reviews</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows?.map((r, i) => (
-                    <tr key={i} className="border-t border-slate-100">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <span className="rounded bg-slate-100 px-2 py-0.5 text-xs">{r.country}</span>
-                          <a href={r.url} target="_blank" rel="noreferrer" className="font-medium text-slate-900 hover:underline">{r.domain}</a>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">{r.signals ? (r.signals.tqs_badge ? <Badge ok label="Yes"/> : <Badge ok={false} label="No"/>) : <span className="text-slate-400">—</span>}</td>
-                      <td className={`px-4 py-3 ${r.signals && isFast(r.signals.delivery_time) ? "text-emerald-700" : ""}`}>{r.signals?.delivery_time || "—"}</td>
-                      <td className="px-4 py-3">{r.signals ? (r.signals.shipping_cost_free ? <Badge ok label="Yes"/> : <Badge ok={false} label="No"/>) : "—"}</td>
-                      <td className={`px-4 py-3 ${r.signals && longReturn(r.signals.return_window) ? "text-emerald-700" : ""}`}>{r.signals?.return_window || "—"}</td>
-                      <td className="px-4 py-3">{r.signals ? (r.signals.return_cost_free ? <Badge ok label="Yes"/> : <Badge ok={false} label="No"/>) : "—"}</td>
-                      <td className="px-4 py-3">{r.signals?.e_wallets || "—"}</td>
-                      <td className={`px-4 py-3 ${r.signals && strongRating(r.signals.store_rating) ? "text-emerald-700" : ""}`}>{r.signals?.store_rating || "—"}</td>
-                      <td className={`px-4 py-3 ${r.signals && manyReviews(r.signals.review_count) ? "text-emerald-700" : ""}`}>{r.signals?.review_count || "—"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+      <div className="mb-8">
+        <button
+          disabled={!canCompare || loading}
+          onClick={onCompare}
+          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+        >
+          {loading ? "Comparing..." : "Compare"}
+        </button>
       </div>
-    </div>
+
+      {err && (
+        <div className="mb-6 rounded-md bg-rose-50 px-4 py-3 text-rose-700">
+          {err}
+        </div>
+      )}
+
+      <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Store</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">TQS</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Delivery time</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Shipping (quality)</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Return window</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Returns (quality)</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Wallets</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Rating</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Reviews</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {(rows ?? []).map((row) => {
+              const s = row.signals ?? {};
+              return (
+                <tr key={`${row.country}-${row.domain}`}>
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      {s.logo_url ? (
+                        <img
+                          src={s.logo_url}
+                          alt=""
+                          className="h-9 w-9 rounded-md object-cover"
+                        />
+                      ) : (
+                        <div className="h-9 w-9 rounded-md bg-gray-100" />
+                      )}
+                      <div className="flex flex-col">
+                        <div className="text-sm font-medium text-gray-900">
+                          {row.domain}
+                        </div>
+                        <div className="mt-1">
+                          <Pill>{row.country}</Pill>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <YesNoChip yes={!!s.tqs_badge} />
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">
+                      {s.delivery_time || "—"}
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <GradeChip grade={s.section_grades?.shipping} />
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">
+                      {s.return_window || "—"}
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <GradeChip grade={s.section_grades?.returns} />
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <div className="max-w-[260px] truncate text-sm text-gray-900">
+                      {s.e_wallets || "—"}
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <div className="text-sm font-medium text-emerald-700">
+                      {s.store_rating || "—"}
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">
+                      {s.review_count || "—"}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {!rows?.length && (
+              <tr>
+                <td colSpan={9} className="px-4 py-16 text-center text-sm text-gray-500">
+                  Enter up to five domains above, pick a region, and click <strong>Compare</strong>.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </section>
+
+      <p className="mt-4 text-xs text-gray-500">
+        We query <code>google.com/storepages</code> for each domain (per region) via a US-based serverless API. Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
+      </p>
+    </main>
   );
 }
