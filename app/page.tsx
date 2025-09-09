@@ -149,7 +149,7 @@ export default function Page() {
     </p>
 
         {/* Inputs */}
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur bg-blue-100 p-6 rounded-2xl rounded-2xl ring-1 ring-slate-200 bg-blue-50 rounded-xl p-4">
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-sky-50 p-4 shadow-sm backdrop-blur bg-blue-100 p-6 rounded-2xl rounded-2xl ring-1 ring-slate-200 bg-blue-50 rounded-xl p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
             <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
               {domains.map((d, i) => (
@@ -205,7 +205,7 @@ export default function Page() {
 
 
       {hasCompared && (
-        <section className="mx-auto max-w-6xl px-6 pb-16 bg-blue-100 rounded-2xl p-6">
+        <section className="mx-auto max-w-6xl px-6 pb-16">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <table className="w-full table-fixed text-left">
               <thead className="bg-slate-50 text-sm text-slate-600">
