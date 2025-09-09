@@ -29,9 +29,9 @@ function renderWalletPills(input?: string | string[]) {
     try {
       const arr = JSON.parse(raw);
       if (Array.isArray(arr)) names = arr.map(String);
-      else names = raw.split(/[,|/·]+/);
+      else names = raw.split(/(?:\s*&\s*|\s+and\s+|[,;|/•·]+)/i);
     } catch {
-      names = raw.split(/[,|/·]+/);
+      names = raw.split(/(?:\s*&\s*|\s+and\s+|[,;|/•·]+)/i);
     }
   }
 
