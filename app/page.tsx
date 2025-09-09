@@ -72,6 +72,14 @@ export default function Page() {
       red: 'bg-rose-50 text-rose-700 ring-rose-600/20',
       slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
     };
+  const validationUrl = (domain: string, country: string) => {
+    // Default: Google search scoped to storepages. Swap to exact storepages URL pattern if needed.
+    const q = encodeURIComponent(`${domain} site:google.com/storepages`);
+    // If you know the canonical URL pattern, replace the return below.
+    // e.g., return `https://www.google.com/storepages?gl=${country}&seller=${encodeURIComponent(domain)}`;
+    return `https://www.google.com/search?q=${q}`;
+  };
+
     return (
       <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 ${toneMap[tone]}`}>
         {label}
@@ -245,7 +253,20 @@ export default function Page() {
                           )}
                         </div>
                         <div className="leading-5">
-                          <div className="font-medium text-slate-900">{row.domain}</div>
+                          <div className="font-medium text-slate-900 flex items-center gap-2">
+                            {row.domain}
+                            <a
+                              href={validationUrl(row.domain, row.country)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+                              title="Open source URL"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                                <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
+                              </svg>
+                            </a>
+                          </div>
                         </div>
                       </td>
 
