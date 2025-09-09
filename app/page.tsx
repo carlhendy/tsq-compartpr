@@ -1,13 +1,13 @@
+'use client';
+
 
 
 // --- Competitive Pricing renderer ---
-// Word-only badges using soft pill style (no numeric handling)
 function renderCompetitivePricing(v: any) {
-  if (v === undefined || v === null || v === '') return <span className="text-slate-400">–</span>;
+  if (v === undefined || v === null || String(v).trim() === '') return <span className="text-slate-400">–</span>;
   const raw = String(v).trim();
   const word = raw.replace(/[^a-zA-Z\s-]/g, '').toLowerCase();
 
-  // categories
   const GREEN = ['exceptional','excellent','great','good','strong','competitive'];
   const AMBER = ['fair','average','ok','okay','neutral'];
   const RED   = ['poor','weak','uncompetitive','bad'];
@@ -15,15 +15,14 @@ function renderCompetitivePricing(v: any) {
   let tone: 'green'|'amber'|'red' = 'green';
   if (AMBER.some(k => word.includes(k))) tone = 'amber';
   else if (RED.some(k => word.includes(k))) tone = 'red';
-  else if (!GREEN.some(k => word.includes(k))) tone = 'amber'; // unknown -> neutral
+  else if (!GREEN.some(k => word.includes(k))) tone = 'amber';
 
-  // pretty label (capitalize first letter of each word)
-  const label = raw.charAt(0).toUpperCase() + raw.slice(1);
+  const label = raw[0]?.toUpperCase() + raw.slice(1);
 
   const styles = {
-    green:  { bg: '#ecfdf5', border: '#bbf7d0', text: '#166534' }, // emerald-50/200/700-ish
-    amber:  { bg: '#fff7ed', border: '#fed7aa', text: '#92400e' }, // orange-50/200/700-ish
-    red:    { bg: '#fef2f2', border: '#fecaca', text: '#991b1b' }, // red-50/200/700-ish
+    green:  { bg: '#ecfdf5', border: '#bbf7d0', text: '#166534' },
+    amber:  { bg: '#fff7ed', border: '#fed7aa', text: '#92400e' },
+    red:    { bg: '#fef2f2', border: '#fecaca', text: '#991b1b' },
   }[tone];
 
   return (
@@ -44,8 +43,6 @@ function renderCompetitivePricing(v: any) {
     </span>
   );
 }
-
-'use client';
 
 import { useState } from 'react';
 
@@ -272,6 +269,7 @@ export default function Page() {
                     <th className="w-[12%] text-center">Return window</th>
                     <th className="w-[13%] text-center">Returns (quality)</th>
                     <th className="w-[12%] text-center">Wallets</th>
+                    <th className="w-[10%] text-center">Competitive Pricing</th>
                     <th className="w-[7%] text-center">Rating</th>
                     <th className="w-[8%] text-center">Reviews</th>
                   </tr>
@@ -292,12 +290,24 @@ export default function Page() {
                     const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
                     const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
                     const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
+                    const competitivePricing = getAny(s, [
+                      'Competitive pricing',      // exact Google Store Pages label
+                      'competitive pricing',
+                      'competitive_pricing',
+                      'price_competitiveness',
+                      'pricing_competitiveness',
+                      'competitivePricing',
+                      'priceCompetitive',
+                      'pricingCompetitive',
+                      'comp_pricing',
+                      'pricing_comp'
+                    ]);
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
 
                     return (
                       <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
-                        <td className="flex items-center gap-3 pr-2">
+                        <td className="flex items-center gap-3 pr-2 align-middle">
                           <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
@@ -337,7 +347,7 @@ export default function Page() {
                         <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
                         <td className="text-center tabular-nums">{returnWindow}</td>
                         <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
-                        <td className="text-center truncate">{wallets}</td>
+                        <td className="text-center">{renderWalletPills(wallets)}</td>
                         <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
                         <td className="text-center tabular-nums">{reviews}</td>
                       </tr>
