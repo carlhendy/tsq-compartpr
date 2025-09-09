@@ -2,10 +2,6 @@
 
 import { useState } from 'react';
 
-export const metadata = {
-  title: 'Compare Google Store Ratings - Bulk Upload',
-  description: 'Benchmark Ecommerce Stores by Google’s Public Quality Signals. Free Bulk Upload.'
-};
 
 type Signals = {
   tqs_badge: boolean;
@@ -203,7 +199,7 @@ const updateDomain = (i: number, v: string) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center relative">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl inline-block mx-auto bg-yellow-100/70 px-3 py-1 rounded-md text-center">Compare Google Store Ratings</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl text-center inline-block mx-auto bg-yellow-100/70 px-3 py-1 rounded-md">Compare Google Store Ratings</h1>
             <h2 className="mt-6 text-xl font-medium text-slate-700 text-center inline-block mx-auto bg-green-100/70 px-3 py-1 rounded-md">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
             {/* subtle guidance arrow pointing to first input */}
 {/* Inputs */}
@@ -466,7 +462,7 @@ const updateDomain = (i: number, v: string) => {
           </div>
         </div>
       
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Where do these signals come from?", "acceptedAnswer": {"@type": "Answer", "text": "From Google’s public storepages surface for each domain and region. We don’t scrape private data or guess values."}}, {"@type": "Question", "name": "What does “Top Quality Store” mean?", "acceptedAnswer": {"@type": "Answer", "text": "It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)."}}, {"@type": "Question", "name": "How often are results updated?", "acceptedAnswer": {"@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time."}}, {"@type": "Question", "name": "Why don’t I see all wallets or grades for my store?", "acceptedAnswer": {"@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—)."}}, {"@type": "Question", "name": "Can I export the results?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet, but you can copy/paste the table into a spreadsheet. CSV export is on the roadmap."}}, {"@type": "Question", "name": "How do we collect and display the quality signals for store websites from google.com/storepages?", "acceptedAnswer": {"@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page."}}]}</script>
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Where do these signals come from?", "acceptedAnswer": {"@type": "Answer", "text": "From Google’s public storepages surface for each domain and region. We don’t scrape private data or guess values."}}, {"@type": "Question", "name": "What does “Top Quality Store” mean?", "acceptedAnswer": {"@type": "Answer", "text": "It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)."}}, {"@type": "Question", "name": "How often are results updated?", "acceptedAnswer": {"@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time."}}, {"@type": "Question", "name": "Why don’t I see all wallets or grades for my store?", "acceptedAnswer": {"@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—)."}}, {"@type": "Question", "name": "Can I export the results?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet, but you can copy/paste the table into a spreadsheet. CSV export is on the roadmap."}}, {"@type": "Question", "name": "How do we collect and display the quality signals for store websites from google.com/storepages?", "acceptedAnswer": {"@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page."}}]}` }} />
 </section>
 
 
