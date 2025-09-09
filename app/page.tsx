@@ -38,10 +38,14 @@ export default function Page() {
   const [hasCompared, setHasCompared] = useState<boolean>(false);
 
   const validationUrl = (domain: string, country: string) => {
-    const q = encodeURIComponent(`${domain} site:google.com/storepages`);
-    return `https://www.google.com/search?q=${q}`;
+    const c = (country || 'US').toUpperCase();
+    return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
   };
-
+    const hl = hlMap[gl] ?? 'en';
+    // Expected public surface per earlier comment in UI: google.com/storepages
+    // Example: https://www.google.com/storepages?gl=GB&hl=en-GB&seller=asos.com
+    return `https://www.google.com/storepages?gl=${gl}&hl=${hl}&seller=${encodeURIComponent(domain)}`;
+  };
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
     next[i] = v;
@@ -77,14 +81,6 @@ export default function Page() {
       red: 'bg-rose-50 text-rose-700 ring-rose-600/20',
       slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
     };
-  const validationUrl = (domain: string, country: string) => {
-    // Default: Google search scoped to storepages. Swap to exact storepages URL pattern if needed.
-    const q = encodeURIComponent(`${domain} site:google.com/storepages`);
-    // If you know the canonical URL pattern, replace the return below.
-    // e.g., return `https://www.google.com/storepages?gl=${country}&seller=${encodeURIComponent(domain)}`;
-    return `https://www.google.com/search?q=${q}`;
-  };
-
     return (
       <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 ${toneMap[tone]}`}>
         {label}
