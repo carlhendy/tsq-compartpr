@@ -197,12 +197,12 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">Compare Google Store Ratings</h1>
-            <h2 className="mt-3 text-xl font-medium text-slate-700 text-center">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
+        <h1 className="bg-yellow-100/70 font-bold inline-block px-3 py-1 rounded-md sm:text-5xl text-4xl text-slate-900 tracking-tight">Compare Google Store Ratings</h1>
+            <h2 className="bg-green-100/70 font-medium inline-block mt-3 px-3 py-1 rounded-md text-center text-slate-700 text-xl">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 text-center">👉 Compare up to five store websites and review the signals displayed by Google on google.com/storepages.</p>
 
         {/* Inputs */}
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-sky-50 p-4 shadow-sm backdrop-blur bg-blue-100 p-6 rounded-2xl rounded-2xl ring-1 ring-slate-200 bg-blue-50 rounded-xl p-4">
+        <div className="backdrop-blur bg-blue-100 bg-blue-50 bg-sky-50 border border-slate-200 mt-8 p-4 p-6 ring-1 ring-slate-200 rounded-2xl rounded-xl shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
             <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
               {domains.map((d, i) => (
@@ -234,7 +234,7 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
               <button
                 onClick={compare}
                 disabled={loading}
-                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="bg-emerald-600 bg-slate-900 disabled:cursor-not-allowed disabled:opacity-60 font-medium gap-2 hover:bg-emerald-700 hover:bg-slate-800 inline-flex items-center px-4 py-2 rounded-xl shadow-sm text-sm text-white"
               >
                 {loading ? (
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
