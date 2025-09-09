@@ -205,7 +205,7 @@ export default function Page() {
 
 
       {hasCompared && (
-        <section className="mx-auto max-w-6xl px-6 pb-16">
+        <section className="mx-auto max-w-6xl px-6 pb-16 bg-blue-100 rounded-2xl p-6">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <table className="w-full table-fixed text-left">
               <thead className="bg-slate-50 text-sm text-slate-600">
@@ -232,7 +232,7 @@ export default function Page() {
                 {rows.map((row, i) => {
                   const s = row.signals;
                   return (
-                    <tr key={i} className="[&>td]:px-4 [&>td]:py-4">
+                    <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
                       <td className="flex items-center gap-3 pr-2">
                         <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
                           {s?.logo_url ? (
