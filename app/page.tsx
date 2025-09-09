@@ -223,6 +223,7 @@ export default function Page() {
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            {/* Actions */}
             <div className="flex items-center justify-end gap-2 px-4 py-2">
               <button
                 onClick={copyResults}
@@ -237,104 +238,108 @@ export default function Page() {
                 {copied ? 'Copied' : 'Copy results'}
               </button>
             </div>
-            <table className="w-full table-fixed text-left">
-              <thead className="bg-slate-50 text-sm text-slate-600">
-                <tr className="[&>th]:px-4 [&>th]:py-3">
-                  <th className="w-[26%] text-left">Store</th>
-                  <th className="w-[9%] text-center">Top Quality Store</th>
-                  <th className="w-[10%] text-center">Delivery time</th>
-                  <th className="w-[13%] text-center">Shipping (quality)</th>
-                  <th className="w-[12%] text-center">Return window</th>
-                  <th className="w-[13%] text-center">Returns (quality)</th>
-                  <th className="w-[12%] text-center">Wallets</th>
-                  <th className="w-[7%] text-center">Rating</th>
-                  <th className="w-[8%] text-center">Reviews</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
-                {rows.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
-                      {loading ? 'Fetching signals…' : 'No results yet.'}
-                    </td>
+
+            {/* Single table with horizontal scroll on mobile */}
+            <div className="overflow-x-auto">
+              <table className="min-w-[980px] w-full table-fixed text-left">
+                <thead className="bg-slate-50 text-sm text-slate-600">
+                  <tr className="[&>th]:px-4 [&>th]:py-3">
+                    <th className="w-[26%] text-left">Store</th>
+                    <th className="w-[9%] text-center">Top Quality Store</th>
+                    <th className="w-[10%] text-center">Delivery time</th>
+                    <th className="w-[13%] text-center">Shipping (quality)</th>
+                    <th className="w-[12%] text-center">Return window</th>
+                    <th className="w-[13%] text-center">Returns (quality)</th>
+                    <th className="w-[12%] text-center">Wallets</th>
+                    <th className="w-[7%] text-center">Rating</th>
+                    <th className="w-[8%] text-center">Reviews</th>
                   </tr>
-                )}
-                {rows.map((row, i) => {
-                  const s: Signals = row.signals || {};
-                  const tqs = s?.tqs_badge; // true/false/undefined
-                  const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
-                  const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
-                  const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
-                  const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
-                  const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
-                  const rating = getAny(s, ['store_rating','rating','storeRating']);
-                  const reviews = getAny(s, ['review_count','reviews','reviewCount']);
-
-                  return (
-                    <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
-                      <td className="flex items-center gap-3 pr-2">
-                        <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
-                          {s?.logo_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
-                          ) : (
-                            <div className="h-full w-full bg-slate-100" />
-                          )}
-                        </div>
-                        <div className="leading-5">
-                          <div className="font-medium text-slate-900 flex items-center gap-2">
-                            {row.domain}
-                            <a
-                              href={validationUrl(row.domain, row.country)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
-                              title="Open source URL"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                                <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
-                              </svg>
-                            </a>
-                          </div>
-                        </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
+                  {rows.length === 0 && (
+                    <tr>
+                      <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
+                        {loading ? 'Fetching signals…' : 'No results yet.'}
                       </td>
-
-                      {/* TQS */}
-                      <td className="text-center">
-                        {row.error
-                          ? badge('Error', 'red')
-                          : tqs === true
-                            ? badge('Yes', 'green')
-                            : tqs === false
-                              ? badge('No', 'red')
-                              : badge('—', 'slate')}
-                      </td>
-
-                      {/* Delivery */}
-                      <td className="text-center tabular-nums">{delivery}</td>
-
-                      {/* Shipping grade */}
-                      <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
-
-                      {/* Return window */}
-                      <td className="text-center tabular-nums">{returnWindow}</td>
-
-                      {/* Returns grade */}
-                      <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
-
-                      {/* Wallets */}
-                      <td className="text-center truncate">{wallets}</td>
-
-                      {/* Rating */}
-                      <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
-
-                      {/* Reviews */}
-                      <td className="text-center tabular-nums">{reviews}</td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                  )}
+                  {rows.map((row, i) => {
+                    const s: Signals = row.signals || {};
+                    const tqs = s?.tqs_badge; // true/false/undefined
+                    const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
+                    const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
+                    const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
+                    const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
+                    const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
+                    const rating = getAny(s, ['store_rating','rating','storeRating']);
+                    const reviews = getAny(s, ['review_count','reviews','reviewCount']);
+
+                    return (
+                      <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
+                        <td className="flex items-center gap-3 pr-2">
+                          <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
+                            {s?.logo_url ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
+                            ) : (
+                              <div className="h-full w-full bg-slate-100" />
+                            )}
+                          </div>
+                          <div className="leading-5">
+                            <div className="font-medium text-slate-900 flex items-center gap-2">
+                              {row.domain}
+                              <a
+                                href={validationUrl(row.domain, row.country)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+                                title="Open source URL"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                                  <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
+                                </svg>
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* TQS */}
+                        <td className="text-center">
+                          {row.error
+                            ? badge('Error', 'red')
+                            : tqs === true
+                              ? badge('Yes', 'green')
+                              : tqs === false
+                                ? badge('No', 'red')
+                                : badge('—', 'slate')}
+                        </td>
+
+                        {/* Delivery */}
+                        <td className="text-center tabular-nums">{delivery}</td>
+
+                        {/* Shipping grade */}
+                        <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
+
+                        {/* Return window */}
+                        <td className="text-center tabular-nums">{returnWindow}</td>
+
+                        {/* Returns grade */}
+                        <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
+
+                        {/* Wallets */}
+                        <td className="text-center truncate">{wallets}</td>
+
+                        {/* Rating */}
+                        <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
+
+                        {/* Reviews */}
+                        <td className="text-center tabular-nums">{reviews}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
       )}
