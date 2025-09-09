@@ -149,8 +149,7 @@ export default function Page() {
       </section>
 
 
-      {
-      /* Inputs */
+      {/* Inputs */}
       <section className="mx-auto max-w-6xl px-6 pb-8">
         <div className="rounded-2xl border border-slate-200 bg-blue-50/70 p-6 shadow-sm backdrop-blur">
           <p className="mb-5 text-sm text-slate-700 text-center">
