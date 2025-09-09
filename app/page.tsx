@@ -41,12 +41,8 @@ export default function Page() {
     const c = (country || 'US').toUpperCase();
     return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
   };
-    const hl = hlMap[gl] ?? 'en';
-    // Expected public surface per earlier comment in UI: google.com/storepages
-    // Example: https://www.google.com/storepages?gl=GB&hl=en-GB&seller=asos.com
-    return `https://www.google.com/storepages?gl=${gl}&hl=${hl}&seller=${encodeURIComponent(domain)}`;
-  };
-  const updateDomain = (i: number, v: string) => {
+
+const updateDomain = (i: number, v: string) => {
     const next = [...domains];
     next[i] = v;
     setDomains(next);
