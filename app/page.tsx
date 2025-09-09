@@ -38,6 +38,7 @@ export default function Page() {
     return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
   };
 
+  // === SIMPLE TEXT-ONLY COPY OF TABLE DATA (no images) ===
   const copyResults = async () => {
     try {
       const headers = ['Store','Top Quality Store','Delivery time','Shipping (quality)','Return window','Returns (quality)','Wallets','Rating','Reviews'];
@@ -46,14 +47,14 @@ export default function Page() {
         const s = row.signals || {};
         const values = [
           row.domain || '—',
-          s.tqs_badge ? 'Yes' : (row.error ? 'Error' : '—'),
-          s.delivery_time || '—',
-          s.section_grades?.shipping || '—',
-          s.return_window || '—',
-          s.section_grades?.returns || '—',
-          s.e_wallets || '—',
-          s.store_rating ?? '—',
-          s.review_count ?? '—',
+          s ? (s.tqs_badge ? 'Yes' : 'No') : (row.error ? 'Error' : '—'),
+          s?.delivery_time || '—',
+          s?.section_grades?.shipping || '—',
+          s?.return_window || '—',
+          s?.section_grades?.returns || '—',
+          s?.e_wallets || '—',
+          s?.store_rating ?? '—',
+          s?.review_count ?? '—',
         ];
         lines.push(values.join('\t'));
       }
@@ -110,7 +111,7 @@ export default function Page() {
       slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
     };
     return (
-      <span className={\`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 \${toneMap[tone]}\`}>
+      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 ${toneMap[tone]}`}>
         {label}
       </span>
     );
@@ -318,7 +319,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* FAQs */}
+      {/* FAQs with schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
@@ -364,7 +365,6 @@ export default function Page() {
             </div>
           </div>
         </div>
-        {/* FAQ Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
