@@ -144,10 +144,9 @@ export default function Page() {
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-          Benchmark Ecommerce Stores by Google’s Public Quality Signals
-        </h1>
+          Compare Google's Ratings for Ecommerce Stores</h1>
         <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
-          Paste up to five store domains and compare the signals Google shows on{' '}
+          Benchmark Ecommerce Stores by Google’s Public Quality Signals. Paste up to five store domains and compare the signals Google shows on{' '}
           <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.{' '}
           See shipping &amp; returns quality, payments, ratings and more—side by side.
         </p>
