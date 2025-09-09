@@ -148,6 +148,7 @@ export default function Page() {
         </h2>
       </section>
 
+
       {/* Inputs */}
       <section className="mx-auto max-w-6xl px-6 pb-8">
         <div className="mt-2 rounded-2xl border border-slate-200 bg-blue-50/70 p-6 shadow-sm backdrop-blur">
@@ -156,63 +157,75 @@ export default function Page() {
             <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.
           </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
-            {/* Inputs */}
-            <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
-              {domains.map((d, i) => (
-                <input
-                  key={i}
-                  value={d}
-                  onChange={(e) => updateDomain(i, e.target.value)}
-                  placeholder="domain.com"
-                  className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
-                />
-              ))}
-            </div>
+          {/* Step 1: Country */}
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:items-center sm:gap-3">
+            <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-600/20">
+              Step 1
+            </span>
+            <p className="text-sm text-slate-700">Select Country/Region</p>
+          </div>
+          <div className="mt-2 flex w-full flex-col items-center gap-2 sm:flex-row sm:justify-center sm:items-center sm:gap-3">
+            <label className="sr-only">Country/Region</label>
+            <select
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="h-10 w-full sm:w-64 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+              aria-label="Region"
+            >
+              <option value="US">US</option>
+              <option value="GB">GB</option>
+              <option value="AU">AU</option>
+              <option value="CA">CA</option>
+              <option value="IE">IE</option>
+              <option value="NZ">NZ</option>
+              <option value="DE">DE</option>
+              <option value="FR">FR</option>
+            </select>
+          </div>
 
-            {/* Country + Compare (mobile-centered, stacked) */}
-            <div className="flex w-full flex-col items-center gap-2 pt-2 sm:flex-row sm:justify-center sm:items-center sm:gap-3 sm:pt-0">
-              <p className="text-xs text-slate-600 text-center -mt-1 mb-1 sm:mb-0">Select a country and tap Compare</p>
-              <label className="sr-only">Country/Region</label>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="h-10 w-full sm:w-64 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
-                aria-label="Region"
-              >
-                <option value="US">US</option>
-                <option value="GB">GB</option>
-                <option value="AU">AU</option>
-                <option value="CA">CA</option>
-                <option value="IE">IE</option>
-                <option value="NZ">NZ</option>
-                <option value="DE">DE</option>
-                <option value="FR">FR</option>
-              </select>
+          {/* Step 2: Domains */}
+          <div className="mt-6 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:items-center sm:gap-3">
+            <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-800 ring-1 ring-indigo-600/20">
+              Step 2
+            </span>
+            <p className="text-sm text-slate-700">Paste up to five store domains</p>
+          </div>
 
-              <button
-                onClick={compare}
-                disabled={loading}
-                className="inline-flex h-10 w-full sm:w-64 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loading ? (
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.25" />
-                    <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  </svg>
-                ) : (
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 5l7 7-7 7" />
-                  </svg>
-                )}
-                Compare
-              </button>
-            </div>
+          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-5">
+            {domains.map((d, i) => (
+              <input
+                key={i}
+                value={d}
+                onChange={(e) => updateDomain(i, e.target.value)}
+                placeholder="domain.com"
+                className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
+              />
+            ))}
+          </div>
+
+          {/* Compare Button */}
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={compare}
+              disabled={loading}
+              className="inline-flex h-10 w-full sm:w-64 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loading ? (
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.25" />
+                  <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="4" fill="none" />
+                </svg>
+              ) : (
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              )}
+              Compare
+            </button>
           </div>
         </div>
       </section>
-
-      {/* Results */}
+/* Results */}
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
