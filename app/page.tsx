@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+// --- lightweight UI shims (no external deps) ---
+
 /** ---------- Types ---------- */
 type Signals = {
   tqs_badge?: boolean;
@@ -462,14 +464,3 @@ export default function Page() {
     </main>
   );
 }
-
-
-<h2 className="text-xl font-semibold mb-2">Wallets</h2>
-<div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
-  <span style={{backgroundColor:'#003087',color:'#fff',borderRadius:'9999px',padding:'6px 12px',fontSize:'0.875rem',fontWeight:600}}>PayPal</span>
-  <span style={{backgroundColor:'#000000',color:'#fff',borderRadius:'9999px',padding:'6px 12px',fontSize:'0.875rem',fontWeight:600}}>Apple Pay</span>
-  <span style={{backgroundColor:'#4285F4',color:'#fff',borderRadius:'9999px',padding:'6px 12px',fontSize:'0.875rem',fontWeight:600}}>Google Pay</span>
-  <span style={{backgroundColor:'#5a31f4',color:'#fff',borderRadius:'9999px',padding:'6px 12px',fontSize:'0.875rem',fontWeight:600}}>Shop Pay</span>
-  <span style={{backgroundColor:'#b2ffe5',color:'#0f172a',borderRadius:'9999px',padding:'6px 12px',fontSize:'0.875rem',fontWeight:600}}>Afterpay</span>
-  <span style={{backgroundColor:'#ffb3c7',color:'#0f172a',borderRadius:'9999px',padding:'6px 12px',fontSize:'0.875rem',fontWeight:600}}>Klarna</span>
-</div>
