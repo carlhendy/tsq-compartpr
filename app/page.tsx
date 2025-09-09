@@ -217,9 +217,66 @@ export default function Page() {
         </p>
       </section>
 
+      {/* FAQ */}
+      <section className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-slate-900">Frequently Asked Questions</h2>
+          <div className="mt-4 space-y-5 text-slate-700">
+            <div>
+              <p className="font-medium">❓ 1. How can I compare ecommerce store ratings?</p>
+              <p className="mt-1 text-sm text-slate-600">
+                Our tool lets you enter multiple online stores and instantly compare their customer review scores, overall ratings, and trust levels.
+                This makes it easy to see which store offers the best shopping experience.
+              </p>
+            </div>
+            <div>
+              <p className="font-medium">❓ 2. Can I bulk compare multiple ecommerce stores at once?</p>
+              <p className="mt-1 text-sm text-slate-600">
+                Yes! Instead of checking review sites one by one, you can compare several ecommerce stores side by side in one place.
+                Perfect for shoppers doing research or businesses benchmarking competitors.
+              </p>
+            </div>
+            <div>
+              <p className="font-medium">❓ 3. Why is comparing ecommerce store scores important?</p>
+              <p className="mt-1 text-sm text-slate-600">
+                Ratings and reviews are one of the strongest signals of customer satisfaction.
+                By comparing store scores, you can identify which stores are most trusted, deliver better service, and provide a smoother shopping experience.
+              </p>
+            </div>
+            <div>
+              <p className="font-medium">❓ 4. Does your tool show both ratings and customer reviews?</p>
+              <p className="mt-1 text-sm text-slate-600">
+                Absolutely. You’ll see not just the overall star ratings but also the number of reviews, so you can judge both quality and credibility.
+                A store with thousands of positive reviews may be more reliable than one with just a handful.
+              </p>
+            </div>
+            <div>
+              <p className="font-medium">❓ 5. Can I find the top-rated ecommerce stores?</p>
+              <p className="mt-1 text-sm text-slate-600">
+                Yes. You can sort and filter to highlight stores with the highest ratings, best customer feedback, and strongest reputations.
+                This helps you quickly find the best options in any ecommerce category.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-500">
-        Built for quick TQS research. No affiliation with Google.
+      <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-600">
+        <p className="mb-2">
+          Vibe coded by{" "}
+          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="font-medium text-slate-900 underline decoration-slate-300 hover:decoration-slate-500">
+            Carl Hendy
+          </a>{" "}
+          — founder of{" "}
+          <a href="https://audits.com" target="_blank" rel="noreferrer" className="font-medium text-slate-900 underline decoration-slate-300 hover:decoration-slate-500">
+            Audits.com
+          </a>.
+        </p>
+        <p className="mx-auto max-w-3xl text-xs text-slate-500">
+          Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google’s public
+          <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
+        </p>
       </footer>
     </main>
   );
