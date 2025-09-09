@@ -43,6 +43,34 @@ export default function Page() {
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState(false);
 
+  const copyResults = async () => {
+    try {
+      const headers = ["Store","Top Quality Store","Delivery time","Shipping (quality)","Return window","Returns (quality)","Wallets","Rating","Reviews"];
+      const lines = [headers.join("\t")];
+      for (const row of rows) {
+        const s = row.signals || {};
+        const values = [
+          row.domain || "—",
+          s.tqs_badge ? "Yes" : (row.error ? "Error" : "—"),
+          s.delivery_time || "—",
+          (s.section_grades?.shipping) || "—",
+          s.return_window || "—",
+          (s.section_grades?.returns) || "—",
+          s.e_wallets || "—",
+          s.store_rating ?? "—",
+          s.review_count ?? "—",
+        ];
+        lines.push(values.join("\t"));
+      }
+      const text = lines.join("\n");
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1400);
+    } catch (e) {
+      console.error("Copy failed", e);
+    }
+  };
+
   const validationUrl = (domain: string, country: string) => {
     const c = (country || 'US').toUpperCase();
     return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
@@ -83,13 +111,6 @@ const updateDomain = (i: number, v: string) => {
       red: 'bg-rose-50 text-rose-700 ring-rose-600/20',
       slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
     };
-    
-  const copyResults = async () => {
-    try {
-      const headers = ["Store","Top Quality Store","Delivery time","Shipping (quality)","Return window","Returns (quality)","Wallets","Rating","Reviews"];
-      const lines = [headers.join("\t")];
-      for (const row of rows) {
-        const s = row.signals || {};
         const values = [
           row.domain || "—",
           s.tqs_badge ? "Yes" : (row.error ? "Error" : "—"),
@@ -182,7 +203,7 @@ const updateDomain = (i: number, v: string) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center relative">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl inline-block bg-yellow-100 px-4 py-1 rounded-md text-center inline-block mx-auto bg-yellow-100/70 px-3 py-1 rounded-md">Compare Google Store Ratings</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl inline-block mx-auto bg-yellow-100/70 px-3 py-1 rounded-md text-center">Compare Google Store Ratings</h1>
             <h2 className="mt-6 text-xl font-medium text-slate-700 text-center inline-block mx-auto bg-green-100/70 px-3 py-1 rounded-md">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
             {/* subtle guidance arrow pointing to first input */}
 {/* Inputs */}
