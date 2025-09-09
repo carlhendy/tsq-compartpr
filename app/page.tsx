@@ -3,6 +3,81 @@
 import { useState } from 'react';
 
 
+
+// --- Wallet pills renderer (no dependencies) ---
+const WALLET_COLORS: Record<string, { bg: string; text: string }> = {
+  'paypal':     { bg: '#003087', text: '#ffffff' },
+  'apple pay':  { bg: '#000000', text: '#ffffff' },
+  'google pay': { bg: '#4285F4', text: '#ffffff' },
+  'gpay':       { bg: '#4285F4', text: '#ffffff' },
+  'shop pay':   { bg: '#5a31f4', text: '#ffffff' },
+  'shoppay':    { bg: '#5a31f4', text: '#ffffff' },
+  'afterpay':   { bg: '#b2ffe5', text: '#0f172a' },
+  'klarna':     { bg: '#ffb3c7', text: '#0f172a' },
+};
+
+function normalise(name: string) {
+  const n = name.toLowerCase().replace(/\s+/g, ' ').trim();
+  if (n === 'g pay' || n === 'googlepay') return 'google pay';
+  if (n === 'shop pay' || n === 'shop-pay' || n === 'shop pay™' || n === 'shop-pay™') return 'shop pay';
+  return n;
+}
+
+function renderWalletPills(input?: string | string[]) {
+  let names: string[] = [];
+  if (Array.isArray(input)) {
+    names = input;
+  } else {
+    const raw = (input || '').trim();
+    try {
+      // handle JSON arrays like '["PayPal","Google Pay"]'
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) names = arr.map(String);
+      else names = raw.split(/[,|/·]+/);
+    } catch {
+      names = raw.split(/[,|/·]+/);
+    }
+  }
+
+  const cleaned = Array.from(
+    new Set(
+      names
+        .map((s) => s.replace(/^\[|\]|"|\'|\s+$/g, '').trim())
+        .filter(Boolean)
+    )
+  );
+
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
+      {cleaned.map((name) => {
+        const key = normalise(name);
+        const c = WALLET_COLORS[key] || { bg: '#e2e8f0', text: '#0f172a' };
+        return (
+          <span
+            key={name}
+            style={{
+              backgroundColor: c.bg,
+              color: c.text,
+              borderRadius: '9999px',
+              padding: '4px 10px',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              lineHeight: 1,
+              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+              border: '1px solid rgba(0,0,0,0.06)',
+              whiteSpace: 'nowrap',
+            }}
+            title={name}
+          >
+            {name}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+
 // --- Wallet pills renderer (no dependencies) ---
 const WALLET_COLORS: Record<string, { bg: string; text: string }> = {
   'paypal':     { bg: '#003087', text: '#ffffff' },
@@ -298,7 +373,7 @@ export default function Page() {
 
                     return (
                       <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
-                        <td className="flex items-center gap-3 pr-2">
+                        <td className="flex items-center gap-3 pr-2 align-middle">
                           <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
