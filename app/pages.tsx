@@ -141,16 +141,15 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center bg-blue-50">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-          Compare Google's Ratings for Ecommerce Stores</h1>
+      {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">Compare Google Store Ratings</h1>
         <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
           Benchmark Ecommerce Stores by Google’s Public Quality Signals. Paste up to five store domains and compare the signals Google shows on{' '}
           <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.{' '}
     </p>
 
         {/* Inputs */}
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur">
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur bg-blue-50 rounded-2xl ring-1 ring-slate-200">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
             <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
               {domains.map((d, i) => (
@@ -200,6 +199,8 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+
 
 
 
@@ -289,7 +290,11 @@ export default function Page() {
 
 
 
-      {/* Explainer table */}
+      
+
+
+
+{/* Explainer table */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
