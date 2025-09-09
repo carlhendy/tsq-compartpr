@@ -215,7 +215,7 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
                 />
               ))}
             </div>
-            <div className="flex flex-wrap items-center gap-2 pt-2 sm:pt-0">\n              <label htmlFor="country" className="text-sm font-medium text-slate-700">Select Country:</label>
+            <div className="flex flex-wrap items-center gap-2 pt-2 sm:pt-0">             <label htmlFor="country" className="text-sm font-medium text-slate-700">Select Country:</label>
               <select id="country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
@@ -249,15 +249,7 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
                 Compare
               </button>
             </div>
-              <div className="px-5 py-4">
-                <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
-                <p className="mt-1 text-sm text-slate-600">
-                  We query google.com/storepages for each domain and selected region via a US‑based serverless API.
-                  We only display Google’s public indicators shown on the Store page (e.g., quality grades like
-                  Exceptional/Great/Good, delivery time, returns, supported wallets). Values can change at any time
-                  based on what Google publicly shows.
-                </p>
-              </div>
+              
     
           </div>
         </div>
@@ -439,6 +431,14 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
             <h2 className="text-sm font-medium text-slate-700">FAQs</h2>
           </div>
           <div className="divide-y divide-slate-100">
+              <div className="px-5 py-4">
+                <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
+                <p className="mt-1 text-sm text-slate-600">
+                  We query google.com/storepages for each domain (per region) via a US‑based serverless API.
+                  Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
+                </p>
+              </div>
+
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
               <p className="mt-1 text-sm text-slate-600">
