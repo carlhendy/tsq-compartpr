@@ -172,7 +172,9 @@ export default function Page() {
 
           {/* Controls */}
           <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-3">
+            <label className="text-sm text-slate-700 sm:mr-2" htmlFor="country-select">Select Country:</label>
             <select
+              id="country-select"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               className="h-10 w-full sm:w-48 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
@@ -208,7 +210,7 @@ export default function Page() {
           </div>
         </div>
       </section>
-    /* Results */
+    {/* Results */}
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
