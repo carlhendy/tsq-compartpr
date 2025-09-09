@@ -148,10 +148,8 @@ const updateDomain = (i: number, v: string) => {
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">Compare Google Store Ratings</h1>
-        <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
-          Benchmark Ecommerce Stores by Google’s Public Quality Signals. Paste up to five store domains and compare the signals Google shows on{' '}
-          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.{' '}
-    </p>
+            <h2 className="mt-3 text-xl font-medium text-slate-700 text-center">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 text-center">👉 Paste up to five store domains and compare the signals Google shows on <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.</p>
 
         {/* Inputs */}
         <div className="mt-8 rounded-2xl border border-slate-200 bg-sky-50 p-4 shadow-sm backdrop-blur bg-blue-100 p-6 rounded-2xl rounded-2xl ring-1 ring-slate-200 bg-blue-50 rounded-xl p-4">
