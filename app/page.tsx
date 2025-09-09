@@ -142,7 +142,85 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
+      {hasCompared && (
+        <section className="mx-auto max-w-6xl px-6 pb-16">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <table className="w-full table-fixed text-left">
+              <thead className="bg-slate-50 text-sm text-slate-600">
+                <tr className="[&>th]:px-4 [&>th]:py-3">
+                  <th className="w-[26%]">Store</th>
+                  <th className="w-[9%]">Top Quality Store</th>
+                  <th className="w-[10%]">Delivery time</th>
+                  <th className="w-[13%]">Shipping (quality)</th>
+                  <th className="w-[12%]">Return window</th>
+                  <th className="w-[13%]">Returns (quality)</th>
+                  <th className="w-[12%]">Wallets</th>
+                  <th className="w-[7%]">Rating</th>
+                  <th className="w-[8%]">Reviews</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
+                {rows.length === 0 && (
+                  <tr>
+                    <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
+                      {loading ? 'Fetching signals…' : 'No results yet.'}
+                    </td>
+                  </tr>
+                )}
+                {rows.map((row, i) => {
+                  const s = row.signals;
+                  return (
+                    <tr key={i} className="[&>td]:px-4 [&>td]:py-4">
+                      <td className="flex items-center gap-3 pr-2">
+                        <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
+                          {s?.logo_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="h-full w-full bg-slate-100" />
+                          )}
+                        </div>
+                        <div className="leading-5">
+                          <div className="font-medium text-slate-900">{row.domain}</div>
+                        </div>
+                      </td>
+
+                      <td>
+                        {s
+                          ? (s.tqs_badge ? badge('Yes', 'green') : badge('No', 'red'))
+                          : row.error
+                          ? badge('Error', 'red')
+                          : badge('—', 'slate')}
+                      </td>
+
+                      <td className="tabular-nums">{s?.delivery_time || '—'}</td>
+
+                      <td>{badge(s?.section_grades?.shipping || '—', qualityTone(s?.section_grades?.shipping))}</td>
+
+                      <td className="tabular-nums">{s?.return_window || '—'}</td>
+
+                      <td>{badge(s?.section_grades?.returns || '—', qualityTone(s?.section_grades?.returns))}</td>
+
+                      <td className="truncate">{s?.e_wallets || '—'}</td>
+
+                      <td className="tabular-nums font-medium text-emerald-700">{s?.store_rating || '—'}</td>
+
+                      <td className="tabular-nums">{s?.review_count || '—'}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-3 text-xs text-slate-500">
+            We query <span className="font-mono text-slate-700">google.com/storepages</span> for each domain (per region) via a US‑based serverless API.
+            Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
+          </p>
+        </section>
+      )}
+
+<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
           Compare Google's Ratings for Ecommerce Stores</h1>
         <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
@@ -234,86 +312,53 @@ export default function Page() {
       </section>
 
       {/* Results (hidden until Compare) */}
-      {hasCompared && (
-        <section className="mx-auto max-w-6xl px-6 pb-16">
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <table className="w-full table-fixed text-left">
-              <thead className="bg-slate-50 text-sm text-slate-600">
-                <tr className="[&>th]:px-4 [&>th]:py-3">
-                  <th className="w-[26%]">Store</th>
-                  <th className="w-[9%]">Top Quality Store</th>
-                  <th className="w-[10%]">Delivery time</th>
-                  <th className="w-[13%]">Shipping (quality)</th>
-                  <th className="w-[12%]">Return window</th>
-                  <th className="w-[13%]">Returns (quality)</th>
-                  <th className="w-[12%]">Wallets</th>
-                  <th className="w-[7%]">Rating</th>
-                  <th className="w-[8%]">Reviews</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
-                {rows.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
-                      {loading ? 'Fetching signals…' : 'No results yet.'}
-                    </td>
-                  </tr>
-                )}
-                {rows.map((row, i) => {
-                  const s = row.signals;
-                  return (
-                    <tr key={i} className="[&>td]:px-4 [&>td]:py-4">
-                      <td className="flex items-center gap-3 pr-2">
-                        <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
-                          {s?.logo_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
-                          ) : (
-                            <div className="h-full w-full bg-slate-100" />
-                          )}
-                        </div>
-                        <div className="leading-5">
-                          <div className="font-medium text-slate-900">{row.domain}</div>
-                        </div>
-                      </td>
-
-                      <td>
-                        {s
-                          ? (s.tqs_badge ? badge('Yes', 'green') : badge('No', 'red'))
-                          : row.error
-                          ? badge('Error', 'red')
-                          : badge('—', 'slate')}
-                      </td>
-
-                      <td className="tabular-nums">{s?.delivery_time || '—'}</td>
-
-                      <td>{badge(s?.section_grades?.shipping || '—', qualityTone(s?.section_grades?.shipping))}</td>
-
-                      <td className="tabular-nums">{s?.return_window || '—'}</td>
-
-                      <td>{badge(s?.section_grades?.returns || '—', qualityTone(s?.section_grades?.returns))}</td>
-
-                      <td className="truncate">{s?.e_wallets || '—'}</td>
-
-                      <td className="tabular-nums font-medium text-emerald-700">{s?.store_rating || '—'}</td>
-
-                      <td className="tabular-nums">{s?.review_count || '—'}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          <p className="mt-3 text-xs text-slate-500">
-            We query <span className="font-mono text-slate-700">google.com/storepages</span> for each domain (per region) via a US‑based serverless API.
-            Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
-          </p>
-        </section>
-      )}
+      
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-600">
+      
+      {/* FAQs */}
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
+            <h2 className="text-sm font-medium text-slate-700">FAQs</h2>
+          </div>
+          <div className="divide-y divide-slate-100">
+            <div className="px-5 py-4">
+              <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                From Google’s public <span className="font-mono">storepages</span> surface for each domain and region. We don’t scrape private data or guess values.
+              </p>
+            </div>
+            <div className="px-5 py-4">
+              <h3 className="font-medium text-slate-900">What does “Top Quality Store” mean?</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
+              </p>
+            </div>
+            <div className="px-5 py-4">
+              <h3 className="font-medium text-slate-900">How often are results updated?</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time.
+              </p>
+            </div>
+            <div className="px-5 py-4">
+              <h3 className="font-medium text-slate-900">Why don’t I see all wallets or grades for my store?</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—).
+              </p>
+            </div>
+            <div className="px-5 py-4">
+              <h3 className="font-medium text-slate-900">Can I export the results?</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Not yet, but you can copy/paste the table into a spreadsheet. CSV export is on the roadmap.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+<footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-600">
         <p className="mb-2">
           Vibe coded by{' '}
           <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="font-medium text-slate-900 underline decoration-slate-300 hover:decoration-slate-500">
