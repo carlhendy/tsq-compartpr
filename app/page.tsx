@@ -1,291 +1,226 @@
-// app/page.tsx
-"use client";
+'use client';
 
-import { useCallback, useMemo, useState } from "react";
+import { useState } from 'react';
 
-type SectionGrades = {
-  shipping?: string;
-  returns?: string;
-  payments?: string;
-  pricing?: string;
-  website?: string;
-};
-
-type ApiSignals = {
+type Signals = {
   tqs_badge: boolean;
-  delivery_time?: string;
-  shipping_cost_free?: boolean;
-  return_window?: string;
-  return_cost_free?: boolean;
-  e_wallets?: string;
-  store_rating?: string;
-  review_count?: string;
-  section_grades?: SectionGrades;
+  delivery_time: string;
+  shipping_cost_free: boolean;
+  return_window: string;
+  return_cost_free: boolean;
+  e_wallets: string;
+  store_rating: string;
+  review_count: string;
+  section_grades?: {
+    shipping?: string;
+    returns?: string;
+    pricing?: string;
+    payments?: string;
+    website?: string;
+  };
   logo_url?: string;
 };
 
 type Row = {
-  country: "US" | "GB";
   domain: string;
-  signals: ApiSignals;
+  country: string;
+  signals?: Signals;
+  error?: string;
 };
 
-const COUNTRIES: Array<"US" | "GB"> = ["US", "GB"];
-
-function Pill({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
-      {children}
-    </span>
-  );
-}
-
-function YesNoChip({ yes }: { yes: boolean }) {
-  return (
-    <span
-      className={[
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
-        yes ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800",
-      ].join(" ")}
-    >
-      {yes ? (
-        <>
-          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3.25-3.25a1 1 0 111.414-1.414l2.543 2.543 6.543-6.543a1 1 0 011.414 0z" />
-          </svg>
-          Yes
-        </>
-      ) : (
-        <>
-          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10 8.586l4.95-4.95a1 1 0 111.414 1.414L11.414 10l4.95 4.95a1 1 0 11-1.414 1.414L10 11.414l-4.95 4.95a1 1 0 11-1.414-1.414L8.586 10l-4.95-4.95A1 1 0 115.05 3.636L10 8.586z" />
-          </svg>
-          No
-        </>
-      )}
-    </span>
-  );
-}
-
-function GradeChip({ grade }: { grade?: string }) {
-  if (!grade) return <span>—</span>;
-  const color =
-    grade === "Exceptional"
-      ? "bg-emerald-100 text-emerald-800"
-      : grade === "Great"
-      ? "bg-green-100 text-green-800"
-      : grade === "Good"
-      ? "bg-yellow-100 text-yellow-800"
-      : grade === "Fair"
-      ? "bg-orange-100 text-orange-800"
-      : "bg-rose-100 text-rose-800"; // Poor or unknown
-  return (
-    <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${color}`}>
-      {grade}
-    </span>
-  );
-}
+const DEFAULTS = ['dunelm.com', 'charlesandivy.co.uk', 'wickes.co.uk', 'next.co.uk', ''];
 
 export default function Page() {
-  const [country, setCountry] = useState<"US" | "GB">("GB");
-  const [domains, setDomains] = useState<string[]>(["", "", "", "", ""]);
-  const [rows, setRows] = useState<Row[] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
+  const [domains, setDomains] = useState<string[]>(DEFAULTS);
+  const [country, setCountry] = useState<string>('GB');
+  const [rows, setRows] = useState<Row[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const canCompare = useMemo(
-    () => domains.some((d) => d.trim().length > 0),
-    [domains]
-  );
-
-  const onChangeDomain = (i: number, v: string) => {
+  const updateDomain = (i: number, v: string) => {
     const next = [...domains];
     next[i] = v;
     setDomains(next);
   };
 
-  const fetchSignals = useCallback(async (d: string, c: "US" | "GB") => {
-    const url = `/api/storepage?domain=${encodeURIComponent(d)}&country=${c}`;
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) throw new Error(`API error for ${d}: ${res.status}`);
-    const data = (await res.json()) as { signals: ApiSignals } | { error: string };
-    if ("error" in data) throw new Error(data.error);
-    return data.signals;
-  }, []);
-
-  const onCompare = useCallback(async () => {
-    setErr(null);
+  async function compare() {
     setLoading(true);
-    try {
-      const inputDomains = domains
-        .map((d) => d.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, ""))
-        .filter(Boolean)
-        .slice(0, 5);
-
-      const results = await Promise.all(
-        inputDomains.map(async (d) => {
-          const signals = await fetchSignals(d, country);
-          return { country, domain: d, signals } as Row;
-        })
-      );
-      setRows(results);
-    } catch (e: any) {
-      setErr(e?.message ?? "Something went wrong");
-      setRows(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [domains, country, fetchSignals]);
+    setRows([]);
+    const entries = domains.map(d => d.trim()).filter(Boolean).slice(0, 5);
+    const promises = entries.map(async (d) => {
+      try {
+        const r = await fetch(`/api/storepage?domain=${encodeURIComponent(d)}&country=${country}`);
+        const json = await r.json();
+        if (json.error) {
+          return { domain: d, country, error: json.error } as Row;
+        }
+        return { domain: d, country, signals: json.signals } as Row;
+      } catch (e: any) {
+        return { domain: d, country, error: e.message } as Row;
+      }
+    });
+    const out = await Promise.all(promises);
+    setRows(out);
+    setLoading(false);
+  }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
-      <header className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">Top Quality Store — Scorecard Comparator</h1>
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600">Region</label>
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value as "US" | "GB")}
-            className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm"
-          >
-            {COUNTRIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
-      </header>
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Hero */}
+      <section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          Top Quality Store — Scorecard Comparator
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
+          Paste up to five store domains and see the public signals Google shows on{" "}
+          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>. 
+          Compare shipping, returns, wallets, and ratings side by side.
+        </p>
 
-      <section className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {domains.map((d, i) => (
-          <input
-            key={i}
-            value={d}
-            onChange={(e) => onChangeDomain(i, e.target.value)}
-            placeholder={i === 0 ? "domain.com" : "optional"}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-        ))}
+        {/* Inputs */}
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
+            <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
+              {domains.map((d, i) => (
+                <input
+                  key={i}
+                  value={d}
+                  onChange={(e) => updateDomain(i, e.target.value)}
+                  placeholder="domain.com"
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
+                />
+              ))}
+            </div>
+            <div className="flex items-center gap-2 pt-2 sm:pt-0">
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+              >
+                <option value="US">US</option>
+                <option value="GB">GB</option>
+                <option value="AU">AU</option>
+                <option value="CA">CA</option>
+                <option value="IE">IE</option>
+                <option value="NZ">NZ</option>
+                <option value="DE">DE</option>
+                <option value="FR">FR</option>
+              </select>
+              <button
+                onClick={compare}
+                disabled={loading}
+                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Loading…" : "Compare"}
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <div className="mb-8">
-        <button
-          disabled={!canCompare || loading}
-          onClick={onCompare}
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-        >
-          {loading ? "Comparing..." : "Compare"}
-        </button>
-      </div>
-
-      {err && (
-        <div className="mb-6 rounded-md bg-rose-50 px-4 py-3 text-rose-700">
-          {err}
-        </div>
-      )}
-
-      <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Store</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">TQS</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Delivery time</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Shipping (quality)</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Return window</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Returns (quality)</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Wallets</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Rating</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Reviews</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {(rows ?? []).map((row) => {
-              const s = row.signals ?? {};
-              return (
-                <tr key={`${row.country}-${row.domain}`}>
-                  <td className="px-4 py-4">
-                    <div className="flex items-center gap-3">
-                      {s.logo_url ? (
-                        <img
-                          src={s.logo_url}
-                          alt=""
-                          className="h-9 w-9 rounded-md object-cover"
-                        />
-                      ) : (
-                        <div className="h-9 w-9 rounded-md bg-gray-100" />
-                      )}
-                      <div className="flex flex-col">
-                        <div className="text-sm font-medium text-gray-900">
-                          {row.domain}
-                        </div>
-                        <div className="mt-1">
-                          <Pill>{row.country}</Pill>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <YesNoChip yes={!!s.tqs_badge} />
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <div className="text-sm text-gray-900">
-                      {s.delivery_time || "—"}
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <GradeChip grade={s.section_grades?.shipping} />
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <div className="text-sm text-gray-900">
-                      {s.return_window || "—"}
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <GradeChip grade={s.section_grades?.returns} />
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <div className="max-w-[260px] truncate text-sm text-gray-900">
-                      {s.e_wallets || "—"}
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <div className="text-sm font-medium text-emerald-700">
-                      {s.store_rating || "—"}
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-4">
-                    <div className="text-sm text-gray-900">
-                      {s.review_count || "—"}
-                    </div>
+      {/* Results */}
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <table className="w-full table-fixed text-left">
+            <thead className="bg-slate-50 text-sm text-slate-600">
+              <tr className="[&>th]:px-4 [&>th]:py-3">
+                <th className="w-[26%]">Store</th>
+                <th className="w-[9%]">TQS</th>
+                <th className="w-[10%]">Delivery time</th>
+                <th className="w-[13%]">Shipping (quality)</th>
+                <th className="w-[12%]">Return window</th>
+                <th className="w-[13%]">Returns (quality)</th>
+                <th className="w-[12%]">Wallets</th>
+                <th className="w-[7%]">Rating</th>
+                <th className="w-[8%]">Reviews</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
+              {rows.length === 0 && (
+                <tr>
+                  <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
+                    Enter domains above and click <span className="font-medium text-slate-900">Compare</span>.
                   </td>
                 </tr>
-              );
-            })}
+              )}
+              {rows.map((row, i) => {
+                const s = row.signals;
+                const badge = (label: string, tone: 'green'|'yellow'|'red'|'slate' = 'slate') => {
+                  const toneMap: Record<string, string> = {
+                    green: 'bg-green-50 text-green-700 ring-green-600/20',
+                    yellow: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+                    red: 'bg-rose-50 text-rose-700 ring-rose-600/20',
+                    slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
+                  };
+                  return (
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 ${toneMap[tone]}`}>
+                      {label}
+                    </span>
+                  );
+                };
 
-            {!rows?.length && (
-              <tr>
-                <td colSpan={9} className="px-4 py-16 text-center text-sm text-gray-500">
-                  Enter up to five domains above, pick a region, and click <strong>Compare</strong>.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                const qualityTone = (q?: string) => {
+                  if (!q) return 'slate';
+                  const v = q.toLowerCase();
+                  if (v.includes('exceptional')) return 'green';
+                  if (v.includes('great')) return 'green';
+                  if (v.includes('good')) return 'yellow';
+                  return 'slate';
+                };
+
+                return (
+                  <tr key={i} className="[&>td]:px-4 [&>td]:py-4">
+                    <td className="flex items-center gap-3 pr-2">
+                      <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
+                        {s?.logo_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="h-full w-full bg-slate-100" />
+                        )}
+                      </div>
+                      <div className="leading-5">
+                        <div className="font-medium text-slate-900">{row.domain}</div>
+                      </div>
+                    </td>
+
+                    <td>
+                      {s ? (
+                        s.tqs_badge
+                          ? badge('Yes', 'green')
+                          : badge('No', 'red')
+                      ) : row.error ? badge('Error', 'red') : badge('—', 'slate')}
+                    </td>
+
+                    <td className="tabular-nums">{s?.delivery_time || '—'}</td>
+
+                    <td>{badge(s?.section_grades?.shipping || '—', qualityTone(s?.section_grades?.shipping) as any)}</td>
+
+                    <td className="tabular-nums">{s?.return_window || '—'}</td>
+
+                    <td>{badge(s?.section_grades?.returns || '—', qualityTone(s?.section_grades?.returns) as any)}</td>
+
+                    <td className="truncate">{s?.e_wallets || '—'}</td>
+
+                    <td className="tabular-nums font-medium text-emerald-700">{s?.store_rating || '—'}</td>
+
+                    <td className="tabular-nums">{s?.review_count || '—'}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-3 text-xs text-slate-500">
+          We query <span className="font-mono text-slate-700">google.com/storepages</span> for each domain (per region) via a US-based serverless API.
+          Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
+        </p>
       </section>
 
-      <p className="mt-4 text-xs text-gray-500">
-        We query <code>google.com/storepages</code> for each domain (per region) via a US-based serverless API. Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
-      </p>
+      {/* Footer */}
+      <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-500">
+        Built for quick TQS research. No affiliation with Google.
+      </footer>
     </main>
   );
 }
