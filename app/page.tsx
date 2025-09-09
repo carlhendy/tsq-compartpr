@@ -328,7 +328,32 @@ export default function Page() {
                         <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
                         <td className="text-center tabular-nums">{returnWindow}</td>
                         <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
-                        <td className="text-center truncate">{wallets}</td>
+                        <td className="text-center">
+                          <div className="flex justify-center items-center flex-wrap gap-1.5">
+                            {typeof wallets === 'string' && wallets.includes('Apple Pay') && (
+                              <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px]" title="Apple Pay">Apple</span>
+                            )}
+                            {typeof wallets === 'string' && wallets.includes('Google Pay') && (
+                              <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px]" title="Google Pay">G&nbsp;Pay</span>
+                            )}
+                            {typeof wallets === 'string' && wallets.includes('PayPal') && (
+                              <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px]" title="PayPal">PayPal</span>
+                            )}
+                            {typeof wallets === 'string' && wallets.includes('Klarna') && (
+                              <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px]" title="Klarna">Klarna</span>
+                            )}
+                            {typeof wallets === 'string' && wallets.includes('Afterpay') && (
+                              <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px]" title="Afterpay">Afterpay</span>
+                            )}
+                            {typeof wallets === 'string' && wallets.includes('Alipay') && (
+                              <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px]" title="Alipay">Alipay</span>
+                            )}
+                            {(!wallets || (typeof wallets==='string' && wallets.trim()==='')) && '—'}
+                            {typeof wallets === 'string' && !['Apple Pay','Google Pay','PayPal','Klarna','Afterpay','Alipay'].some(w => wallets.includes(w)) && (
+                              <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px]">{wallets}</span>
+                            )}
+                          </div>
+                        </td>
                         <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
                         <td className="text-center tabular-nums">{reviews}</td>
                       </tr>
