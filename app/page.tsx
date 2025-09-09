@@ -306,14 +306,14 @@ export default function Page() {
               <thead className="bg-slate-50 text-sm text-slate-600">
                 <tr className="[&>th]:px-4 [&>th]:py-3">
                   <th className="w-[26%] text-left">Store</th>
-                  <th className="w-[9%] text-center">Top Quality Store</th>
-                  <th className="w-[10%] text-center">Delivery time</th>
-                  <th className="w-[13%] text-center">Shipping (quality)</th>
-                  <th className="w-[12%] text-center">Return window</th>
-                  <th className="w-[13%] text-center">Returns (quality)</th>
-                  <th className="w-[12%] text-center">Wallets</th>
-                  <th className="w-[7%] text-center">Rating</th>
-                  <th className="w-[8%] text-center">Reviews</th>
+                  <th className="w-[9%]">Top Quality Store</th>
+                  <th className="w-[10%]">Delivery time</th>
+                  <th className="w-[13%]">Shipping (quality)</th>
+                  <th className="w-[12%]">Return window</th>
+                  <th className="w-[13%]">Returns (quality)</th>
+                  <th className="w-[12%]">Wallets</th>
+                  <th className="w-[7%]">Rating</th>
+                  <th className="w-[8%]">Reviews</th>
                 </tr>
               </thead>
 
