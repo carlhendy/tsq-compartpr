@@ -223,23 +223,7 @@ export default function Page() {
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            {/* Actions */}
-            <div className="flex items-center justify-end gap-2 px-4 py-2">
-              <button
-                onClick={copyResults}
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
-                aria-label="Copy table results"
-                title="Copy table results"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M6 2.75A1.75 1.75 0 0 1 7.75 1h6.5C15.216 1 16 1.784 16 2.75v6.5A1.75 1.75 0 0 1 14.25 11h-6.5A1.75 1.75 0 0 1 12 9.25v-6.5Z" />
-                  <path d="M3.75 5A1.75 1.75 0 0 0 2 6.75v8.5C2 16.216 2.784 17 3.75 17h8.5A1.75 1.75 0 0 0 14 15.25V14H7.75A1.75 1.75 0 0 1 6 12.25V6H3.75Z" />
-                </svg>
-                {copied ? 'Copied' : 'Copy results'}
-              </button>
-            </div>
-
-            {/* Single table with horizontal scroll on mobile */}
+            {/* Table inside horizontal scroll container */}
             <div className="overflow-x-auto">
               <table className="min-w-[980px] w-full table-fixed text-left">
                 <thead className="bg-slate-50 text-sm text-slate-600">
@@ -296,7 +280,7 @@ export default function Page() {
                                 title="Open source URL"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                                  <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
+                                  <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A.75.75 0 0 1 3.75 17h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
                                 </svg>
                               </a>
                             </div>
@@ -341,19 +325,35 @@ export default function Page() {
               </table>
             </div>
           </div>
+
+          {/* Copy button moved OUTSIDE the table card, centered & green */}
+          <div className="pt-4 flex justify-center">
+            <button
+              onClick={copyResults}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:translate-y-px"
+              aria-label="Copy table results"
+              title="Copy table results"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M6 2.75A1.75 1.75 0 0 1 7.75 1h6.5C15.216 1 16 1.784 16 2.75v6.5A1.75 1.75 0 0 1 14.25 11h-6.5A1.75 1.75 0 0 1 12 9.25v-6.5Z" />
+                <path d="M3.75 5A1.75 1.75 0 0 0 2 6.75v8.5C2 16.216 2.784 17 3.75 17h8.5A1.75 1.75 0 0 0 14 15.25V14H7.75A1.75 1.75 0 0 1 6 12.25V6H3.75Z" />
+              </svg>
+              {copied ? 'Copied!' : 'Copy Results'}
+            </button>
+          </div>
         </section>
       )}
 
       {/* Explainer table */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
+        {/* Header moved OUTSIDE of the table and centered */}
+        <h2 className="text-center text-lg font-semibold text-slate-800 mb-3">How Google might interpret these signals</h2>
+
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
-            <h2 className="text-sm font-medium text-slate-700">How Google might interpret these signals</h2>
-          </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-sm text-slate-600">
-                <tr className="[&>th]:px-4 [&>th]:py-3 text-left">
+                <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left">
                   <th className="w-[20%] text-left">Signal</th>
                   <th className="w-[26%] text-left">What it means</th>
                   <th className="w-[27%] text-left">How it’s measured</th>
@@ -362,7 +362,7 @@ export default function Page() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-top [&>td]:px-4 [&>td]:py-3">
+                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3">
                     <td className="font-medium text-slate-900">{r.m}</td>
                     <td className="text-slate-700">{r.w}</td>
                     <td className="text-slate-600">{r.t}</td>
