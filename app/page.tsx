@@ -20,6 +20,75 @@ function renderWalletPills(input?: string | string[]) {
         .map((s) => s.trim())
         .filter(Boolean);
 
+  const MAX = 8; // show up to 8, then "+N"
+  const visible = names.slice(0, MAX);
+  const hiddenCount = Math.max(0, names.length - visible.length);
+
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
+      {visible.map((name) => {
+        const c = WALLET_COLORS[name.toLowerCase()] || { bg: '#e2e8f0', text: '#0f172a' }; // fallback
+        return (
+          <span
+            key={name}
+            style={{
+              backgroundColor: c.bg,
+              color: c.text,
+              borderRadius: '9999px',
+              padding: '4px 10px',        // smaller pill
+              fontSize: '0.75rem',        // smaller text
+              fontWeight: 600,
+              lineHeight: 1,
+              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+              border: '1px solid rgba(0,0,0,0.06)',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {name}
+          </span>
+        );
+      })}
+      {hiddenCount > 0 && (
+        <span
+          style={{
+            backgroundColor: '#e2e8f0',
+            color: '#0f172a',
+            borderRadius: '9999px',
+            padding: '4px 10px',
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            lineHeight: 1,
+            border: '1px solid rgba(0,0,0,0.06)',
+            whiteSpace: 'nowrap',
+          }}
+          title={names.slice(MAX).join(', ')}
+        >
+          +{hiddenCount}
+        </span>
+      )}
+    </div>
+  );
+}
+
+
+// --- Wallet pills renderer (no dependencies) ---
+const WALLET_COLORS: Record<string, { bg: string; text: string }> = {
+  'paypal':     { bg: '#003087', text: '#ffffff' },
+  'apple pay':  { bg: '#000000', text: '#ffffff' },
+  'google pay': { bg: '#4285F4', text: '#ffffff' },
+  'shop pay':   { bg: '#5a31f4', text: '#ffffff' },
+  'afterpay':   { bg: '#b2ffe5', text: '#0f172a' },
+  'klarna':     { bg: '#ffb3c7', text: '#0f172a' },
+};
+
+function renderWalletPills(input?: string | string[]) {
+  const names = Array.isArray(input)
+    ? input
+    : (input || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
       {names.map((name) => {
