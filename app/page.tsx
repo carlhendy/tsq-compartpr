@@ -295,11 +295,6 @@ const updateDomain = (i: number, v: string) => {
               </tbody>
             </table>
           </div>
-
-          <p className="mt-3 text-xs text-slate-500 max-w-3xl mx-auto px-4">
-            We query <span className="font-mono text-slate-700">google.com/storepages</span> for each domain (per region) via a US‑based serverless API.
-            Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
-          </p>
         </section>
       )}
 
@@ -359,6 +354,14 @@ const updateDomain = (i: number, v: string) => {
             <h2 className="text-sm font-medium text-slate-700">FAQs</h2>
           </div>
           <div className="divide-y divide-slate-100">
+              <div className="px-5 py-4">
+                <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
+                <p className="mt-1 text-sm text-slate-600">
+                  We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. 
+                  Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
+                </p>
+              </div>
+
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
               <p className="mt-1 text-sm text-slate-600">
