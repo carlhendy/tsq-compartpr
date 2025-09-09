@@ -294,7 +294,8 @@ export default function Page() {
 
 
 
-{/* Explainer table */}
+
+      {/* Explainer table */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
@@ -304,26 +305,21 @@ export default function Page() {
             <table className="w-full text-left text-sm">
               
               <thead className="bg-slate-50 text-sm text-slate-600">
-                <tr className="[&>th]:px-4 [&>th]:py-3">
-                  <th className="w-[26%] text-left">Store</th>
-                  <th className="w-[9%]">Top Quality Store</th>
-                  <th className="w-[10%]">Delivery time</th>
-                  <th className="w-[13%]">Shipping (quality)</th>
-                  <th className="w-[12%]">Return window</th>
-                  <th className="w-[13%]">Returns (quality)</th>
-                  <th className="w-[12%]">Wallets</th>
-                  <th className="w-[7%]">Rating</th>
-                  <th className="w-[8%]">Reviews</th>
+                <tr className="[&>th]:px-4 [&>th]:py-3 text-left">
+                  <th className="w-[20%] text-left">Signal</th>
+                  <th className="w-[26%] text-left">What it means</th>
+                  <th className="w-[27%] text-left">How it’s measured</th>
+                  <th className="w-[27%] text-left">Quick wins</th>
                 </tr>
               </thead>
-
+    
               <tbody className="divide-y divide-slate-100">
                 {EXPLAINER.map((r, idx) => (
                   <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-top [&>td]:px-4 [&>td]:py-3">
-                    <td className="text-center font-medium text-slate-900">{r.m}</td>
-                    <td className="text-center text-slate-700">{r.w}</td>
-                    <td className="text-center text-slate-600">{r.t}</td>
-                    <td className="text-center text-slate-600">{r.q}</td>
+                    <td className="font-medium text-slate-900">{r.m}</td>
+                    <td className="text-slate-700">{r.w}</td>
+                    <td className="text-slate-600">{r.t}</td>
+                    <td className="text-slate-600">{r.q}</td>
                   </tr>
                 ))}
               </tbody>
@@ -331,6 +327,7 @@ export default function Page() {
           </div>
         </div>
       </section>
+
 
       {/* Results (hidden until Compare) */}{/* Footer */}
       
