@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { SiApplepay, SiGooglepay, SiPaypal, SiKlarna, SiAfterpay, SiAlipay } from 'react-icons/si';
 
 /** ---------- Types ---------- */
 type Signals = {
@@ -69,16 +70,47 @@ export default function Page() {
   const [domains, setDomains] = useState<string[]>(DEFAULTS);
   const [country, setCountry] = useState<string>('GB');
   const [rows, setRows] = useState<Row[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [hasCompared, setHasCompared] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
-  // Auto-fetch on first load to show enticing sample data
+  // Load cached rows for selected country on first render
   useEffect(() => {
-    // fire and forget; compare() already sets loading/rows/hasCompared
-    compare();
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(`storepages_cache_${country}`) : null;
+      if (raw) {
+        const cached = JSON.parse(raw);
+        if (Array.isArray(cached)) {
+          setRows(cached);
+      try { if (typeof window !== 'undefined') localStorage.setItem(`storepages_cache_${country}`, JSON.stringify(cached)); } catch {}
+      setHasCompared(true);
+        }
+      }
+    } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // When country changes, try hydrate from cache for that country
+  useEffect(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(`storepages_cache_${country}`) : null;
+      if (raw) {
+        const cached = JSON.parse(raw);
+        if (Array.isArray(cached)) {
+          setRows(cached);
+      try { if (typeof window !== 'undefined') localStorage.setItem(`storepages_cache_${country}`, JSON.stringify(cached)); } catch {}
+      setHasCompared(true);
+          setLoading(false);
+          return;
+        }
+      }
+      // if no cache for this country, keep table hidden until user compares
+      setHasCompared(false);
+      setRows([]);
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country]);
+
 
 
   const updateDomain = (i: number, v: string) => {
