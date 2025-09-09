@@ -28,7 +28,7 @@ type Row = {
   error?: string;
 };
 
-const DEFAULTS = ['dunelm.com', 'charlesandivy.co.uk', 'wickes.co.uk', 'next.co.uk', ''];
+const DEFAULTS = ['asos.com', 'boohoo.com', 'next.co.uk', 'riverisland.com', 'newlook.com'];
 
 export default function Page() {
   const [domains, setDomains] = useState<string[]>(DEFAULTS);
@@ -208,19 +208,21 @@ export default function Page() {
         <section className="mx-auto max-w-6xl px-6 pb-16">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <table className="w-full table-fixed text-left">
+              
               <thead className="bg-slate-50 text-sm text-slate-600">
                 <tr className="[&>th]:px-4 [&>th]:py-3">
-                  <th className="w-[26%]">Store</th>
-                  <th className="w-[9%]">Top Quality Store</th>
-                  <th className="w-[10%]">Delivery time</th>
-                  <th className="w-[13%]">Shipping (quality)</th>
-                  <th className="w-[12%]">Return window</th>
-                  <th className="w-[13%]">Returns (quality)</th>
-                  <th className="w-[12%]">Wallets</th>
-                  <th className="w-[7%]">Rating</th>
-                  <th className="w-[8%]">Reviews</th>
+                  <th className="w-[26%] text-left">Store</th>
+                  <th className="w-[9%] text-center">Top Quality Store</th>
+                  <th className="w-[10%] text-center">Delivery time</th>
+                  <th className="w-[13%] text-center">Shipping (quality)</th>
+                  <th className="w-[12%] text-center">Return window</th>
+                  <th className="w-[13%] text-center">Returns (quality)</th>
+                  <th className="w-[12%] text-center">Wallets</th>
+                  <th className="w-[7%] text-center">Rating</th>
+                  <th className="w-[8%] text-center">Reviews</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
                 {rows.length === 0 && (
                   <tr>
@@ -247,7 +249,7 @@ export default function Page() {
                         </div>
                       </td>
 
-                      <td>
+                      <td className="text-center">
                         {s
                           ? (s.tqs_badge ? badge('Yes', 'green') : badge('No', 'red'))
                           : row.error
@@ -255,19 +257,17 @@ export default function Page() {
                           : badge('—', 'slate')}
                       </td>
 
-                      <td className="tabular-nums">{s?.delivery_time || '—'}</td>
+                      <td className="text-center tabular-nums">{s?.delivery_time || '—'}</td>
+                      <td className="text-center">{badge(s?.section_grades?.shipping || '—', qualityTone(s?.section_grades?.shipping))}</td>
 
-                      <td>{badge(s?.section_grades?.shipping || '—', qualityTone(s?.section_grades?.shipping))}</td>
+                      <td className="text-center tabular-nums">{s?.return_window || '—'}</td>
+                      <td className="text-center">{badge(s?.section_grades?.returns || '—', qualityTone(s?.section_grades?.returns))}</td>
 
-                      <td className="tabular-nums">{s?.return_window || '—'}</td>
+                      <td className="text-center truncate">{s?.e_wallets || '—'}</td>
 
-                      <td>{badge(s?.section_grades?.returns || '—', qualityTone(s?.section_grades?.returns))}</td>
+                      <td className="text-center tabular-nums font-medium text-emerald-700">{s?.store_rating || '—'}</td>
 
-                      <td className="truncate">{s?.e_wallets || '—'}</td>
-
-                      <td className="tabular-nums font-medium text-emerald-700">{s?.store_rating || '—'}</td>
-
-                      <td className="tabular-nums">{s?.review_count || '—'}</td>
+                      <td className="text-center tabular-nums">{s?.review_count || '—'}</td>
                     </tr>
                   );
                 })}
@@ -302,21 +302,28 @@ export default function Page() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-white/60 text-slate-500">
+              
+              <thead className="bg-slate-50 text-sm text-slate-600">
                 <tr className="[&>th]:px-4 [&>th]:py-3">
-                  <th className="w-[18%]">Metric</th>
-                  <th className="w-[28%]">What it means</th>
-                  <th className="w-[34%]">Typical signals / inputs</th>
-                  <th className="w-[20%]">Quick improvement ideas</th>
+                  <th className="w-[26%] text-left">Store</th>
+                  <th className="w-[9%] text-center">Top Quality Store</th>
+                  <th className="w-[10%] text-center">Delivery time</th>
+                  <th className="w-[13%] text-center">Shipping (quality)</th>
+                  <th className="w-[12%] text-center">Return window</th>
+                  <th className="w-[13%] text-center">Returns (quality)</th>
+                  <th className="w-[12%] text-center">Wallets</th>
+                  <th className="w-[7%] text-center">Rating</th>
+                  <th className="w-[8%] text-center">Reviews</th>
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-slate-100">
                 {EXPLAINER.map((r, idx) => (
                   <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-top [&>td]:px-4 [&>td]:py-3">
-                    <td className="font-medium text-slate-900">{r.m}</td>
-                    <td className="text-slate-700">{r.w}</td>
-                    <td className="text-slate-600">{r.t}</td>
-                    <td className="text-slate-600">{r.q}</td>
+                    <td className="text-center font-medium text-slate-900">{r.m}</td>
+                    <td className="text-center text-slate-700">{r.w}</td>
+                    <td className="text-center text-slate-600">{r.t}</td>
+                    <td className="text-center text-slate-600">{r.q}</td>
                   </tr>
                 ))}
               </tbody>
