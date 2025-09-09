@@ -3,20 +3,25 @@
 
 
 // --- Competitive Pricing renderer ---
+// WORD-ONLY renderer: styles the given word as a soft pill (no numeric handling).
 function renderCompetitivePricing(v: any) {
-  if (v === undefined || v === null || String(v).trim() === '') return <span className="text-slate-400">–</span>;
+  if (v === undefined || v === null || String(v).trim() === '') {
+    return <span className="text-slate-400">–</span>;
+  }
   const raw = String(v).trim();
-  const word = raw.replace(/[^a-zA-Z\s-]/g, '').toLowerCase();
+  const low = raw.toLowerCase();
 
+  // Buckets
   const GREEN = ['exceptional','excellent','great','good','strong','competitive'];
   const AMBER = ['fair','average','ok','okay','neutral'];
   const RED   = ['poor','weak','uncompetitive','bad'];
 
   let tone: 'green'|'amber'|'red' = 'green';
-  if (AMBER.some(k => word.includes(k))) tone = 'amber';
-  else if (RED.some(k => word.includes(k))) tone = 'red';
-  else if (!GREEN.some(k => word.includes(k))) tone = 'amber';
+  if (AMBER.some(k => low.includes(k))) tone = 'amber';
+  else if (RED.some(k => low.includes(k))) tone = 'red';
+  else if (!GREEN.some(k => low.includes(k))) tone = 'amber'; // unknown -> neutral
 
+  // Capitalize nicely (keep original if already capitalized)
   const label = raw[0]?.toUpperCase() + raw.slice(1);
 
   const styles = {
@@ -41,74 +46,6 @@ function renderCompetitivePricing(v: any) {
     >
       {label}
     </span>
-  );
-}
-
-
-
-// --- Wallet pills renderer (no dependencies) ---
-const WALLET_COLORS: Record<string, { bg: string; text: string }> = {
-  'paypal':     { bg: '#003087', text: '#ffffff' },
-  'apple pay':  { bg: '#000000', text: '#ffffff' },
-  'google pay': { bg: '#4285F4', text: '#ffffff' },
-  'gpay':       { bg: '#4285F4', text: '#ffffff' },
-  'shop pay':   { bg: '#5a31f4', text: '#ffffff' },
-  'shoppay':    { bg: '#5a31f4', text: '#ffffff' },
-  'afterpay':   { bg: '#b2ffe5', text: '#0f172a' },
-  'klarna':     { bg: '#ffb3c7', text: '#0f172a' },
-};
-
-function normalise(name: string) {
-  const n = name.toLowerCase().replace(/\s+/g, ' ').trim();
-  if (n === 'g pay' || n === 'googlepay') return 'google pay';
-  if (n.startsWith('shop') && n.includes('pay')) return 'shop pay';
-  return n;
-}
-
-function renderWalletPills(input?: string | string[]) {
-  let names: string[] = [];
-  if (Array.isArray(input)) {
-    names = input;
-  } else {
-    const raw = (input || '').trim();
-    try {
-      const arr = JSON.parse(raw);
-      if (Array.isArray(arr)) names = arr.map(String);
-      else names = raw.split(/(?:\s*&\s*|\s+and\s+|[,;|/•·]+)/i);
-    } catch {
-      names = raw.split(/(?:\s*&\s*|\s+and\s+|[,;|/•·]+)/i);
-    }
-  }
-
-  const cleaned = Array.from(new Set(names.map((s) => s.replace(/^\[|\]|"|\'|\s+$/g, '').trim()).filter(Boolean)));
-
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
-      {cleaned.map((name) => {
-        const key = normalise(name);
-        const c = WALLET_COLORS[key] || { bg: '#e2e8f0', text: '#0f172a' };
-        return (
-          <span
-            key={name}
-            style={{
-              backgroundColor: c.bg,
-              color: c.text,
-              borderRadius: '9999px',
-              padding: '4px 10px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              lineHeight: 1,
-              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
-              border: '1px solid rgba(0,0,0,0.06)',
-              whiteSpace: 'nowrap',
-            }}
-            title={name}
-          >
-            {name}
-          </span>
-        );
-      })}
-    </div>
   );
 }
 
@@ -359,16 +296,9 @@ export default function Page() {
                     const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
                     const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
                     const competitivePricing = getAny(s, [
-                      'Competitive pricing',
-                      'competitive pricing',
-                      'competitive_pricing',
-                      'price_competitiveness',
-                      'pricing_competitiveness',
-                      'competitivePricing',
-                      'priceCompetitive',
-                      'pricingCompetitive',
-                      'comp_pricing',
-                      'pricing_comp'
+                      'Competitive pricing',      // exact Google Store Pages label
+                      'Competitive Pricing',
+                      'competitive pricing'
                     ]);
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
@@ -415,7 +345,7 @@ export default function Page() {
                         <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
                         <td className="text-center tabular-nums">{returnWindow}</td>
                         <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
-                        <td className="text-center truncate">{renderWalletPills(wallets)}</td>
+                        <td className="text-center truncate">{wallets}</td>
                         <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
                         <td className="text-center tabular-nums">{reviews}</td>
                       </tr>
