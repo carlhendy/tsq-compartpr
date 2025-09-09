@@ -149,7 +149,7 @@ export default function Page() {
     </p>
 
         {/* Inputs */}
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur bg-blue-50 rounded-2xl ring-1 ring-slate-200">
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur bg-blue-100 p-6 rounded-2xl rounded-2xl ring-1 ring-slate-200">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
             <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
               {domains.map((d, i) => (
@@ -372,11 +372,11 @@ export default function Page() {
 <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-600">
         <p className="mb-2">
           Vibe coded by{' '}
-          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="font-medium text-slate-900 underline decoration-slate-300 hover:decoration-slate-500">
+          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
             Carl Hendy
           </a>{' '}
           — founder of{' '}
-          <a href="https://audits.com" target="_blank" rel="noreferrer" className="font-medium text-slate-900 underline decoration-slate-300 hover:decoration-slate-500">
+          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
             Audits.com
           </a>.
         </p>
