@@ -215,8 +215,8 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
                 />
               ))}
             </div>
-            <div className="flex flex-wrap items-center gap-2 pt-2 sm:pt-0">             <label htmlFor="country" className="text-sm font-medium text-slate-700">Select Country:</label>
-              <select id="country"
+            <div className="flex flex-col items-center gap-3 pt-2">             <label htmlFor="country" className="text-sm font-medium text-slate-700">Select Country:</label>
+              <div className="flex items-center justify-center gap-2"><select id="country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 className="rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
@@ -392,7 +392,7 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
-            <h2 className="text-center text-xl font-semibold text-slate-800 mt-10 mb-4">How Google might interpret these signals</h2>
+            <h2 className="mx-auto mb-4 mt-10 inline-block rounded-md bg-green-100/70 px-3 py-1 text-center text-xl font-semibold text-slate-800">How Google might interpret these signals</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
