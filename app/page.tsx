@@ -42,10 +42,31 @@ export default function Page() {
   const copyResults = async () => {
     try {
       const headers = ["Store","Top Quality Store","Delivery time","Shipping (quality)","Return window","Returns (quality)","Wallets","Rating","Reviews"];
-      const lines = [headers.join("\t")];
+      const lines: string[] = [headers.join("\t")];
       for (const row of rows) {
         const s = row.signals || {};
         const values = [
+          row.domain || "—",
+          s.tqs_badge ? "Yes" : (row.error ? "Error" : "—"),
+          s.delivery_time || "—",
+          (s.section_grades?.shipping) || "—",
+          s.return_window || "—",
+          (s.section_grades?.returns) || "—",
+          s.e_wallets || "—",
+          s.store_rating ?? "—",
+          s.review_count ?? "—",
+        ];
+        lines.push(values.join("\t"));
+      }
+      const text = lines.join("\n");
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1400);
+    } catch (e) {
+      console.error("Copy failed", e);
+    }
+  };
+const values = [
           row.domain || "—",
           s.tqs_badge ? "Yes" : (row.error ? "Error" : "—"),
           s.delivery_time || "—",
