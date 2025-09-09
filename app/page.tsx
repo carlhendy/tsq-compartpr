@@ -347,7 +347,10 @@ export default function Page() {
       {/* Explainer table */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         {/* Header moved OUTSIDE of the table and centered */}
-        <h2 className="text-center text-lg font-semibold text-slate-800 mb-3">How Google might interpret these signals</h2>
+       
+        <h2 className="mt-6 text-xl font-medium text-slate-700 text-center inline-block mx-auto bg-green-100/70 px-3 py-1 rounded-md">
+          How Google Might Interpret These Signals?
+        </h2>
 
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
