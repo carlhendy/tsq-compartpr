@@ -171,12 +171,13 @@ export default function Page() {
             </div>
 
             {/* Country + Compare (mobile-centered, stacked) */}
-            <div className="flex w-full sm:w-auto flex-col gap-2 sm:flex-row sm:gap-2 sm:pt-0 pt-2 items-stretch sm:items-center">
-              <label className="text-xs text-slate-600 font-medium mb-1 text-center sm:sr-only sm:text-left">Country/Region</label>
+            <div className="flex w-full flex-col items-center gap-2 pt-2 sm:flex-row sm:justify-center sm:items-center sm:gap-3 sm:pt-0">
+              <p className="text-xs text-slate-600 text-center -mt-1 mb-1 sm:mb-0">Select a country and tap Compare</p>
+              <label className="sr-only">Country/Region</label>
               <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="h-10 rounded-lg border border-slate-200 bg-white px-2.5 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 w-full sm:w-auto max-w-xs mx-auto sm:max-w-none sm:mx-0"
+                className="h-10 w-full sm:w-64 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 aria-label="Region"
               >
                 <option value="US">US</option>
@@ -192,7 +193,7 @@ export default function Page() {
               <button
                 onClick={compare}
                 disabled={loading}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm w-full sm:w-auto max-w-xs mx-auto sm:max-w-none sm:mx-0 bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-10 w-full sm:w-64 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
