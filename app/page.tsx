@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SiApplepay, SiGooglepay, SiPaypal, SiKlarna, SiAfterpay, SiAlipay } from 'react-icons/si';
+import { SiApplepay, SiGooglepay, SiPaypal, SiKlarna, SiAlipay } from 'react-icons/si';
 
 /** ---------- Types ---------- */
 type Signals = {
