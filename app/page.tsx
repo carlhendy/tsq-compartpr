@@ -198,8 +198,8 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
         <h1 className="bg-yellow-100/70 font-bold inline-block px-3 py-1 rounded-md sm:text-5xl text-4xl text-slate-900 tracking-tight">Compare Google Store Ratings</h1>
-            <h2 className="bg-green-100/70 font-medium inline-block mt-3 px-3 py-1 rounded-md text-center text-slate-700 text-xl">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 text-center">👉 Compare up to five store websites and review the signals displayed by Google on google.com/storepages.</p>
+            <h2 className="mt-6 text-xl font-medium text-slate-700 text-center inline-block mx-auto bg-green-100/70 px-3 py-1 rounded-md">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 text-center">👉 Compare up to five store websites and choose a country. We’ll compare what Google shows on google.com/storepages.</p>
 
         {/* Inputs */}
         <div className="backdrop-blur bg-blue-100 bg-blue-50 bg-sky-50 border border-slate-200 mt-8 p-4 p-6 ring-1 ring-slate-200 rounded-2xl rounded-xl shadow-sm">
@@ -215,8 +215,8 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
                 />
               ))}
             </div>
-            <div className="flex items-center gap-2 pt-2 sm:pt-0">
-              <select
+            <div className="flex flex-wrap items-center gap-2 pt-2 sm:pt-0">\n              <label htmlFor="country" className="text-sm font-medium text-slate-700">Select Country:</label>
+              <select id="country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 className="rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
@@ -234,7 +234,7 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
               <button
                 onClick={compare}
                 disabled={loading}
-                className="bg-emerald-600 bg-slate-900 disabled:cursor-not-allowed disabled:opacity-60 font-medium gap-2 hover:bg-emerald-700 hover:bg-slate-800 inline-flex items-center px-4 py-2 rounded-xl shadow-sm text-sm text-white"
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
@@ -249,6 +249,16 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
                 Compare
               </button>
             </div>
+              <div className="px-5 py-4">
+                <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
+                <p className="mt-1 text-sm text-slate-600">
+                  We query google.com/storepages for each domain and selected region via a US‑based serverless API.
+                  We only display Google’s public indicators shown on the Store page (e.g., quality grades like
+                  Exceptional/Great/Good, delivery time, returns, supported wallets). Values can change at any time
+                  based on what Google publicly shows.
+                </p>
+              </div>
+    
           </div>
         </div>
       </section>
@@ -390,7 +400,7 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
-            <h2 className="text-sm font-medium text-slate-700">How Google might interpret these signals</h2>
+            <h2 className="text-center text-xl font-semibold text-slate-800 mt-10 mb-4">How Google might interpret these signals</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
@@ -404,9 +414,9 @@ const WalletChips: React.FC<{ value?: string }> = ({ value }) => {
                 </tr>
               </thead>
     
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 align-middle">
                 {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-top [&>td]:px-4 [&>td]:py-3">
+                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3">
                     <td className="font-medium text-slate-900">{r.m}</td>
                     <td className="text-slate-700">{r.w}</td>
                     <td className="text-slate-600">{r.t}</td>
