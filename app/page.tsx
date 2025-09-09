@@ -206,7 +206,7 @@ export default function Page() {
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
-            <h2 className="text-sm font-medium text-slate-700">How we interpret these signals</h2>
+            <h2 className="text-sm font-medium text-slate-700">How Google might interpret these signals</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
