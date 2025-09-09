@@ -53,7 +53,7 @@ const badge = (label: string | number, tone: 'green'|'yellow'|'red'|'slate' = 's
     slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
   };
   return (
-    <span className={\`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 \${toneMap[tone]}\`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 ${toneMap[tone]}`}>
       {label}
     </span>
   );
@@ -61,7 +61,7 @@ const badge = (label: string | number, tone: 'green'|'yellow'|'red'|'slate' = 's
 
 const validationUrl = (domain: string, country: string) => {
   const c = (country || 'US').toUpperCase();
-  return \`https://www.google.com/storepages?q=\${encodeURIComponent(domain)}&c=\${c}&v=19\`;
+  return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
 };
 
 /** ---------- Page ---------- */
@@ -86,7 +86,7 @@ export default function Page() {
     const entries = domains.map((d) => d.trim()).filter(Boolean).slice(0, 5);
     const promises = entries.map(async (d) => {
       try {
-        const r = await fetch(\`/api/storepage?domain=\${encodeURIComponent(d)}&country=\${country}\`);
+        const r = await fetch(`/api/storepage?domain=${encodeURIComponent(d)}&country=${country}`);
         const json = await r.json();
         if (json?.error) return { domain: d, country, error: String(json.error) } as Row;
         const payload = json?.signals ?? json?.data ?? json?.payload ?? json;
