@@ -37,6 +37,11 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
 
+  const validationUrl = (domain: string, country: string) => {
+    const q = encodeURIComponent(`${domain} site:google.com/storepages`);
+    return `https://www.google.com/search?q=${q}`;
+  };
+
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
     next[i] = v;
