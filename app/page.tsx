@@ -90,7 +90,7 @@ export default function Page() {
 
   const EXPLAINER = [
     {
-      m: 'TQS',
+      m: 'Top Quality Store',
       w: 'Overall trust/quality score combining key commerce signals.',
       t: 'Composite of shipping, returns, ratings/reviews, payments, policy clarity, etc.',
       q: 'Make policies easy to find, keep promises on shipping/returns, increase review volume/quality.',
@@ -241,7 +241,7 @@ export default function Page() {
               <thead className="bg-slate-50 text-sm text-slate-600">
                 <tr className="[&>th]:px-4 [&>th]:py-3">
                   <th className="w-[26%]">Store</th>
-                  <th className="w-[9%]">TQS</th>
+                  <th className="w-[9%]">Top Quality Store</th>
                   <th className="w-[10%]">Delivery time</th>
                   <th className="w-[13%]">Shipping (quality)</th>
                   <th className="w-[12%]">Return window</th>
