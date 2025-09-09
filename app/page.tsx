@@ -147,15 +147,16 @@ const updateDomain = (i: number, v: string) => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center relative">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">Compare Google Store Ratings</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl inline-block bg-yellow-100 px-4 py-1 rounded-md text-center inline-block mx-auto bg-yellow-100/70 px-3 py-1 rounded-md">Compare Google Store Ratings</h1>
             <h2 className="mt-6 text-xl font-medium text-slate-700 text-center inline-block mx-auto bg-green-100/70 px-3 py-1 rounded-md">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
             {/* subtle guidance arrow pointing to first input */}
 {/* Inputs */}
         <div className="mt-8 rounded-2xl border border-slate-200 bg-sky-50 p-4 shadow-sm backdrop-blur bg-blue-100 p-6 rounded-2xl rounded-2xl ring-1 ring-slate-200 bg-blue-50 rounded-xl p-4">
-            <p className="mb-3 text-sm text-slate-600 text-center">
+            <p className="mb-6 text-sm text-slate-600 text-center">
               👉 Compare up to five store websites and review the signals displayed by Google on
               <span className="whitespace-nowrap"> <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.</span>
             </p>
+            <div className="h-2"></div>
         
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
             <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
@@ -295,7 +296,7 @@ const updateDomain = (i: number, v: string) => {
             </table>
           </div>
 
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="mt-3 text-xs text-slate-500 max-w-3xl mx-auto px-4">
             We query <span className="font-mono text-slate-700">google.com/storepages</span> for each domain (per region) via a US‑based serverless API.
             Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
           </p>
