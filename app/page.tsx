@@ -153,8 +153,8 @@ export default function Page() {
       <section className="mx-auto max-w-6xl px-6 pb-8">
         <div className="rounded-2xl border border-slate-200 bg-blue-50/70 p-6 shadow-sm backdrop-blur">
           <p className="mb-5 text-sm text-slate-700 text-center">
-            👉 Paste up to five store domains and choose a country. We’ll compare what Google shows on{' '}
-            <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.
+            👉 Compare up to five store websites and choose a country. We’ll compare what Google shows on{' '}
+            google.com/storepages.
           </p>
 
           {/* Domains row */}
