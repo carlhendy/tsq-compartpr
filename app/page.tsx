@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SiApplepay, SiGooglepay, SiPaypal, SiKlarna, SiAlipay } from 'react-icons/si';
-
 /** ---------- Types ---------- */
 type Signals = {
   tqs_badge?: boolean;
@@ -71,7 +69,7 @@ export default function Page() {
   const [country, setCountry] = useState<string>('GB');
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasCompared, setHasCompared] = useState<boolean>(false);
+  const [hasCompared, setHasCompared] = useState<boolean>(true);
   const [copied, setCopied] = useState<boolean>(false);
 
   // Load cached rows for selected country on first render
