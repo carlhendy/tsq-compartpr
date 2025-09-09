@@ -2,6 +2,11 @@
 
 import { useState } from 'react';
 
+export const metadata = {
+  title: 'Compare Google Store Ratings - Bulk Upload',
+  description: 'Benchmark Ecommerce Stores by Google’s Public Quality Signals. Free Bulk Upload.'
+};
+
 type Signals = {
   tqs_badge: boolean;
   delivery_time: string;
@@ -36,6 +41,7 @@ export default function Page() {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
+  const [copied, setCopied] = useState(false);
 
   const validationUrl = (domain: string, country: string) => {
     const c = (country || 'US').toUpperCase();
@@ -77,7 +83,36 @@ const updateDomain = (i: number, v: string) => {
       red: 'bg-rose-50 text-rose-700 ring-rose-600/20',
       slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
     };
-    return (
+    
+  const copyResults = async () => {
+    try {
+      const headers = ["Store","Top Quality Store","Delivery time","Shipping (quality)","Return window","Returns (quality)","Wallets","Rating","Reviews"];
+      const lines = [headers.join("\t")];
+      for (const row of rows) {
+        const s = row.signals || {};
+        const values = [
+          row.domain || "—",
+          s.tqs_badge ? "Yes" : (row.error ? "Error" : "—"),
+          s.delivery_time || "—",
+          (s.section_grades?.shipping) || "—",
+          s.return_window || "—",
+          (s.section_grades?.returns) || "—",
+          s.e_wallets || "—",
+          s.store_rating ?? "—",
+          s.review_count ?? "—",
+        ];
+        lines.push(values.join("\t"));
+      }
+      const text = lines.join("\n");
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1400);
+    } catch (e) {
+      console.error("Copy failed", e);
+    }
+  };
+
+  return (
       <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs ring-1 ${toneMap[tone]}`}>
         {label}
       </span>
@@ -215,6 +250,21 @@ const updateDomain = (i: number, v: string) => {
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-16">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="flex items-center justify-end gap-2 px-4 py-2">
+                <button
+                  onClick={copyResults}
+                  className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+                  aria-label="Copy table results"
+                  title="Copy table results"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M6 2.75A1.75 1.75 0 0 1 7.75 1h6.5C15.216 1 16 1.784 16 2.75v6.5A1.75 1.75 0 0 1 14.25 11h-6.5A1.75 1.75 0 0 1 6 9.25v-6.5Z" />
+                    <path d="M3.75 5A1.75 1.75 0 0 0 2 6.75v8.5C2 16.216 2.784 17 3.75 17h8.5A1.75 1.75 0 0 0 14 15.25V14H7.75A1.75 1.75 0 0 1 6 12.25V6H3.75Z" />
+                  </svg>
+                  {copied ? 'Copied' : 'Copy results'}
+                </button>
+              </div>
+
             <table className="w-full table-fixed text-left">
               
               <thead className="bg-slate-50 text-sm text-slate-600">
@@ -394,7 +444,9 @@ const updateDomain = (i: number, v: string) => {
             </div>
           </div>
         </div>
-      </section>
+      
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Where do these signals come from?", "acceptedAnswer": {"@type": "Answer", "text": "From Google’s public storepages surface for each domain and region. We don’t scrape private data or guess values."}}, {"@type": "Question", "name": "What does “Top Quality Store” mean?", "acceptedAnswer": {"@type": "Answer", "text": "It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)."}}, {"@type": "Question", "name": "How often are results updated?", "acceptedAnswer": {"@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time."}}, {"@type": "Question", "name": "Why don’t I see all wallets or grades for my store?", "acceptedAnswer": {"@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—)."}}, {"@type": "Question", "name": "Can I export the results?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet, but you can copy/paste the table into a spreadsheet. CSV export is on the roadmap."}}, {"@type": "Question", "name": "How do we collect and display the quality signals for store websites from google.com/storepages?", "acceptedAnswer": {"@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page."}}]}</script>
+</section>
 
 
 <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-600">
