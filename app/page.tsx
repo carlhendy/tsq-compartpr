@@ -225,7 +225,7 @@ export default function Page() {
           </div>
         </div>
       </section>
-/* Results */}
+/* Results */
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
