@@ -148,23 +148,15 @@ const updateDomain = (i: number, v: string) => {
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero */}<section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center relative">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">Compare Google Store Ratings</h1>
-            <h2 className="mt-3 text-xl font-medium text-slate-700 text-center">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 text-center">👉 Compare up to five store websites and review the signals displayed by Google on google.com/storepages.</p>
+            <h2 className="mt-6 text-xl font-medium text-slate-700 text-center inline-block mx-auto bg-green-100/70 px-3 py-1 rounded-md">Benchmark Ecommerce Stores by Google’s Public Quality Signals</h2>
             {/* subtle guidance arrow pointing to first input */}
-            <svg
-              aria-hidden="true"
-              className="absolute left-[6%] -bottom-5 hidden md:block text-red-500 drop-shadow-sm"
-              width="120"
-              height="56"
-              viewBox="0 0 120 56"
-            >
-              <path d="M6 6 C 40 10, 70 24, 104 30" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-              <polyline points="95,22 110,32 98,40" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-
-
-        {/* Inputs */}
+{/* Inputs */}
         <div className="mt-8 rounded-2xl border border-slate-200 bg-sky-50 p-4 shadow-sm backdrop-blur bg-blue-100 p-6 rounded-2xl rounded-2xl ring-1 ring-slate-200 bg-blue-50 rounded-xl p-4">
+            <p className="mb-3 text-sm text-slate-600 text-center">
+              👉 Compare up to five store websites and review the signals displayed by Google on
+              <span className="whitespace-nowrap"> <code className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700">google.com/storepages</code>.</span>
+            </p>
+        
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
             <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-5">
               {domains.map((d, i) => (
