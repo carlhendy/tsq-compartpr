@@ -1,55 +1,54 @@
 'use client';
 
+import { useState } from 'react';
 
 
-// --- Competitive Pricing renderer ---
-// WORD-ONLY renderer: styles the given word as a soft pill (no numeric handling).
-function renderCompetitivePricing(v: any) {
-  if (v === undefined || v === null || String(v).trim() === '') {
-    return <span className="text-slate-400">–</span>;
-  }
-  const raw = String(v).trim();
-  const low = raw.toLowerCase();
+// --- Wallet pills renderer (no dependencies) ---
+const WALLET_COLORS: Record<string, { bg: string; text: string }> = {
+  'paypal':     { bg: '#003087', text: '#ffffff' },
+  'apple pay':  { bg: '#000000', text: '#ffffff' },
+  'google pay': { bg: '#4285F4', text: '#ffffff' },
+  'shop pay':   { bg: '#5a31f4', text: '#ffffff' },
+  'afterpay':   { bg: '#b2ffe5', text: '#0f172a' },
+  'klarna':     { bg: '#ffb3c7', text: '#0f172a' },
+};
 
-  // Buckets
-  const GREEN = ['exceptional','excellent','great','good','strong','competitive'];
-  const AMBER = ['fair','average','ok','okay','neutral'];
-  const RED   = ['poor','weak','uncompetitive','bad'];
-
-  let tone: 'green'|'amber'|'red' = 'green';
-  if (AMBER.some(k => low.includes(k))) tone = 'amber';
-  else if (RED.some(k => low.includes(k))) tone = 'red';
-  else if (!GREEN.some(k => low.includes(k))) tone = 'amber'; // unknown -> neutral
-
-  // Capitalize nicely (keep original if already capitalized)
-  const label = raw[0]?.toUpperCase() + raw.slice(1);
-
-  const styles = {
-    green:  { bg: '#ecfdf5', border: '#bbf7d0', text: '#166534' },
-    amber:  { bg: '#fff7ed', border: '#fed7aa', text: '#92400e' },
-    red:    { bg: '#fef2f2', border: '#fecaca', text: '#991b1b' },
-  }[tone];
+function renderWalletPills(input?: string | string[]) {
+  const names = Array.isArray(input)
+    ? input
+    : (input || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
 
   return (
-    <span
-      style={{
-        backgroundColor: styles.bg,
-        color: styles.text,
-        borderRadius: '9999px',
-        padding: '6px 14px',
-        fontSize: '0.875rem',
-        fontWeight: 600,
-        lineHeight: 1,
-        border: `1px solid ${styles.border}`,
-        display: 'inline-block'
-      }}
-    >
-      {label}
-    </span>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
+      {names.map((name) => {
+        const c = WALLET_COLORS[name.toLowerCase()] || { bg: '#e2e8f0', text: '#0f172a' };
+        return (
+          <span
+            key={name}
+            style={{
+              backgroundColor: c.bg,
+              color: c.text,
+              borderRadius: '9999px',
+              padding: '4px 10px',   // smaller pill
+              fontSize: '0.75rem',   // smaller text
+              fontWeight: 600,
+              lineHeight: 1,
+              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+              border: '1px solid rgba(0,0,0,0.06)',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {name}
+          </span>
+        );
+      })}
+    </div>
   );
 }
 
-import { useState } from 'react';
 
 /** ---------- Types ---------- */
 type Signals = {
@@ -274,7 +273,6 @@ export default function Page() {
                     <th className="w-[12%] text-center">Return window</th>
                     <th className="w-[13%] text-center">Returns (quality)</th>
                     <th className="w-[12%] text-center">Wallets</th>
-                    <th className="w-[10%] text-center">Competitive Pricing</th>
                     <th className="w-[7%] text-center">Rating</th>
                     <th className="w-[8%] text-center">Reviews</th>
                   </tr>
@@ -295,11 +293,6 @@ export default function Page() {
                     const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
                     const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
                     const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
-                    const competitivePricing = getAny(s, [
-                      'Competitive pricing',      // exact Google Store Pages label
-                      'Competitive Pricing',
-                      'competitive pricing'
-                    ]);
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
 
@@ -345,7 +338,7 @@ export default function Page() {
                         <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
                         <td className="text-center tabular-nums">{returnWindow}</td>
                         <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
-                        <td className="text-center truncate">{wallets}</td>
+                        <td className="text-center">{renderWalletPills(wallets)}</td>
                         <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
                         <td className="text-center tabular-nums">{reviews}</td>
                       </tr>
