@@ -165,17 +165,18 @@ export default function Page() {
                   value={d}
                   onChange={(e) => updateDomain(i, e.target.value)}
                   placeholder="domain.com"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
+                  className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
                 />
               ))}
             </div>
 
             {/* Country + Compare (mobile-centered, stacked) */}
             <div className="flex w-full sm:w-auto flex-col gap-2 sm:flex-row sm:gap-2 sm:pt-0 pt-2 items-stretch sm:items-center">
+              <label className="text-xs text-slate-600 font-medium mb-1 text-center sm:sr-only sm:text-left">Country/Region</label>
               <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 w-full sm:w-auto max-w-xs mx-auto sm:max-w-none sm:mx-0"
+                className="h-10 rounded-lg border border-slate-200 bg-white px-2.5 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200 w-full sm:w-auto max-w-xs mx-auto sm:max-w-none sm:mx-0"
                 aria-label="Region"
               >
                 <option value="US">US</option>
@@ -191,7 +192,7 @@ export default function Page() {
               <button
                 onClick={compare}
                 disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-sm w-full sm:w-auto max-w-xs mx-auto sm:max-w-none sm:mx-0 bg-emerald-600 sm:bg-slate-900 hover:bg-emerald-700 sm:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm w-full sm:w-auto max-w-xs mx-auto sm:max-w-none sm:mx-0 bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
