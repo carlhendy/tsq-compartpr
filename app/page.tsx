@@ -1,3 +1,4 @@
+'use client';
 
 
 // --- Wallet pills renderer (no dependencies) ---
@@ -71,8 +72,6 @@ function renderWalletPills(input?: string | string[]) {
     </div>
   );
 }
-
-'use client';
 
 import { useState } from 'react';
 
