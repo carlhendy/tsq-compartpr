@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 /** ---------- Types ---------- */
 type Signals = {
@@ -69,9 +69,17 @@ export default function Page() {
   const [domains, setDomains] = useState<string[]>(DEFAULTS);
   const [country, setCountry] = useState<string>('GB');
   const [rows, setRows] = useState<Row[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [hasCompared, setHasCompared] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasCompared, setHasCompared] = useState<boolean>(true);
   const [copied, setCopied] = useState<boolean>(false);
+
+  // Auto-fetch on first load to show enticing sample data
+  useEffect(() => {
+    // fire and forget; compare() already sets loading/rows/hasCompared
+    compare();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
