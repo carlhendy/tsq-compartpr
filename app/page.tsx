@@ -1,79 +1,55 @@
 'use client';
 
+import { useState } from 'react';
 
-// --- Wallet pills renderer (no dependencies) ---
-const WALLET_COLORS: Record<string, { bg: string; text: string }> = {
-  'paypal':     { bg: '#003087', text: '#ffffff' },
-  'apple pay':  { bg: '#000000', text: '#ffffff' },
-  'google pay': { bg: '#4285F4', text: '#ffffff' },
-  'gpay':       { bg: '#4285F4', text: '#ffffff' },
-  'shop pay':   { bg: '#5a31f4', text: '#ffffff' },
-  'shoppay':    { bg: '#5a31f4', text: '#ffffff' },
-  'afterpay':   { bg: '#b2ffe5', text: '#0f172a' },
-  'klarna':     { bg: '#ffb3c7', text: '#0f172a' },
-};
 
-function normalise(name: string) {
-  const n = name.toLowerCase().replace(/\s+/g, ' ').trim();
-  if (n === 'g pay' || n === 'googlepay') return 'google pay';
-  if (n === 'shop pay' || n === 'shop-pay' || n === 'shop pay™' || n === 'shop-pay™') return 'shop pay';
-  return n;
-}
+// --- Competitive Pricing renderer ---
+function renderCompetitivePricing(v: any) {
+  if (v === undefined || v === null || v === '') return <span className="text-slate-400">–</span>;
 
-function renderWalletPills(input?: string | string[]) {
-  let names: string[] = [];
-  if (Array.isArray(input)) {
-    names = input;
-  } else {
-    const raw = (input || '').trim();
-    try {
-      const arr = JSON.parse(raw);
-      if (Array.isArray(arr)) names = arr.map(String);
-      else names = raw.split(/(?:\s*&\s*|\s+and\s+|[,;|/•·]+)/i);
-    } catch {
-      names = raw.split(/(?:\s*&\s*|\s+and\s+|[,;|/•·]+)/i);
-    }
+  const raw = String(v).trim();
+
+  // Try to parse numbers / percents
+  const pctMatch = raw.match(/(-?\d+(?:\.\d+)?)\s*%?/);
+  let asPct: number | null = null;
+  if (pctMatch) {
+    const n = parseFloat(pctMatch[1]);
+    // If looks like 0-1, scale; if >1 assume already percent
+    asPct = n <= 1 ? n * 100 : n;
   }
 
-  const cleaned = Array.from(
-    new Set(
-      names
-        .map((s) => s.replace(/^\[|\]|"|\'|\s+$/g, '').trim())
-        .filter(Boolean)
-    )
+  // Categorical badges (case-insensitive)
+  const cat = raw.toLowerCase();
+  const badge = (txt: string, color: 'green'|'amber'|'red'|'slate'='slate') => (
+    <span
+      style={
+        borderRadius: '9999px',
+        padding: '2px 8px',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        whiteSpace: 'nowrap',
+        backgroundColor: color==='green' ? '#dcfce7' : color==='amber' ? '#fef3c7' : color==='red' ? '#fee2e2' : '#e2e8f0',
+        color: color==='green' ? '#065f46' : color==='amber' ? '#92400e' : color==='red' ? '#991b1b' : '#0f172a',
+        border: '1px solid rgba(0,0,0,0.06)'
+      }
+    >{txt}</span>
   );
 
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center' }}>
-      {cleaned.map((name) => {
-        const key = normalise(name);
-        const c = WALLET_COLORS[key] || { bg: '#e2e8f0', text: '#0f172a' };
-        return (
-          <span
-            key={name}
-            style={{
-              backgroundColor: c.bg,
-              color: c.text,
-              borderRadius: '9999px',
-              padding: '4px 10px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              lineHeight: 1,
-              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
-              border: '1px solid rgba(0,0,0,0.06)',
-              whiteSpace: 'nowrap',
-            }}
-            title={name}
-          >
-            {name}
-          </span>
-        );
-      })}
-    </div>
-  );
+  if (['good','strong','competitive','better'].some(k => cat.includes(k))) return badge(raw, 'green');
+  if (['average','ok','neutral'].some(k => cat.includes(k))) return badge(raw, 'amber');
+  if (['poor','weak','uncompetitive','worse'].some(k => cat.includes(k))) return badge(raw, 'red');
+
+  if (asPct !== null && !isNaN(asPct)) {
+    const txt = asPct.toFixed(0) + '%';
+    // Colour thresholds: >=0 good, -5..0 amber, < -5 red (interpreting relative price advantage)
+    const c = asPct >= 0 ? 'green' : (asPct >= -5 ? 'amber' : 'red');
+    return badge(txt, c as any);
+  }
+
+  // Default: raw
+  return <span>{raw}</span>;
 }
 
-import { useState } from 'react';
 
 /** ---------- Types ---------- */
 type Signals = {
@@ -298,6 +274,7 @@ export default function Page() {
                     <th className="w-[12%] text-center">Return window</th>
                     <th className="w-[13%] text-center">Returns (quality)</th>
                     <th className="w-[12%] text-center">Wallets</th>
+                    <th className="w-[8%] text-center">Competitive Pricing</th>
                     <th className="w-[7%] text-center">Rating</th>
                     <th className="w-[8%] text-center">Reviews</th>
                   </tr>
@@ -318,12 +295,22 @@ export default function Page() {
                     const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
                     const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
                     const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
+                    const competitivePricing = getAny(s, [
+                      'competitive_pricing',
+                      'price_competitiveness',
+                      'pricing_competitiveness',
+                      'competitivePricing',
+                      'priceCompetitive',
+                      'pricingCompetitive',
+                      'comp_pricing',
+                      'pricing_comp'
+                    ]);
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
 
                     return (
                       <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
-                        <td className="flex items-center gap-3 pr-2 align-middle">
+                        <td className="flex items-center gap-3 pr-2">
                           <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
@@ -363,7 +350,7 @@ export default function Page() {
                         <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
                         <td className="text-center tabular-nums">{returnWindow}</td>
                         <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
-                        <td className="text-center">{renderWalletPills(wallets)}</td>
+                        <td className="text-center truncate">{wallets}</td>
                         <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
                         <td className="text-center tabular-nums">{reviews}</td>
                       </tr>
