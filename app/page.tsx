@@ -243,7 +243,7 @@ export default function Page() {
 
   const copyResults = async () => {
     try {
-      const headers = ['Medal','Rank','Store','TSQ Score','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Trust Score'];
+      const headers = ['Medal','Store','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
       const lines: string[] = [headers.join('\t')];
       for (let i = 0; i < sortedRows.length; i++) {
         const row = sortedRows[i];
@@ -254,24 +254,22 @@ export default function Page() {
         const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
         const pricingGrade = getAny(s, ['section_grades.pricing','pricing_quality','pricingGrade']);
         const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
-        const tsqScore = s ? computeTsqScore(s) : 0;
-        const trustScore = getAny(s, ['scamadviser_score']);
+        const rating = getAny(s, ['store_rating','rating','storeRating']);
+        const reviews = getAny(s, ['review_count','reviews','reviewCount']);
         
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '—';
-        const rank = i + 1;
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
         
         const values = [
           medal,
-          rank,
           row.domain || '—',
-          tsqScore,
           row.error ? 'Error' : (s?.tqs_badge === true ? 'Yes' : s?.tqs_badge === false ? 'No' : '—'),
           delivery ? `${shipGrade} (${delivery})` : shipGrade,
           returnWindow ? `${returnsGrade} (${returnWindow})` : returnsGrade,
           pricingGrade,
           websiteGrade,
           getAny(s, ['e_wallets','wallets','payment_wallets']),
-          trustScore,
+          String(rating),
+          String(reviews),
         ];
         lines.push(values.join('\t'));
       }
@@ -374,16 +372,16 @@ export default function Page() {
               <table className="min-w-[1000px] w-full table-fixed text-left">
                 <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
                   <tr className="[&>th]:px-4 [&>th]:py-3">
-                    <th className="w-[6%] text-center">Medal</th>
-                    <th className="w-[6%] text-center">Rank</th>
-                    <th className="w-[18%] text-left">Store</th>
-                    <th className="w-[8%] text-center">TSQ Score</th>
+                    <th className="w-[6%] text-center"></th>
+                    <th className="w-[20%] text-left">Store</th>
                     <th className="w-[8%] text-center">Top Quality Store</th>
                     <th className="w-[12%] text-center">Shipping (quality)</th>
                     <th className="w-[12%] text-center">Returns (quality)</th>
                     <th className="w-[10%] text-center">Competitive pricing</th>
                     <th className="w-[10%] text-center">Website quality</th>
                     <th className="w-[10%] text-center">Wallets</th>
+                    <th className="w-[6%] text-center">Rating</th>
+                    <th className="w-[6%] text-center">Reviews</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
@@ -407,17 +405,12 @@ export default function Page() {
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
 
-                    const tsqScore = s ? computeTsqScore(s) : 0;
-                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '—';
-                    const rank = i + 1;
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
                       <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
                         <td className="text-center text-lg" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
-                        </td>
-                        <td className="text-center tabular-nums font-medium text-slate-700">
-                          {rank}
                         </td>
                         <td className="flex items-center gap-3 pr-2">
                           <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
@@ -444,9 +437,6 @@ export default function Page() {
                               </a>
                             </div>
                           </div>
-                        </td>
-                        <td className="text-center tabular-nums font-bold text-lg text-slate-800">
-                          {tsqScore}
                         </td>
                         <td className="text-center">
                           {row.error
@@ -480,6 +470,8 @@ export default function Page() {
                         <td className="text-center">{badge(pricingGrade, qualityTone(pricingGrade))}</td>
                         <td className="text-center">{badge(websiteGrade, qualityTone(websiteGrade))}</td>
                         <td className="text-center">{renderWalletPills(wallets)}</td>
+                        <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
+                        <td className="text-center tabular-nums">{reviews}</td>
                       </tr>
                     );
                   })}
