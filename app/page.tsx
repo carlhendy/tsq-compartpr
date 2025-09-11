@@ -437,7 +437,7 @@ export default function Page() {
       <section className="bg-black">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Compare Google Store Ratings
+            Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-14 w-auto mx-2" /> Store Ratings
           </h1>
           <h2 className="mt-6 text-xl font-medium text-white">
             Benchmark Ecommerce Stores by Google's Public Quality Signals
@@ -684,7 +684,7 @@ export default function Page() {
       )}
 
       {/* Quick Start Section */}
-      <section className="mx-auto max-w-6xl px-6 pb-8 mt-4">
+      <section className="mx-auto max-w-6xl px-6 pb-8 mt-2">
         <div className="bg-white p-6">
           <div className="text-center mb-6">
           </div>
