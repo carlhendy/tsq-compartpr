@@ -438,7 +438,7 @@ export default function Page() {
         <h1 className="text-4xl font-bold tracking-tight text-black sm:text-5xl">
           Compare Google Store Ratings
         </h1>
-        <h2 className="mt-6 text-xl font-medium text-gray-600">
+        <h2 className="mt-6 text-xl font-medium text-white bg-black px-3 py-1">
           Benchmark Ecommerce Stores by Google's Public Quality Signals
         </h2>
       </section>
@@ -509,7 +509,7 @@ export default function Page() {
       {/* Results */}
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
-          <div className="border border-gray-200 bg-white">
+          <div className="border border-black bg-white">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
                 <thead className="text-sm text-white bg-black">
@@ -694,7 +694,7 @@ export default function Page() {
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-black border border-black text-sm font-medium text-white hover:bg-gray-800 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-sm font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
@@ -713,7 +713,7 @@ export default function Page() {
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-black border border-black text-sm font-medium text-white hover:bg-gray-800 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-sm font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
@@ -732,7 +732,7 @@ export default function Page() {
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-black border border-black text-sm font-medium text-white hover:bg-gray-800 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-sm font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
@@ -747,15 +747,15 @@ export default function Page() {
       {/* Explainer */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
+          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-white bg-black px-3 py-1">
             How Google Might Interpret These Signals?
           </h2>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="border border-black bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-sm text-slate-600">
+              <thead className="bg-black text-sm text-white">
                 <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left">
                   <th className="w-[20%] text-left">Signal</th>
                   <th className="w-[26%] text-left">What it means</th>
@@ -781,12 +781,12 @@ export default function Page() {
       {/* TSQ Scoring Explanation */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
+          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-white bg-black px-3 py-1">
             How Are These Scores Calculated?
           </h2>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="border border-black bg-white">
           <div className="px-6 py-8">
             <p className="text-slate-700 mb-4 text-sm">
               These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
@@ -870,13 +870,13 @@ export default function Page() {
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
+          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-white bg-black px-3 py-1">
             Frequently Asked Questions
           </h2>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="divide-y divide-slate-100">
+        <div className="border border-black bg-white">
+          <div className="divide-y divide-gray-200">
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
               <p className="mt-1 text-sm text-slate-600">
@@ -974,11 +974,11 @@ export default function Page() {
       <footer className="border-t border-slate-200 bg-white/90 py-10 px-4 sm:px-6 text-center text-sm text-slate-600">
         <p className="mb-2">
           Vibe coded by{' '}
-          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
+          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-black text-white px-2 py-1 no-underline font-normal">
             Carl Hendy
           </a>{' '}
         founder of{' '}
-          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
+          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-black text-white px-2 py-1 no-underline font-normal">
             Audits.com
           </a>.
         </p>
