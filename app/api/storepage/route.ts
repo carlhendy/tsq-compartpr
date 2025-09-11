@@ -71,6 +71,12 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       "i"
     );
     
+    // Pattern 4b: Alternative pattern for Payment options
+    const re4b = new RegExp(
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<span class="KtbsVc-ij8cu-fmcmS">\\s*([^<]*?)\\s*<\/span>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
+      "i"
+    );
+    
     // Pattern 5: Simple text-based fallback
     const re5 = new RegExp(
       `${headerPattern}[\\s\\S]*?([^\\n]*?)[\\s\\S]*?(Exceptional|Great|Good|Fair|Poor)`,
@@ -81,6 +87,32 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     // <div class="hnGZye">Competitive pricing</div>...<span class="rMOWke-uDEFge hnGZye">Great</span>
     const re6 = new RegExp(
       `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 7: More specific pattern for competitive pricing and website quality
+    // Based on the actual HTML structure: <div class="hnGZye">Competitive pricing</div>...<span class="rMOWke-uDEFge hnGZye">Good</span>
+    const re7 = new RegExp(
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 8: Even more flexible pattern for competitive pricing and website quality
+    const re8 = new RegExp(
+      `${headerPattern}[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 9: Very specific pattern for competitive pricing and website quality
+    // Based on the exact HTML structure from the user's example
+    const re9 = new RegExp(
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 10: Fallback pattern that looks for the header followed by any grade
+    const re10 = new RegExp(
+      `${headerPattern}[\\s\\S]*?(Exceptional|Great|Good|Fair|Poor)`,
       "i"
     );
     
@@ -95,10 +127,25 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       m = segment.match(re4);
     }
     if (!m) {
+      m = segment.match(re4b);
+    }
+    if (!m) {
       m = segment.match(re5);
     }
     if (!m) {
       m = segment.match(re6);
+    }
+    if (!m) {
+      m = segment.match(re7);
+    }
+    if (!m) {
+      m = segment.match(re8);
+    }
+    if (!m) {
+      m = segment.match(re9);
+    }
+    if (!m) {
+      m = segment.match(re10);
     }
     
     return {
@@ -106,6 +153,12 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       grade: m && m[2] ? stripTags(m[2]) : ""
     };
   }
+
+  // Debug: Log the segment we're working with
+  console.log(`Working with segment length: ${segment.length}`);
+  console.log(`Segment contains 'Competitive pricing': ${segment.includes('Competitive pricing')}`);
+  console.log(`Segment contains 'Website quality': ${segment.includes('Website quality')}`);
+  console.log(`Segment contains 'Payment options': ${segment.includes('Payment options')}`);
 
   // Extract shipping data
   const shippingData = extractInsightData(segment, "Shipping");
@@ -121,6 +174,9 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const paymentsData = extractInsightData(segment, "Payment options");
   const paymentsRaw = paymentsData.description;
   const paymentsGrade = paymentsData.grade;
+  
+  // Debug: Log what we're getting for payment options
+  console.log(`Payment options - description: "${paymentsData.description}", grade: "${paymentsData.grade}"`);
 
   // Extract website quality data
   const websiteData = extractInsightData(segment, "Website quality");
