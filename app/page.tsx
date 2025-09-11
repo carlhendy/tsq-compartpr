@@ -370,8 +370,8 @@ export default function Page() {
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-xs text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
-                  <tr className="[&>th]:px-2 [&>th]:py-4">
+                <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
+                  <tr className="[&>th]:px-2 [&>th]:py-4 [&>th]:align-middle">
                     <th className="w-[4%] text-center"></th>
                     <th className="w-[18%] text-left">Store</th>
                     <th className="w-[6%] text-center">Top Quality Store</th>
@@ -384,7 +384,7 @@ export default function Page() {
                     <th className="w-[7%] text-center">Reviews</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-xs text-slate-800">
+                <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
                   {sortedRows.length === 0 && (
                     <tr>
                       <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
@@ -408,12 +408,12 @@ export default function Page() {
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
-                      <tr key={i} className="[&>td]:px-2 [&>td]:py-4 hover:bg-slate-50 transition-colors">
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-4 [&>td]:align-middle hover:bg-slate-50 transition-colors">
                         <td className="text-center text-lg" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
                         <td className="flex items-center gap-2 pr-1">
-                          <div className="h-8 w-8 overflow-hidden rounded-lg ring-1 ring-slate-200 bg-white">
+                          <div className="h-10 w-10 overflow-hidden rounded-lg ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
@@ -421,8 +421,8 @@ export default function Page() {
                               <div className="h-full w-full bg-slate-100" />
                             )}
                           </div>
-                          <div className="leading-4">
-                            <div className="font-medium text-slate-900 text-sm flex items-center gap-1">
+                          <div className="leading-5">
+                            <div className="font-medium text-slate-900 text-base flex items-center gap-1">
                               {row.domain}
                               <a
                                 href={validationUrl(row.domain, row.country)}
@@ -451,7 +451,7 @@ export default function Page() {
                           <div className="flex flex-col items-center gap-1">
                             {badge(shipGrade, qualityTone(shipGrade))}
                             {delivery && (
-                              <div className="text-[10px] text-slate-500 tabular-nums">
+                              <div className="text-xs text-slate-500 tabular-nums">
                                 {delivery}
                               </div>
                             )}
@@ -461,7 +461,7 @@ export default function Page() {
                           <div className="flex flex-col items-center gap-1">
                             {badge(returnsGrade, qualityTone(returnsGrade))}
                             {returnWindow && (
-                              <div className="text-[10px] text-slate-500 tabular-nums">
+                              <div className="text-xs text-slate-500 tabular-nums">
                                 {returnWindow}
                               </div>
                             )}
