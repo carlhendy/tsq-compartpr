@@ -97,8 +97,8 @@ const getFaviconUrlWithFallback = (domain: string) => {
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
   }
   if (domain === 'tractorsupply.com') {
-    // Try with www prefix for Tractor Supply
-    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
+    // Try DuckDuckGo first for Tractor Supply as Google might not have it
+    return `https://icons.duckduckgo.com/ip3/www.${domain}.ico`;
   }
   if (domain === 'bhphotovideo.com') {
     // Try with www prefix for B&H
@@ -114,7 +114,8 @@ const getResultsFaviconUrl = (domain: string) => {
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
   }
   if (domain === 'tractorsupply.com') {
-    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
+    // Try DuckDuckGo first for Tractor Supply as Google might not have it
+    return `https://icons.duckduckgo.com/ip3/www.${domain}.ico`;
   }
   if (domain === 'bhphotovideo.com') {
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
@@ -584,19 +585,19 @@ export default function Page() {
                                 onError={(e) => {
                                   const img = e.target as HTMLImageElement;
                                   // Try alternative favicon services with different approaches
-                                  if (img.src.includes('google.com/s2/favicons')) {
+                                  if (img.src.includes('duckduckgo.com')) {
+                                    // Try favicon.io service
+                                    img.src = `https://favicons.githubusercontent.com/${row.domain}`;
+                                  } else if (img.src.includes('favicons.githubusercontent.com')) {
+                                    // Try direct favicon from website
+                                    img.src = `https://${row.domain}/favicon.ico`;
+                                  } else if (img.src.includes('google.com/s2/favicons')) {
                                     // Try DuckDuckGo with different domain format
                                     if (row.domain === 'tractorsupply.com' || row.domain === 'bhphotovideo.com') {
                                       img.src = `https://icons.duckduckgo.com/ip3/www.${row.domain}.ico`;
                                     } else {
                                       img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
                                     }
-                                  } else if (img.src.includes('duckduckgo.com')) {
-                                    // Try favicon.io service
-                                    img.src = `https://favicons.githubusercontent.com/${row.domain}`;
-                                  } else if (img.src.includes('favicons.githubusercontent.com')) {
-                                    // Try direct favicon from website
-                                    img.src = `https://${row.domain}/favicon.ico`;
                                   } else {
                                     // Try one more Google service attempt with different parameters
                                     img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64&t=2`;
