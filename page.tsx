@@ -277,14 +277,14 @@ export default function Page() {
                 <thead className="bg-slate-50 text-sm text-slate-600">
                   <tr className="[&>th]:px-4 [&>th]:py-3">
                     <th className="w-[20%] text-left">Store</th>
-                    <th className="w-[10%] text-center">Top Quality Store</th>
-                    <th className="w-[10%] text-center">Shipping (quality)</th>
-                    <th className="w-[10%] text-center">Returns (quality)</th>
+                    <th className="w-[8%] text-center">Top Quality Store</th>
+                    <th className="w-[12%] text-center">Shipping (quality)</th>
+                    <th className="w-[12%] text-center">Returns (quality)</th>
                     <th className="w-[10%] text-center">Competitive pricing</th>
                     <th className="w-[10%] text-center">Website quality</th>
-                    <th className="w-[10%] text-center">Wallets</th>
-                    <th className="w-[10%] text-center">Rating</th>
-                    <th className="w-[10%] text-center">Reviews</th>
+                    <th className="w-[12%] text-center">Wallets</th>
+                    <th className="w-[8%] text-center">Rating</th>
+                    <th className="w-[8%] text-center">Reviews</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
