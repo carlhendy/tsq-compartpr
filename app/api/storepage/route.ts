@@ -28,209 +28,79 @@ function win(s: string, i: number, radius: number) { const a = Math.max(0, i - r
 function extractStructuredInsights(html: string, scopeHint?: { start: number; end: number }) {
   const segment = scopeHint ? html.slice(scopeHint.start, scopeHint.end) : html;
 
-  // Extract data from the structured insights section based on the actual HTML structure
-  function extractInsightData(seg: string, headerPattern: string) {
-    // Look for the pattern: header text followed by description and grade
-    // Based on the actual HTML structure from Google Store pages
-    
-    // First, try to find the Store Insights section
-    const storeInsightsMatch = seg.match(/Store Insights[\s\S]*?(?=Other ratings|$)/i);
-    if (!storeInsightsMatch) {
-      // If no Store Insights section found, search the entire segment
-      return extractFromSegment(seg, headerPattern);
-    }
-    
-    const insightsSection = storeInsightsMatch[0];
-    return extractFromSegment(insightsSection, headerPattern);
-  }
-  
-  function extractFromSegment(segment: string, headerPattern: string) {
-    // More flexible patterns to handle variations in HTML structure
-    
-    // Pattern 1: Match with description - more flexible spacing
-    const re1 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<div class="KtbsVc-ij8cu-fmcmS">\\s*([^<]*?)\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
+  function afterHeader(seg: string, headerPattern: string) {
+    const re = new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<(?:(?:div)|(?:span))[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|span)>`,
       "i"
     );
-    
-    // Pattern 2: Match without description - more flexible spacing
-    const re2 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 3: Match with span description instead of div
-    const re3 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<span class="KtbsVc-ij8cu-fmcmS">\\s*([^<]*?)\\s*<\/span>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 4: Match Payment options with complex nested structure
-    const re4 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<span class="KtbsVc-ij8cu-fmcmS">[\\s\\S]*?<span[^>]*jsname="aWXQDc"[^>]*>\\s*([^<]*?)\\s*<\/span>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 4b: Alternative pattern for Payment options
-    const re4b = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<span class="KtbsVc-ij8cu-fmcmS">\\s*([^<]*?)\\s*<\/span>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 5: Simple text-based fallback
-    const re5 = new RegExp(
-      `${headerPattern}[\\s\\S]*?([^\\n]*?)[\\s\\S]*?(Exceptional|Great|Good|Fair|Poor)`,
-      "i"
-    );
-    
-    // Pattern 6: Specific pattern for fields without descriptions (like Competitive pricing, Website quality)
-    // <div class="hnGZye">Competitive pricing</div>...<span class="rMOWke-uDEFge hnGZye">Great</span>
-    const re6 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 7: More specific pattern for competitive pricing and website quality
-    // Based on the actual HTML structure: <div class="hnGZye">Competitive pricing</div>...<span class="rMOWke-uDEFge hnGZye">Good</span>
-    const re7 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 8: Even more flexible pattern for competitive pricing and website quality
-    const re8 = new RegExp(
-      `${headerPattern}[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 9: Very specific pattern for competitive pricing and website quality
-    // Based on the exact HTML structure from the user's example
-    const re9 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 10: Fallback pattern that looks for the header followed by any grade
-    const re10 = new RegExp(
-      `${headerPattern}[\\s\\S]*?(Exceptional|Great|Good|Fair|Poor)`,
-      "i"
-    );
-    
-    let m = segment.match(re1);
-    if (!m) {
-      m = segment.match(re2);
-    }
-    if (!m) {
-      m = segment.match(re3);
-    }
-    if (!m) {
-      m = segment.match(re4);
-    }
-    if (!m) {
-      m = segment.match(re4b);
-    }
-    if (!m) {
-      m = segment.match(re5);
-    }
-    if (!m) {
-      m = segment.match(re6);
-    }
-    if (!m) {
-      m = segment.match(re7);
-    }
-    if (!m) {
-      m = segment.match(re8);
-    }
-    if (!m) {
-      m = segment.match(re9);
-    }
-    if (!m) {
-      m = segment.match(re10);
-    }
-    
-    return {
-      description: m && m[1] ? stripTags(m[1]) : "",
-      grade: m && m[2] ? stripTags(m[2]) : ""
-    };
+    const m = seg.match(re);
+    return m ? stripTags(m[1]) : "";
   }
 
-  // Debug: Log the segment we're working with
-  console.log(`Working with segment length: ${segment.length}`);
-  console.log(`Segment contains 'Competitive pricing': ${segment.includes('Competitive pricing')}`);
-  console.log(`Segment contains 'Website quality': ${segment.includes('Website quality')}`);
-  console.log(`Segment contains 'Payment options': ${segment.includes('Payment options')}`);
+  const shippingRaw = afterHeader(segment, "Shipping");
+  const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
+  let paymentsRaw = "";
+  const payBlock = segment.match(
+    new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Payment\\s+options|Payment\\s+methods)\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<span[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`,
+      "i"
+    )
+  );
+  if (payBlock) {
+    const expanded = payBlock[1].match(/<span[^>]*class=["']NBMhyb["'][^>]*>([\s\S]*?)<\/span>/i);
+    const primary  = payBlock[1].match(/<span[^>]*jsname=["']u5tB8["'][^>]*>([\s\S]*?)<\/span>/i);
+    paymentsRaw = stripTags((expanded && expanded[1]) || (primary && primary[1]) || payBlock[1]);
+  }
 
-  // Extract shipping data
-  const shippingData = extractInsightData(segment, "Shipping");
-  const shippingRaw = shippingData.description;
-  const shippingGrade = shippingData.grade;
+  function gradeFor(seg: string, headerPattern: string): string {
+    const re = new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,420}?<span[^>]*class=["']rMOWke-uDEFge\\s+hnGZye[^"']*["'][^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\\/span>`,
+      "i"
+    );
+    const m = seg.match(re);
+    return m ? stripTags(m[1]) : "";
+  }
 
-  // Extract returns data
-  const returnsData = extractInsightData(segment, "Returns");
-  const returnsRaw = returnsData.description;
-  const returnsGrade = returnsData.grade;
-
-  // Extract payment options data
-  const paymentsData = extractInsightData(segment, "Payment options");
-  const paymentsRaw = paymentsData.description;
-  const paymentsGrade = paymentsData.grade;
-  
-  // Debug: Log what we're getting for payment options
-  console.log(`Payment options - description: "${paymentsData.description}", grade: "${paymentsData.grade}"`);
-
-  // Extract website quality data
-  const websiteData = extractInsightData(segment, "Website quality");
-  const websiteGrade = websiteData.grade;
-  
-  // Debug: Log what we're getting for website quality
-  console.log(`Website quality - description: "${websiteData.description}", grade: "${websiteData.grade}"`);
-
-  // Extract competitive pricing data
-  const pricingData = extractInsightData(segment, "Competitive pricing");
-  const pricingGrade = pricingData.grade;
-  
-  // Debug: Log what we're getting for competitive pricing
-  console.log(`Competitive pricing - description: "${pricingData.description}", grade: "${pricingData.grade}"`);
-
-  // Delivery time - extract from shipping description
-  let delivery_time = "";
-  if (shippingRaw) {
-    // Look for time patterns in shipping description
-    const timeMatch = shippingRaw.match(/(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i);
-    if (timeMatch) {
-      delivery_time = timeMatch[1];
-    } else if (/\bfree\s+delivery\b/i.test(shippingRaw)) {
-      delivery_time = "Free delivery";
-    }
+  // Delivery time
+  let delivery_time = pick(
+    [shippingRaw, returnsRaw, paymentsRaw].join(" "),
+    [
+      /(?:£|\$|€)\s*\d+(?:\.\d{2})?[^a-zA-Z]{0,6}(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i,
+      /(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)\s*(?:delivery|ship|shipping)\b/i,
+      /deliver[s]?\s+in\s+(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i
+    ],
+    1
+  );
+  if (!delivery_time && /\bfree\s+delivery\b/i.test(shippingRaw)) {
+    delivery_time = "Free delivery";
   }
 
   const shipping_cost_free =
     /\bfree\s+(delivery|shipping)\b/i.test(shippingRaw) ||
     /\b(?:delivery|shipping)\s*(?:cost|price)?[:\s-]*\s*free\b/i.test(shippingRaw);
 
-  // Return window - extract from returns description
-  let return_window = "";
-  if (returnsRaw) {
-    const timeMatch = returnsRaw.match(/(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i);
-    if (timeMatch) {
-      return_window = timeMatch[1];
-    }
-  }
-
+  const return_window = pick(
+    returnsRaw,
+    [
+      /(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)\s*returns?\b/i,
+      /returns?\s*(?:within|in)?\s*(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i,
+      /return\s*(?:window|period|policy)[:\s-]*\s*(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i
+    ],
+    1
+  );
   const return_cost_free =
     /\bfree\s+returns?\b/i.test(returnsRaw) ||
     /\breturn\s*(?:shipping|cost)[:\s-]*\s*free\b/i.test(returnsRaw);
 
-  // Extract payment wallets from the payment options description
-  const wallets = Array.from(new Set(Array.from((paymentsRaw || "").matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna|Stripe|Square)\b/gi)).map(m => m[1])));
+  const wallets = Array.from(new Set(Array.from((paymentsRaw || "").matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)\b/gi)).map(m => m[1])));
   const e_wallets = wallets.join(", ");
 
   const section_grades = {
-    shipping: shippingGrade,
-    returns: returnsGrade,
-    pricing: pricingGrade,
-    payments: paymentsGrade,
-    website: websiteGrade
+    shipping: gradeFor(segment, "Shipping"),
+    returns: gradeFor(segment, "Returns?|Return\\s+policy|Returns\\s+policy"),
+    pricing: gradeFor(segment, "Competitive\\s+pricing"),
+    payments: gradeFor(segment, "Payment\\s+options|Payment\\s+methods"),
+    website: gradeFor(segment, "Website\\s+quality")
   };
 
   return { delivery_time, shipping_cost_free, return_window, return_cost_free, e_wallets, section_grades };
