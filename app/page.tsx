@@ -216,16 +216,16 @@ const CategoryFavicons = ({ brands }: { brands: string[] }) => {
   const remainingCount = brands.length - 3;
   
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1.5">
       {visibleBrands.map((brand, index) => (
-        <div key={brand} className="h-4 w-4 rounded-sm overflow-hidden bg-white ring-1 ring-slate-200">
+        <div key={brand} className="h-5 w-5 rounded-sm overflow-hidden bg-white ring-1 ring-slate-200">
           <img
             src={getFaviconUrl(brand)}
             alt=""
             className="h-full w-full object-cover"
             onError={(e) => {
               // Fallback to a generic icon if favicon fails
-              (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNOCA0TDEyIDhMOCAxMkw0IDhMOCA0WiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K';
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMTAgNUwxNSAxMEwxMCAxNUw1IDEwTDEwIDVaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';
             }}
           />
         </div>
@@ -604,59 +604,59 @@ export default function Page() {
             <p className="text-sm text-slate-600">Click any category to instantly compare popular brands</p>
           </div>
           
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
-            <div className="flex items-center gap-4">
-              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+            <div className="space-y-3">
+              <h4 className="text-base font-medium text-slate-800 text-center flex items-center justify-center gap-2">
                 🇬🇧 United Kingdom
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
                   >
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
                     <span>{category}</span>
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
                   </button>
                 ))}
               </div>
             </div>
 
             {/* US Categories */}
-            <div className="flex items-center gap-4">
-              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+            <div className="space-y-3">
+              <h4 className="text-base font-medium text-slate-800 text-center flex items-center justify-center gap-2">
                 🇺🇸 United States
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
                   >
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
                     <span>{category}</span>
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
                   </button>
                 ))}
               </div>
             </div>
 
             {/* AU Categories */}
-            <div className="flex items-center gap-4">
-              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+            <div className="space-y-3">
+              <h4 className="text-base font-medium text-slate-800 text-center flex items-center justify-center gap-2">
                 🇦🇺 Australia
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
                   >
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
                     <span>{category}</span>
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
                   </button>
                 ))}
               </div>
