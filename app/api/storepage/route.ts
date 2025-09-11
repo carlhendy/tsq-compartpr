@@ -45,54 +45,26 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   }
   
   function extractFromSegment(segment: string, headerPattern: string) {
+    // Based on the actual HTML structure provided by the user
     
-    // Pattern 1: Look for the specific structure with proper HTML tags
+    // Pattern 1: Match the exact structure from the HTML
+    // <div class="hnGZye">Shipping</div><div class="KtbsVc-ij8cu-fmcmS">Free delivery</div>...<span class="rMOWke-uDEFge hnGZye">Exceptional</span>
     const re1 = new RegExp(
-      `${headerPattern}[\\s\\S]*?<[^>]*>([^<]*?)<[^>]*>[\\s\\S]*?<[^>]*>([^<]*?)(?:Exceptional|Great|Good|Fair|Poor)[^<]*<[^>]*>`,
+      `<div class="hnGZye">${headerPattern}<\/div><div class="KtbsVc-ij8cu-fmcmS">([^<]*)<\/div>[^<]*<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>([^<]*)<\/span>`,
       "i"
     );
     
-    // Pattern 2: Look for the structure in the actual Google Store page HTML
-    // Based on the live page structure where headers are followed by descriptions and grades
+    // Pattern 2: Match structure without description (like Competitive pricing)
+    // <div class="hnGZye">Competitive pricing</div>...<span class="rMOWke-uDEFge hnGZye">Great</span>
     const re2 = new RegExp(
-      `${headerPattern}\\s*([^\\n]*?)\\s*(Exceptional|Great|Good|Fair|Poor)`,
+      `<div class="hnGZye">${headerPattern}<\/div>[^<]*<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>([^<]*)<\/span>`,
       "i"
     );
     
-    // Pattern 2b: More specific pattern for the exact structure from the live page
-    const re2b = new RegExp(
-      `${headerPattern}\\s*([^\\n]*?)\\s*(Exceptional|Great|Good|Fair|Poor)\\s*`,
-      "i"
-    );
-    
-    // Pattern 2c: Pattern that matches the exact structure from the live page
-    // Looking for: "Shipping\nFree delivery\nExceptional"
-    const re2c = new RegExp(
-      `${headerPattern}\\s*\\n\\s*([^\\n]*?)\\s*\\n\\s*(Exceptional|Great|Good|Fair|Poor)`,
-      "i"
-    );
-    
-    // Pattern 3: Look for the specific structure where description comes after the header div
+    // Pattern 3: Match Payment options with complex structure
+    // <div class="hnGZye">Payment options</div><span class="KtbsVc-ij8cu-fmcmS">...<span class="" jsname="aWXQDc">PayPal, Apple Pay, Google Pay</span>...
     const re3 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 4: More flexible pattern that looks for the header anywhere followed by description and grade
-    const re4 = new RegExp(
-      `${headerPattern}[\\s\\S]*?(?:<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>)?[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 5: Nested span structure with KtbsVc-r4nke-haAclf
-    const re5 = new RegExp(
-      `<span[^>]*class="KtbsVc-r4nke-haAclf"[^>]*>[\\s\\S]*?<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?(?:<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>)?[\\s\\S]*?<\/span>[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
-      "i"
-    );
-    
-    // Pattern 6: Original structure
-    const re6 = new RegExp(
-      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?(?:<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>)?[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      `<div class="hnGZye">${headerPattern}<\/div><span class="KtbsVc-ij8cu-fmcmS">[^<]*<span[^>]*jsname="aWXQDc"[^>]*>([^<]*)<\/span>[^<]*<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>([^<]*)<\/span>`,
       "i"
     );
     
@@ -101,22 +73,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       m = segment.match(re2);
     }
     if (!m) {
-      m = segment.match(re2b);
-    }
-    if (!m) {
-      m = segment.match(re2c);
-    }
-    if (!m) {
       m = segment.match(re3);
-    }
-    if (!m) {
-      m = segment.match(re4);
-    }
-    if (!m) {
-      m = segment.match(re5);
-    }
-    if (!m) {
-      m = segment.match(re6);
     }
     
     return {
@@ -131,7 +88,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const shippingGrade = shippingData.grade;
 
   // Extract returns data
-  const returnsData = extractInsightData(segment, "Returns?");
+  const returnsData = extractInsightData(segment, "Returns");
   const returnsRaw = returnsData.description;
   const returnsGrade = returnsData.grade;
 
