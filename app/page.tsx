@@ -80,7 +80,7 @@ type Row = {
 const DEFAULTS = ['asos.com','boohoo.com','next.co.uk','riverisland.com','newlook.com'];
 
 // Quick Start Categories
-type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Outdoors' | 'Art' | 'Furniture' | 'Electronics' | 'Home & Garden' | 'Health & Beauty';
+type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Furniture' | 'Electronics' | 'Home & Garden';
 type CountryKey = 'UK' | 'US' | 'AU';
 
 const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> = {
@@ -88,34 +88,25 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
     'Fashion': ['asos.com', 'next.co.uk', 'riverisland.com', 'boohoo.com', 'newlook.com'],
     'Cosmetics': ['boots.com', 'superdrug.com', 'lookfantastic.com', 'cultbeauty.com', 'feelunique.com'],
     'Sports & Fitness': ['sportsdirect.com', 'decathlon.co.uk', 'jdsports.co.uk', 'mountainwarehouse.com', 'gymshark.com'],
-    'Outdoors': ['gooutdoors.co.uk', 'millets.co.uk', 'blacks.co.uk', 'cotswoldoutdoor.com', 'ellis-brigham.com'],
-    'Art': ['cassart.co.uk', 'jacksonart.com', 'artdiscount.co.uk', 'theworks.co.uk', 'hobbycraft.co.uk'],
     'Furniture': ['ikea.com', 'wayfair.co.uk', 'dunelm.com', 'argos.co.uk', 'bensonsforbeds.co.uk'],
     'Electronics': ['currys.co.uk', 'argos.co.uk', 'johnlewis.com', 'very.co.uk', 'ao.com'],
-    'Home & Garden': ['b&q.co.uk', 'homebase.co.uk', 'wickes.co.uk', 'screwfix.com', 'toolstation.com'],
-    'Health & Beauty': ['boots.com', 'superdrug.com', 'hollandandbarrett.com', 'lookfantastic.com', 'cultbeauty.com']
+    'Home & Garden': ['b&q.co.uk', 'homebase.co.uk', 'wickes.co.uk', 'screwfix.com', 'toolstation.com']
   },
   'US': {
     'Fashion': ['nordstrom.com', 'macys.com', 'gap.com', 'oldnavy.com', 'bananarepublic.com'],
     'Cosmetics': ['sephora.com', 'ulta.com', 'fentybeauty.com', 'beautylish.com', 'glossier.com'],
     'Sports & Fitness': ['dickssportinggoods.com', 'academy.com', 'rei.com', 'nike.com', 'adidas.com'],
-    'Outdoors': ['rei.com', 'backcountry.com', 'patagonia.com', 'columbia.com', 'northface.com'],
-    'Art': ['dickblick.com', 'michaels.com', 'joann.com', 'hobbylobby.com', 'jerrysartarama.com'],
     'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com'],
     'Electronics': ['bestbuy.com', 'amazon.com', 'newegg.com', 'microcenter.com', 'b&h.com'],
-    'Home & Garden': ['homedepot.com', 'lowes.com', 'menards.com', 'acehardware.com', 'tractorsupply.com'],
-    'Health & Beauty': ['cvs.com', 'walgreens.com', 'target.com', 'walmart.com', 'amazon.com']
+    'Home & Garden': ['homedepot.com', 'lowes.com', 'menards.com', 'acehardware.com', 'tractorsupply.com']
   },
   'AU': {
     'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
     'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
     'Sports & Fitness': ['rebel.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
-    'Outdoors': ['anaconda.com.au', 'kathmandu.com.au', 'macpac.com.au', 'patagonia.com.au', 'columbia.com.au'],
-    'Art': ['eckersleys.com.au', 'officeworks.com.au', 'spotlight.com.au', 'lincraft.com.au', 'riotart.com.au'],
     'Furniture': ['ikea.com.au', 'freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au'],
     'Electronics': ['harveynorman.com.au', 'jb-hifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
-    'Home & Garden': ['bunnings.com.au', 'masters.com.au', 'mitre10.com.au', 'total-tools.com.au', 'sydney-tools.com.au'],
-    'Health & Beauty': ['chemistwarehouse.com.au', 'priceline.com.au', 'terrywhite.com.au', 'pharmacyonline.com.au', 'amcal.com.au']
+    'Home & Garden': ['bunnings.com.au', 'masters.com.au', 'mitre10.com.au', 'total-tools.com.au', 'sydney-tools.com.au']
   }
 };
 
@@ -802,10 +793,16 @@ export default function Page() {
               </p>
             </div>
             <div className="px-5 py-4">
+              <h3 className="font-medium text-slate-900">Why does a store have a rating but no review count?</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
+              </p>
+            </div>
+            <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
               <p className="mt-1 text-sm text-slate-600">
-                We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed “quality” grades
-                (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
+                We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
+                (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
               </p>
             </div>
           </div>
@@ -840,12 +837,17 @@ export default function Page() {
                 {
                   "@type": "Question",
                   "name": "Can I export the results?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "You can copy the table using the “Copy results” button and paste into a spreadsheet. CSV export is on the roadmap." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why does a store have a rating but no review count?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count." }
                 },
                 {
                   "@type": "Question",
                   "name": "How do we collect and display the quality signals for store websites from google.com/storepages?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed "quality" grades (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page." }
                 }
               ]
             })
