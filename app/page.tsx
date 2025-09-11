@@ -106,7 +106,7 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
     'Sports & Fitness': ['rebelsport.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
     'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au', 'domayne.com.au'],
     'Electronics': ['harveynorman.com.au', 'jbhifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
-    'Home & Garden': ['bunnings.com.au', 'masters.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
+    'Home & Garden': ['bunnings.com.au', 'homehardware.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
   }
 };
 
@@ -478,7 +478,7 @@ export default function Page() {
                           {medal}
                         </td>
                         <td className="flex items-center gap-2 pr-1">
-                          <div className="h-10 w-10 overflow-hidden rounded-lg ring-1 ring-slate-200 bg-white">
+                          <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
@@ -486,14 +486,14 @@ export default function Page() {
                               <div className="h-full w-full bg-slate-100" />
                             )}
                           </div>
-                          <div className="leading-5">
+                          <div className="leading-5 min-w-0 flex-1">
                             <div className="font-medium text-slate-900 text-base flex items-center gap-1">
-                              {row.domain}
+                              <span className="truncate">{row.domain}</span>
                               <a
                                 href={validationUrl(row.domain, row.country)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+                                className="inline-flex items-center rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition flex-shrink-0"
                                 title="Open source URL"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">
@@ -582,7 +582,7 @@ export default function Page() {
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
                   </button>
@@ -600,7 +600,7 @@ export default function Page() {
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
                   </button>
@@ -618,7 +618,7 @@ export default function Page() {
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
                   </button>
