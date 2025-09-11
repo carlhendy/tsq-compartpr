@@ -664,7 +664,7 @@ export default function Page() {
           <div className="pt-4 flex justify-center">
             <button
               onClick={copyResults}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:translate-y-px"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 active:translate-y-px"
               aria-label="Copy table results"
               title="Copy table results"
             >
