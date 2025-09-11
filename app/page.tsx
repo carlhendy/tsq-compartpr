@@ -432,23 +432,23 @@ export default function Page() {
   ] as const;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <main className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl inline-block bg-yellow-100/70 px-3 py-1 rounded-md">
+        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl inline-block bg-blue-600/90 px-3 py-1 rounded-md">
           Compare Google Store Ratings
         </h1>
-        <h2 className="mt-6 text-xl font-medium text-slate-700 inline-block bg-green-100/70 px-3 py-1 rounded-md">
-          Benchmark Ecommerce Stores by Google’s Public Quality Signals
+        <h2 className="mt-6 text-xl font-medium text-slate-200 inline-block bg-slate-800/70 px-3 py-1 rounded-md">
+          Benchmark Ecommerce Stores by Google's Public Quality Signals
         </h2>
       </section>
 
 
       {/* Inputs */}
       <section className="mx-auto max-w-6xl px-6 pb-8">
-        <div className="rounded-2xl border border-slate-200 bg-blue-50/70 p-6 shadow-sm backdrop-blur">
-          <p className="mb-5 text-sm text-slate-700 text-center">
-            👉 Compare up to five store websites and choose a country. We’ll compare what Google shows on{' '}
+        <div className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 shadow-sm backdrop-blur">
+          <p className="mb-5 text-sm text-slate-300 text-center">
+            👉 Compare up to five store websites and choose a country. We'll compare what Google shows on{' '}
             google.com/storepages.
           </p>
 
@@ -460,19 +460,19 @@ export default function Page() {
                 value={d}
                 onChange={(e) => updateDomain(i, e.target.value)}
                 placeholder="domain.com"
-                className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
+                className="w-full h-10 rounded-lg border border-slate-600 bg-slate-700 text-white px-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
               />
             ))}
           </div>
 
           {/* Controls */}
           <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-3">
-            <label className="text-sm text-slate-700 sm:mr-2" htmlFor="country-select">Select Country:</label>
+            <label className="text-sm text-slate-300 sm:mr-2" htmlFor="country-select">Select Country:</label>
             <select
               id="country-select"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="h-10 w-full sm:w-48 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
+              className="h-10 w-full sm:w-48 rounded-lg border border-slate-600 bg-slate-700 text-white px-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               aria-label="Country"
             >
               <option value="US">United States</option>
@@ -488,7 +488,7 @@ export default function Page() {
             <button
               onClick={compare}
               disabled={loading}
-              className="inline-flex h-10 w-full sm:w-48 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-10 w-full sm:w-48 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm bg-blue-600 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
@@ -509,10 +509,10 @@ export default function Page() {
       {/* Results */}
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 shadow-sm">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
+                <thead className="text-sm text-slate-300" style={{ backgroundColor: '#1e40af' }}>
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle">
                     <th className="w-[4%] text-center"></th>
                     <th className="w-[18%] text-left">Store</th>
@@ -550,7 +550,7 @@ export default function Page() {
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
-                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-slate-50 transition-colors">
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-slate-700/50 transition-colors">
                         <td className="text-center text-2xl" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
@@ -599,7 +599,7 @@ export default function Page() {
                             )}
                           </div>
                           <div className="leading-5 min-w-0 flex-1">
-                            <div className="font-medium text-slate-900 text-base flex items-center gap-1">
+                            <div className="font-medium text-white text-base flex items-center gap-1">
                               <span className="truncate">{row.domain}</span>
                               <a
                                 href={validationUrl(row.domain, row.country)}
@@ -677,16 +677,16 @@ export default function Page() {
 
       {/* Quick Start Section */}
       <section className="mx-auto max-w-6xl px-6 pb-8">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-6 shadow-sm backdrop-blur">
+        <div className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 shadow-sm backdrop-blur">
           <div className="text-center mb-6">
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">Quick Start</h3>
-            <p className="text-sm text-slate-600">Click any category to instantly compare popular brands</p>
+            <h3 className="text-lg font-semibold text-white mb-2">Quick Start</h3>
+            <p className="text-sm text-slate-300">Click any category to instantly compare popular brands</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
             <div className="space-y-3">
-              <h4 className="text-base font-medium text-slate-800 text-center flex items-center justify-center gap-2">
+              <h4 className="text-base font-medium text-white text-center flex items-center justify-center gap-2">
                 🇬🇧 United Kingdom
               </h4>
               <div className="space-y-2">
@@ -694,7 +694,7 @@ export default function Page() {
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-sm font-medium text-white hover:bg-slate-600 hover:border-blue-500 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
@@ -705,7 +705,7 @@ export default function Page() {
 
             {/* US Categories */}
             <div className="space-y-3">
-              <h4 className="text-base font-medium text-slate-800 text-center flex items-center justify-center gap-2">
+              <h4 className="text-base font-medium text-white text-center flex items-center justify-center gap-2">
                 🇺🇸 United States
               </h4>
               <div className="space-y-2">
@@ -713,7 +713,7 @@ export default function Page() {
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-sm font-medium text-white hover:bg-slate-600 hover:border-blue-500 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
@@ -724,7 +724,7 @@ export default function Page() {
 
             {/* AU Categories */}
             <div className="space-y-3">
-              <h4 className="text-base font-medium text-slate-800 text-center flex items-center justify-center gap-2">
+              <h4 className="text-base font-medium text-white text-center flex items-center justify-center gap-2">
                 🇦🇺 Australia
               </h4>
               <div className="space-y-2">
@@ -732,7 +732,7 @@ export default function Page() {
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-sm font-medium text-white hover:bg-slate-600 hover:border-blue-500 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
