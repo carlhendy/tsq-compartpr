@@ -231,7 +231,9 @@ export default function Page() {
   const handleQuickStart = (country: CountryKey, category: CategoryKey) => {
     const brands = QUICK_START_CATEGORIES[country][category];
     setDomains(brands);
-    setCountry(country);
+    // Map country codes to match the selector options
+    const countryCode = country === 'UK' ? 'GB' : country;
+    setCountry(countryCode);
     // Auto-trigger comparison
     setTimeout(() => compare(), 100);
   };
@@ -557,16 +559,16 @@ export default function Page() {
           
           <div className="space-y-4">
             {/* UK Categories */}
-            <div className="flex items-center gap-4">
-              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+            <div>
+              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
                 🇬🇧 United Kingdom
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
                   </button>
@@ -575,16 +577,16 @@ export default function Page() {
             </div>
 
             {/* US Categories */}
-            <div className="flex items-center gap-4">
-              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+            <div>
+              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
                 🇺🇸 United States
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
                   </button>
@@ -593,16 +595,16 @@ export default function Page() {
             </div>
 
             {/* AU Categories */}
-            <div className="flex items-center gap-4">
-              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+            <div>
+              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
                 🇦🇺 Australia
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                 {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
                   </button>
