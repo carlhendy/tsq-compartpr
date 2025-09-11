@@ -294,7 +294,7 @@ export default function Page() {
                     const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
                     const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
                     const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
-                    \1
+                    const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
                     const pricingGrade = getAny(s, ['section_grades.pricing','pricing_quality','pricingGrade']);
                     const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
