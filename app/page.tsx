@@ -274,7 +274,7 @@ export default function Page() {
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-slate-600" style={{ backgroundColor: '#e2e8f0' }}>
+                <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
                   <tr className="[&>th]:px-4 [&>th]:py-3">
                     <th className="w-[20%] text-left">Store</th>
                     <th className="w-[8%] text-center">Top Quality Store</th>
