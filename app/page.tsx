@@ -244,7 +244,7 @@ const CategoryFavicons = ({ brands }: { brands: string[] }) => {
   return (
     <div className="flex items-center gap-1.5">
       {visibleBrands.map((brand, index) => (
-        <div key={brand} className="h-5 w-5 rounded-sm overflow-hidden bg-white ring-1 ring-slate-200">
+        <div key={brand} className="h-5 w-5 rounded-sm overflow-hidden bg-white">
           <img
             src={getFaviconUrlWithFallback(brand)}
             alt=""
@@ -433,24 +433,24 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-black sm:text-5xl">
-          Compare Google Store Ratings
-        </h1>
-        <h2 className="mt-6 text-xl font-medium text-black">
-          <span className="bg-black text-white px-2 py-1">Benchmark Ecommerce Stores by Google's Public Quality Signals</span>
-        </h2>
-      </section>
-
-
-      {/* Inputs */}
-      <section className="mx-auto max-w-6xl px-6 pb-8">
-        <div className="border border-gray-200 bg-white p-6">
-          <p className="mb-5 text-sm text-gray-600 text-center">
-            👉 Compare up to five store websites and choose a country. We'll compare what Google shows on{' '}
-            google.com/storepages.
-          </p>
+      {/* Hero - Half Black Section */}
+      <section className="bg-black">
+        <div className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            Compare Google Store Ratings
+          </h1>
+          <h2 className="mt-6 text-xl font-medium text-white">
+            <span className="bg-white text-black px-2 py-1">Benchmark Ecommerce Stores by Google's Public Quality Signals</span>
+          </h2>
+        </div>
+        
+        {/* Inputs - Halfway down the black section */}
+        <div className="mx-auto max-w-6xl px-6 pb-8">
+          <div className="border border-white bg-white p-6">
+            <p className="mb-5 text-sm text-black text-center">
+              👉 Compare up to five store websites and choose a country. We'll compare what Google shows on{' '}
+              google.com/storepages.
+            </p>
 
           {/* Domains row */}
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
@@ -460,7 +460,7 @@ export default function Page() {
                 value={d}
                 onChange={(e) => updateDomain(i, e.target.value)}
                 placeholder="domain.com"
-                className="w-full h-10 border border-gray-300 px-3 text-sm outline-none placeholder:text-gray-400 focus:border-black focus:ring-0"
+                className="w-full h-10 border border-black px-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-0"
               />
             ))}
           </div>
@@ -468,13 +468,14 @@ export default function Page() {
           {/* Controls */}
           <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-3">
             <label className="text-sm text-gray-700 sm:mr-2" htmlFor="country-select">Select Country:</label>
-            <select
-              id="country-select"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="h-10 w-full sm:w-48 border border-gray-300 bg-white px-3 text-sm text-gray-700 focus:border-black focus:outline-none focus:ring-0"
-              aria-label="Country"
-            >
+            <div className="relative">
+              <select
+                id="country-select"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="h-10 w-full sm:w-48 border border-black bg-white px-3 pr-8 text-sm text-gray-700 outline-none focus:border-gray-500 focus:ring-0 appearance-none cursor-pointer"
+                aria-label="Country"
+              >
               <option value="US">United States</option>
               <option value="GB">United Kingdom</option>
               <option value="AU">Australia</option>
@@ -483,7 +484,13 @@ export default function Page() {
               <option value="NZ">New Zealand</option>
               <option value="DE">Germany</option>
               <option value="FR">France</option>
-            </select>
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
 
             <button
               onClick={compare}
@@ -504,11 +511,12 @@ export default function Page() {
             </button>
           </div>
         </div>
+        </div>
       </section>
 
       {/* Results */}
       {hasCompared && (
-        <section className="mx-auto max-w-6xl px-6 pb-12">
+        <section className="mx-auto max-w-6xl px-6 pb-12 mt-8">
           <div className="border border-black bg-white">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
@@ -555,7 +563,7 @@ export default function Page() {
                           {medal}
                         </td>
                         <td className="flex items-center gap-2 pr-1">
-                          <div className="h-10 w-10 flex-shrink-0 overflow-hidden border border-gray-200 bg-white">
+                          <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img 
@@ -605,7 +613,7 @@ export default function Page() {
                                 href={validationUrl(row.domain, row.country)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition flex-shrink-0"
+                                className="inline-flex items-center rounded border border-black bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition flex-shrink-0"
                                 title="Open source URL"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">
@@ -676,8 +684,8 @@ export default function Page() {
       )}
 
       {/* Quick Start Section */}
-      <section className="mx-auto max-w-6xl px-6 pb-8">
-        <div className="border border-gray-200 bg-white p-6">
+      <section className="mx-auto max-w-6xl px-6 pb-8 mt-8">
+        <div className="border border-black bg-white p-6">
           <div className="text-center mb-6">
             <h3 className="text-lg font-semibold text-black mb-2">Quick Start</h3>
             <p className="text-sm text-gray-600">Click any category to instantly compare popular brands</p>
@@ -876,7 +884,7 @@ export default function Page() {
         </div>
 
         <div className="border border-black bg-white">
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-black">
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
               <p className="mt-1 text-sm text-slate-600">
@@ -971,7 +979,7 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white/90 py-10 px-4 sm:px-6 text-center text-sm text-slate-600">
+      <footer className="border-t border-black bg-white/90 py-10 px-4 sm:px-6 text-center text-sm text-slate-600">
         <p className="mb-2">
           Vibe coded by{' '}
           <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-black text-white px-2 py-1 no-underline font-normal">
