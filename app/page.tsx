@@ -837,7 +837,7 @@ export default function Page() {
                 {
                   "@type": "Question",
                   "name": "Can I export the results?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "You can copy the table using the \"Copy results\" button and paste into a spreadsheet. CSV export is on the roadmap." }
                 },
                 {
                   "@type": "Question",
@@ -847,7 +847,7 @@ export default function Page() {
                 {
                   "@type": "Question",
                   "name": "How do we collect and display the quality signals for store websites from google.com/storepages?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed "quality" grades (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed \"quality\" grades (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page." }
                 }
               ]
             })
