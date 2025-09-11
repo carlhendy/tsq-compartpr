@@ -77,6 +77,13 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       "i"
     );
     
+    // Pattern 6: Specific pattern for fields without descriptions (like Competitive pricing, Website quality)
+    // <div class="hnGZye">Competitive pricing</div>...<span class="rMOWke-uDEFge hnGZye">Great</span>
+    const re6 = new RegExp(
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
     let m = segment.match(re1);
     if (!m) {
       m = segment.match(re2);
@@ -89,6 +96,9 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     }
     if (!m) {
       m = segment.match(re5);
+    }
+    if (!m) {
+      m = segment.match(re6);
     }
     
     return {
@@ -115,10 +125,16 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   // Extract website quality data
   const websiteData = extractInsightData(segment, "Website quality");
   const websiteGrade = websiteData.grade;
+  
+  // Debug: Log what we're getting for website quality
+  console.log(`Website quality - description: "${websiteData.description}", grade: "${websiteData.grade}"`);
 
   // Extract competitive pricing data
   const pricingData = extractInsightData(segment, "Competitive pricing");
   const pricingGrade = pricingData.grade;
+  
+  // Debug: Log what we're getting for competitive pricing
+  console.log(`Competitive pricing - description: "${pricingData.description}", grade: "${pricingData.grade}"`);
 
   // Delivery time - extract from shipping description
   let delivery_time = "";
