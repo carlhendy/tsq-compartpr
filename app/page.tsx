@@ -244,7 +244,7 @@ const CategoryFavicons = ({ brands }: { brands: string[] }) => {
   return (
     <div className="flex items-center gap-1.5">
       {visibleBrands.map((brand, index) => (
-        <div key={brand} className="h-5 w-5 rounded-sm overflow-hidden bg-white">
+        <div key={brand} className="h-6 w-6 rounded-sm overflow-hidden bg-white">
           <img
             src={getFaviconUrlWithFallback(brand)}
             alt=""
@@ -684,17 +684,15 @@ export default function Page() {
       )}
 
       {/* Quick Start Section */}
-      <section className="mx-auto max-w-6xl px-6 pb-8 mt-8">
-        <div className="border border-black bg-white p-6">
+      <section className="mx-auto max-w-6xl px-6 pb-8 mt-4">
+        <div className="bg-white p-6">
           <div className="text-center mb-6">
-            <h3 className="text-lg font-semibold text-black mb-2">Quick Start</h3>
-            <p className="text-sm text-gray-600">Click any category to instantly compare popular brands</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
             <div className="space-y-3">
-              <h4 className="text-base font-medium text-black text-center flex items-center justify-center gap-2">
+              <h4 className="text-lg font-medium text-black text-center flex items-center justify-center gap-2">
                 🇬🇧 United Kingdom
               </h4>
               <div className="space-y-2">
@@ -702,7 +700,7 @@ export default function Page() {
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-sm font-medium text-black hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-base font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
@@ -713,7 +711,7 @@ export default function Page() {
 
             {/* US Categories */}
             <div className="space-y-3">
-              <h4 className="text-base font-medium text-black text-center flex items-center justify-center gap-2">
+              <h4 className="text-lg font-medium text-black text-center flex items-center justify-center gap-2">
                 🇺🇸 United States
               </h4>
               <div className="space-y-2">
@@ -721,7 +719,7 @@ export default function Page() {
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-sm font-medium text-black hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-base font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
@@ -732,7 +730,7 @@ export default function Page() {
 
             {/* AU Categories */}
             <div className="space-y-3">
-              <h4 className="text-base font-medium text-black text-center flex items-center justify-center gap-2">
+              <h4 className="text-lg font-medium text-black text-center flex items-center justify-center gap-2">
                 🇦🇺 Australia
               </h4>
               <div className="space-y-2">
@@ -740,7 +738,7 @@ export default function Page() {
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-sm font-medium text-black hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-base font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
