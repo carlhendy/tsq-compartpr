@@ -920,19 +920,19 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-600">
+      <footer className="border-t border-slate-200 bg-white/90 py-10 px-4 sm:px-6 text-center text-sm text-slate-600">
         <p className="mb-2">
           Vibe coded by{' '}
           <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
             Carl Hendy
           </a>{' '}
-        — founder of{' '}
+        founder of{' '}
           <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
             Audits.com
           </a>.
         </p>
         <p className="mx-auto max-w-3xl text-xs text-slate-500">
-          Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google’s public
+          Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
           <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
         </p>
       </footer>
