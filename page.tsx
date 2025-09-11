@@ -265,25 +265,26 @@ export default function Page() {
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
-              <table className="min-w-[980px] w-full table-fixed text-left">
+              <table className="min-w-[1200px] w-full table-fixed text-left">
                 <thead className="bg-slate-50 text-sm text-slate-600">
                   <tr className="[&>th]:px-4 [&>th]:py-3">
-                    <th className="w-[26%] text-left">Store</th>
-                    <th className="w-[9%] text-center">Top Quality Store</th>
-                    <th className="w-[10%] text-center">Delivery time</th>
-                    <th className="w-[13%] text-center">Shipping (quality)</th>
-                    <th className="w-[12%] text-center">Return window</th>
-                    <th className="w-[13%] text-center">Returns (quality)</th>
-                    <th className="w-[12%] text-center">Competitive Pricing</th>
-                    <th className="w-[12%] text-center">Wallets</th>
-                    <th className="w-[7%] text-center">Rating</th>
-                    <th className="w-[8%] text-center">Reviews</th>
+                    <th className="w-[20%] text-left">Store</th>
+                    <th className="w-[7%] text-center">Top Quality Store</th>
+                    <th className="w-[8%] text-center">Delivery time</th>
+                    <th className="w-[10%] text-center">Shipping (quality)</th>
+                    <th className="w-[9%] text-center">Return window</th>
+                    <th className="w-[10%] text-center">Returns (quality)</th>
+                    <th className="w-[9%] text-center">Competitive pricing</th>
+                    <th className="w-[9%] text-center">Website quality</th>
+                    <th className="w-[9%] text-center">Wallets</th>
+                    <th className="w-[6%] text-center">Rating</th>
+                    <th className="w-[7%] text-center">Reviews</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
+                      <td colSpan={11} className="px-4 py-10 text-center text-slate-500">
                         {loading ? 'Fetching signals…' : 'No results yet.'}
                       </td>
                     </tr>
@@ -296,6 +297,7 @@ export default function Page() {
                     const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
                     const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
                     const pricingGrade = getAny(s, ['section_grades.pricing','pricing_quality','pricingGrade']);
+                    const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
                     const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
@@ -343,6 +345,7 @@ export default function Page() {
                         <td className="text-center tabular-nums">{returnWindow}</td>
                         <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
                         <td className="text-center">{badge(pricingGrade, qualityTone(pricingGrade))}</td>
+                        <td className="text-center">{badge(websiteGrade, qualityTone(websiteGrade))}</td>
                         <td className="text-center">{renderWalletPills(wallets)}</td>
                         <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
                         <td className="text-center tabular-nums">{reviews}</td>
