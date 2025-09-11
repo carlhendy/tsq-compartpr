@@ -93,7 +93,8 @@ const getFaviconUrl = (domain: string) => {
 const getFaviconUrlWithFallback = (domain: string) => {
   // For specific domains that might have issues, try multiple approaches
   if (domain === 'chemistwarehouse.com.au') {
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=32&t=1`;
+    // Try with www prefix first
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
   }
   return getFaviconUrl(domain);
 };
@@ -236,11 +237,19 @@ const CategoryFavicons = ({ brands }: { brands: string[] }) => {
               const img = e.target as HTMLImageElement;
               // Try alternative favicon services as fallback
               if (img.src.includes('google.com/s2/favicons')) {
-                // Try DuckDuckGo favicon service
-                img.src = `https://icons.duckduckgo.com/ip3/${brand}.ico`;
-              } else if (img.src.includes('duckduckgo.com')) {
+                // For Chemist Warehouse, try different domain formats
+                if (brand === 'chemistwarehouse.com.au') {
+                  img.src = `https://www.google.com/s2/favicons?domain=${brand}&sz=32&t=2`;
+                } else {
+                  // Try DuckDuckGo favicon service for other domains
+                  img.src = `https://icons.duckduckgo.com/ip3/${brand}.ico`;
+                }
+              } else if (img.src.includes('duckduckgo.com') || (brand === 'chemistwarehouse.com.au' && img.src.includes('google.com/s2/favicons'))) {
                 // Try favicon.io service
                 img.src = `https://favicons.githubusercontent.com/${brand}`;
+              } else if (brand === 'chemistwarehouse.com.au') {
+                // Special case for Chemist Warehouse - try direct favicon
+                img.src = `https://${brand}/favicon.ico`;
               } else {
                 // Final fallback to generic icon
                 img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMTAgNUwxNSAxMEwxMCAxNUw1IDEwTDEwIDVaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';
