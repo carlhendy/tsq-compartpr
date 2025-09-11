@@ -59,6 +59,7 @@ type Signals = {
   store_rating?: string | number;
   review_count?: string | number;
   logo_url?: string;
+  scamadviser_score?: string | number;
   section_grades?: {
     shipping?: string;
     returns?: string;
@@ -87,6 +88,63 @@ const get = (obj: any, path: string) =>
 
 const getAny = (obj: any, paths: string[], fallback: any = '—') =>
   (pick(...paths.map((p) => get(obj, p))) as any) ?? fallback;
+
+// TSQ Scoring system
+const levelScore = (grade?: string): number => {
+  if (!grade) return 0.00;
+  const g = String(grade).toLowerCase();
+  if (g.startsWith('exception')) return 1.00;
+  if (g.startsWith('great')) return 0.85;
+  if (g.startsWith('good')) return 0.70;
+  if (g.startsWith('fair')) return 0.40;
+  if (g.startsWith('poor')) return 0.20;
+  return 0.00;
+};
+
+const computeTsqScore = (signals: Signals): number => {
+  // Base scores from quality grades
+  const returnsScore = levelScore(signals.section_grades?.returns) * 30;
+  const shippingScore = levelScore(signals.section_grades?.shipping) * 25;
+  const pricingScore = levelScore(signals.section_grades?.pricing) * 25;
+  const websiteScore = levelScore(signals.section_grades?.website) * 10;
+  
+  // Wallets score (5% max, based on unique wallet count)
+  const wallets = signals.e_wallets || '';
+  const uniqueWallets = new Set(
+    wallets.split(',').map(w => w.trim()).filter(Boolean)
+  );
+  const walletsScore = Math.min(uniqueWallets.size / 3, 1.0) * 5;
+  
+  // Trust score (5% max, normalized from 0-100)
+  let trustScore = 0;
+  if (signals.scamadviser_score) {
+    const trustValue = parseInt(String(signals.scamadviser_score), 10);
+    if (!isNaN(trustValue)) {
+      trustScore = (trustValue / 100) * 5;
+    }
+  }
+  
+  // Bonuses
+  let bonuses = 0;
+  
+  // Return window bonus
+  const returnWindow = signals.return_window || '';
+  const maxDaysMatch = returnWindow.match(/(\d+)/g);
+  if (maxDaysMatch) {
+    const maxDays = Math.max(...maxDaysMatch.map(Number));
+    if (maxDays >= 30) bonuses += 5;
+    else if (maxDays >= 28) bonuses += 3;
+  }
+  
+  // Top Quality Store bonus
+  if (signals.tqs_badge === true) bonuses += 5;
+  
+  // Calculate final score
+  const totalScore = returnsScore + shippingScore + pricingScore + websiteScore + walletsScore + trustScore + bonuses;
+  
+  // Cap at 100, floor at 0, round to nearest integer
+  return Math.round(Math.max(0, Math.min(100, totalScore)));
+};
 
 const qualityTone = (grade?: string) => {
   if (!grade) return 'slate';
@@ -151,11 +209,44 @@ export default function Page() {
     setLoading(false);
   }
 
+  // Sort rows by TSQ score (best to worst)
+  const sortedRows = [...rows].sort((a, b) => {
+    const aScore = a.signals ? computeTsqScore(a.signals) : 0;
+    const bScore = b.signals ? computeTsqScore(b.signals) : 0;
+    
+    if (aScore !== bScore) return bScore - aScore; // Higher score first
+    
+    // Tie-breakers
+    const aSignals = a.signals || {};
+    const bSignals = b.signals || {};
+    
+    // 1. Competitive pricing level
+    const aPricing = levelScore(aSignals.section_grades?.pricing);
+    const bPricing = levelScore(bSignals.section_grades?.pricing);
+    if (aPricing !== bPricing) return bPricing - aPricing;
+    
+    // 2. Returns quality level
+    const aReturns = levelScore(aSignals.section_grades?.returns);
+    const bReturns = levelScore(bSignals.section_grades?.returns);
+    if (aReturns !== bReturns) return bReturns - aReturns;
+    
+    // 3. Shipping quality level
+    const aShipping = levelScore(aSignals.section_grades?.shipping);
+    const bShipping = levelScore(bSignals.section_grades?.shipping);
+    if (aShipping !== bShipping) return bShipping - aShipping;
+    
+    // 4. Number of unique wallets
+    const aWallets = new Set((aSignals.e_wallets || '').split(',').map(w => w.trim()).filter(Boolean));
+    const bWallets = new Set((bSignals.e_wallets || '').split(',').map(w => w.trim()).filter(Boolean));
+    return bWallets.size - aWallets.size;
+  });
+
   const copyResults = async () => {
     try {
-      const headers = ['Store','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
+      const headers = ['Medal','Rank','Store','TSQ Score','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Trust Score'];
       const lines: string[] = [headers.join('\t')];
-      for (const row of rows) {
+      for (let i = 0; i < sortedRows.length; i++) {
+        const row = sortedRows[i];
         const s = row.signals || {};
         const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
         const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
@@ -163,17 +254,24 @@ export default function Page() {
         const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
         const pricingGrade = getAny(s, ['section_grades.pricing','pricing_quality','pricingGrade']);
         const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
+        const tsqScore = s ? computeTsqScore(s) : 0;
+        const trustScore = getAny(s, ['scamadviser_score']);
+        
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '—';
+        const rank = i + 1;
         
         const values = [
+          medal,
+          rank,
           row.domain || '—',
+          tsqScore,
           row.error ? 'Error' : (s?.tqs_badge === true ? 'Yes' : s?.tqs_badge === false ? 'No' : '—'),
           delivery ? `${shipGrade} (${delivery})` : shipGrade,
           returnWindow ? `${returnsGrade} (${returnWindow})` : returnsGrade,
           pricingGrade,
           websiteGrade,
           getAny(s, ['e_wallets','wallets','payment_wallets']),
-          String(getAny(s, ['store_rating','rating','storeRating'])),
-          String(getAny(s, ['review_count','reviews','reviewCount'])),
+          trustScore,
         ];
         lines.push(values.join('\t'));
       }
@@ -276,26 +374,27 @@ export default function Page() {
               <table className="min-w-[1000px] w-full table-fixed text-left">
                 <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
                   <tr className="[&>th]:px-4 [&>th]:py-3">
-                    <th className="w-[20%] text-left">Store</th>
+                    <th className="w-[6%] text-center">Medal</th>
+                    <th className="w-[6%] text-center">Rank</th>
+                    <th className="w-[18%] text-left">Store</th>
+                    <th className="w-[8%] text-center">TSQ Score</th>
                     <th className="w-[8%] text-center">Top Quality Store</th>
                     <th className="w-[12%] text-center">Shipping (quality)</th>
                     <th className="w-[12%] text-center">Returns (quality)</th>
                     <th className="w-[10%] text-center">Competitive pricing</th>
                     <th className="w-[10%] text-center">Website quality</th>
-                    <th className="w-[12%] text-center">Wallets</th>
-                    <th className="w-[8%] text-center">Rating</th>
-                    <th className="w-[8%] text-center">Reviews</th>
+                    <th className="w-[10%] text-center">Wallets</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
-                  {rows.length === 0 && (
+                  {sortedRows.length === 0 && (
                     <tr>
-                      <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
+                      <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
                         {loading ? 'Fetching signals…' : 'No results yet.'}
                       </td>
                     </tr>
                   )}
-                  {rows.map((row, i) => {
+                  {sortedRows.map((row, i) => {
                     const s: Signals = row.signals || {};
                     const tqs = s?.tqs_badge;
                     const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
@@ -308,8 +407,18 @@ export default function Page() {
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
 
+                    const tsqScore = s ? computeTsqScore(s) : 0;
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '—';
+                    const rank = i + 1;
+                    
                     return (
                       <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
+                        <td className="text-center text-lg" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
+                          {medal}
+                        </td>
+                        <td className="text-center tabular-nums font-medium text-slate-700">
+                          {rank}
+                        </td>
                         <td className="flex items-center gap-3 pr-2">
                           <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
@@ -336,7 +445,9 @@ export default function Page() {
                             </div>
                           </div>
                         </td>
-
+                        <td className="text-center tabular-nums font-bold text-lg text-slate-800">
+                          {tsqScore}
+                        </td>
                         <td className="text-center">
                           {row.error
                             ? badge('Error', 'red')
@@ -369,8 +480,6 @@ export default function Page() {
                         <td className="text-center">{badge(pricingGrade, qualityTone(pricingGrade))}</td>
                         <td className="text-center">{badge(websiteGrade, qualityTone(websiteGrade))}</td>
                         <td className="text-center">{renderWalletPills(wallets)}</td>
-                        <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
-                        <td className="text-center tabular-nums">{reviews}</td>
                       </tr>
                     );
                   })}
