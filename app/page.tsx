@@ -103,10 +103,10 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
   'AU': {
     'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
     'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
-    'Sports & Fitness': ['rebel.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
-    'Furniture': ['ikea.com.au', 'freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au'],
-    'Electronics': ['harveynorman.com.au', 'jb-hifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
-    'Home & Garden': ['bunnings.com.au', 'masters.com.au', 'mitre10.com.au', 'total-tools.com.au', 'sydney-tools.com.au']
+    'Sports & Fitness': ['rebelsport.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
+    'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au', 'domayne.com.au'],
+    'Electronics': ['harveynorman.com.au', 'jbhifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
+    'Home & Garden': ['bunnings.com.au', 'masters.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
   }
 };
 
@@ -271,7 +271,7 @@ export default function Page() {
     const res = await Promise.all(promises);
     setRows(res);
     setLoading(false);
-  }
+  };
 
   // Sort rows by TSQ score (best to worst)
   const sortedRows = [...rows].sort((a, b) => {
