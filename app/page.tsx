@@ -434,7 +434,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Half Black Section */}
-      <section className="bg-black">
+      <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-14 w-auto mx-2" /> Store Ratings
@@ -501,7 +501,7 @@ export default function Page() {
         </div>
         
         {/* Instruction text below container */}
-        <div className="text-center mt-6">
+        <div className="text-center mt-4 pb-12">
           <p className="text-white text-xs">
             👉 Compare up to five store websites and choose a country. We'll compare what Google shows on{' '}
             google.com/storepages.
