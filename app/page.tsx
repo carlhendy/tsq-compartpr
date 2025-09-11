@@ -371,7 +371,7 @@ export default function Page() {
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
                 <thead className="text-xs text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
-                  <tr className="[&>th]:px-2 [&>th]:py-2">
+                  <tr className="[&>th]:px-2 [&>th]:py-4">
                     <th className="w-[4%] text-center"></th>
                     <th className="w-[18%] text-left">Store</th>
                     <th className="w-[6%] text-center">Top Quality Store</th>
@@ -408,7 +408,7 @@ export default function Page() {
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
-                      <tr key={i} className="[&>td]:px-2 [&>td]:py-2 hover:bg-slate-50 transition-colors">
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-4 hover:bg-slate-50 transition-colors">
                         <td className="text-center text-lg" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
