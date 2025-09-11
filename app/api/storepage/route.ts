@@ -65,6 +65,13 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       "i"
     );
     
+    // Pattern 2c: Pattern that matches the exact structure from the live page
+    // Looking for: "Shipping\nFree delivery\nExceptional"
+    const re2c = new RegExp(
+      `${headerPattern}\\s*\\n\\s*([^\\n]*?)\\s*\\n\\s*(Exceptional|Great|Good|Fair|Poor)`,
+      "i"
+    );
+    
     // Pattern 3: Look for the specific structure where description comes after the header div
     const re3 = new RegExp(
       `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
@@ -95,6 +102,9 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     }
     if (!m) {
       m = segment.match(re2b);
+    }
+    if (!m) {
+      m = segment.match(re2c);
     }
     if (!m) {
       m = segment.match(re3);
@@ -285,35 +295,8 @@ export async function GET(req: NextRequest) {
     if (!res.ok) throw new Error(`Upstream ${res.status}`);
     const html = await res.text();
     
-    // Debug: Check if the HTML contains the expected text
-    console.log(`HTML contains "Store Insights": ${html.includes('Store Insights')}`);
-    console.log(`HTML contains "Competitive pricing": ${html.includes('Competitive pricing')}`);
-    console.log(`HTML contains "Website quality": ${html.includes('Website quality')}`);
-    console.log(`HTML contains "Free delivery": ${html.includes('Free delivery')}`);
-    
-    // Look for the specific structure from the live page
-    const storeInsightsMatch = html.match(/Store Insights[\s\S]*?Shipping[\s\S]*?Free delivery[\s\S]*?Exceptional[\s\S]*?Returns[\s\S]*?Free 28-day returns[\s\S]*?Exceptional[\s\S]*?Competitive pricing[\s\S]*?Great[\s\S]*?Payment options[\s\S]*?PayPal[\s\S]*?Exceptional[\s\S]*?Website quality[\s\S]*?Exceptional/i);
-    if (storeInsightsMatch) {
-      console.log('Found Store Insights section with expected structure');
-    } else {
-      console.log('Store Insights section not found with expected structure');
-    }
     
     const signals = extractSignalsFromHtml(html, domain);
-    
-    // Workaround: Manually set data for known domains that have Store Insights
-    if (domain === 'next.co.uk') {
-      signals.section_grades = {
-        shipping: 'Exceptional',
-        returns: 'Exceptional', 
-        pricing: 'Great',
-        payments: 'Exceptional',
-        website: 'Exceptional'
-      };
-      signals.delivery_time = 'Free delivery';
-      signals.return_window = 'Free 28-day returns for most items';
-      signals.e_wallets = 'PayPal, Apple Pay, Google Pay + 1 more';
-    }
     
     return new Response(JSON.stringify({ signals }), {
       headers: {
