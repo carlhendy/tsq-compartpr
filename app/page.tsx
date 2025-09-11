@@ -282,6 +282,15 @@ const CategoryFavicons = ({ brands }: { brands: string[] }) => {
 };
 
 /** ---------- Page ---------- */
+const EXPLAINER = [
+  { m: 'Shipping (quality)', w: 'Overall signal for shipping experience with delivery time shown below.', t: 'Google\'s derived grade per region with delivery estimates.', q: 'Clarify shipping costs, speed, and policies.' },
+  { m: 'Returns (quality)', w: 'Overall signal for your returns experience with return window shown below.', t: 'Google\'s derived grade per region with return timeframes.', q: 'Free returns and clear policy improve trust.' },
+  { m: 'Competitive pricing', w: 'How your pricing compares to competitors.', t: 'Google\'s derived grade per region.', q: 'Ensure competitive pricing and clear value proposition.' },
+  { m: 'Website quality', w: 'Overall website user experience and trust signals.', t: 'Google\'s derived grade per region.', q: 'Improve site speed, mobile experience, and trust signals.' },
+  { m: 'Wallets', w: 'Digital wallets available at checkout.', t: 'Detected by Google per region.', q: 'Add popular wallets (e.g., PayPal, Apple Pay).'},
+  { m: 'Rating/Reviews', w: 'Aggregate rating and review count.', t: 'Sourced from approved review partners.', q: 'Grow recent, verified reviews.'},
+] as const;
+
 export default function Page() {
   const [domains, setDomains] = useState<string[]>(DEFAULTS);
   const [country, setCountry] = useState<string>('GB');
@@ -422,15 +431,6 @@ export default function Page() {
     }
   };
 
-  const EXPLAINER = [
-    { m: 'Shipping (quality)', w: 'Overall signal for shipping experience with delivery time shown below.', t: 'Google\'s derived grade per region with delivery estimates.', q: 'Clarify shipping costs, speed, and policies.' },
-    { m: 'Returns (quality)', w: 'Overall signal for your returns experience with return window shown below.', t: 'Google\'s derived grade per region with return timeframes.', q: 'Free returns and clear policy improve trust.' },
-    { m: 'Competitive pricing', w: 'How your pricing compares to competitors.', t: 'Google\'s derived grade per region.', q: 'Ensure competitive pricing and clear value proposition.' },
-    { m: 'Website quality', w: 'Overall website user experience and trust signals.', t: 'Google\'s derived grade per region.', q: 'Improve site speed, mobile experience, and trust signals.' },
-    { m: 'Wallets', w: 'Digital wallets available at checkout.', t: 'Detected by Google per region.', q: 'Add popular wallets (e.g., PayPal, Apple Pay).'},
-    { m: 'Rating/Reviews', w: 'Aggregate rating and review count.', t: 'Sourced from approved review partners.', q: 'Grow recent, verified reviews.'},
-  ] as const;
-
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Half Black Section */}
@@ -440,7 +440,7 @@ export default function Page() {
             Compare Google Store Ratings
           </h1>
           <h2 className="mt-6 text-xl font-medium text-white">
-            <span className="bg-white text-black px-2 py-1">Benchmark Ecommerce Stores by Google's Public Quality Signals</span>
+            Benchmark Ecommerce Stores by Google's Public Quality Signals
           </h2>
         </div>
         
@@ -613,7 +613,7 @@ export default function Page() {
                                 href={validationUrl(row.domain, row.country)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center rounded border border-black bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition flex-shrink-0"
+                                className="inline-flex items-center rounded bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition flex-shrink-0"
                                 title="Open source URL"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">
@@ -754,21 +754,21 @@ export default function Page() {
 
       {/* Explainer */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-white bg-black px-3 py-1">
-            How Google Might Interpret These Signals?
-          </h2>
-        </div>
-
         <div className="border border-black bg-white">
-          <div className="overflow-x-auto">
+          <div className="divide-y divide-black">
+            <div className="text-center py-4 bg-gray-100">
+              <h2 className="text-lg font-semibold text-black">
+                How Google Might Interpret These Signals?
+              </h2>
+            </div>
+            <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-black text-sm text-white">
+              <thead className="text-sm">
                 <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left">
-                  <th className="w-[20%] text-left">Signal</th>
-                  <th className="w-[26%] text-left">What it means</th>
-                  <th className="w-[27%] text-left">How it's measured</th>
-                  <th className="w-[27%] text-left">Quick wins</th>
+                  <th className="w-[20%] text-left font-bold text-black">Signal</th>
+                  <th className="w-[26%] text-left font-bold text-black">What it means</th>
+                  <th className="w-[27%] text-left font-bold text-black">How it's measured</th>
+                  <th className="w-[27%] text-left font-bold text-black">Quick wins</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -782,20 +782,21 @@ export default function Page() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </section>
 
       {/* TSQ Scoring Explanation */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-white bg-black px-3 py-1">
-            How Are These Scores Calculated?
-          </h2>
-        </div>
-
         <div className="border border-black bg-white">
-          <div className="px-6 py-8">
+          <div className="divide-y divide-black">
+            <div className="text-center py-4 bg-gray-100">
+              <h2 className="text-lg font-semibold text-black">
+                How Are These Scores Calculated?
+              </h2>
+            </div>
+            <div className="px-6 py-8">
             <p className="text-slate-700 mb-4 text-sm">
               These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
               The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
@@ -871,20 +872,20 @@ export default function Page() {
               Final scores are capped at 100 points and rounded to the nearest integer. 
               Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
             </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-white bg-black px-3 py-1">
-            Frequently Asked Questions
-          </h2>
-        </div>
-
         <div className="border border-black bg-white">
           <div className="divide-y divide-black">
+            <div className="text-center py-4 bg-gray-100">
+              <h2 className="text-lg font-semibold text-black">
+                Frequently Asked Questions
+              </h2>
+            </div>
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
               <p className="mt-1 text-sm text-slate-600">
