@@ -80,8 +80,8 @@ type Row = {
 const DEFAULTS = ['asos.com','boohoo.com','next.co.uk','riverisland.com','newlook.com'];
 
 // Quick Start Categories
-type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Outdoors' | 'Art' | 'Furniture';
-type CountryKey = 'UK' | 'US';
+type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Outdoors' | 'Art' | 'Furniture' | 'Electronics' | 'Home & Garden' | 'Health & Beauty';
+type CountryKey = 'UK' | 'US' | 'AU';
 
 const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> = {
   'UK': {
@@ -90,15 +90,32 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
     'Sports & Fitness': ['sportsdirect.com', 'decathlon.co.uk', 'jdsports.co.uk', 'mountainwarehouse.com', 'gymshark.com'],
     'Outdoors': ['gooutdoors.co.uk', 'millets.co.uk', 'blacks.co.uk', 'cotswoldoutdoor.com', 'ellis-brigham.com'],
     'Art': ['cassart.co.uk', 'jacksonart.com', 'artdiscount.co.uk', 'theworks.co.uk', 'hobbycraft.co.uk'],
-    'Furniture': ['ikea.com', 'wayfair.co.uk', 'dunelm.com', 'argos.co.uk', 'bensonsforbeds.co.uk']
+    'Furniture': ['ikea.com', 'wayfair.co.uk', 'dunelm.com', 'argos.co.uk', 'bensonsforbeds.co.uk'],
+    'Electronics': ['currys.co.uk', 'argos.co.uk', 'johnlewis.com', 'very.co.uk', 'ao.com'],
+    'Home & Garden': ['b&q.co.uk', 'homebase.co.uk', 'wickes.co.uk', 'screwfix.com', 'toolstation.com'],
+    'Health & Beauty': ['boots.com', 'superdrug.com', 'hollandandbarrett.com', 'lookfantastic.com', 'cultbeauty.com']
   },
   'US': {
     'Fashion': ['nordstrom.com', 'macys.com', 'gap.com', 'oldnavy.com', 'bananarepublic.com'],
-    'Cosmetics': ['sephora.com', 'ulta.com', 'ulta.com', 'beautylish.com', 'glossier.com'],
+    'Cosmetics': ['sephora.com', 'ulta.com', 'fentybeauty.com', 'beautylish.com', 'glossier.com'],
     'Sports & Fitness': ['dickssportinggoods.com', 'academy.com', 'rei.com', 'nike.com', 'adidas.com'],
     'Outdoors': ['rei.com', 'backcountry.com', 'patagonia.com', 'columbia.com', 'northface.com'],
     'Art': ['dickblick.com', 'michaels.com', 'joann.com', 'hobbylobby.com', 'jerrysartarama.com'],
-    'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com']
+    'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com'],
+    'Electronics': ['bestbuy.com', 'amazon.com', 'newegg.com', 'microcenter.com', 'b&h.com'],
+    'Home & Garden': ['homedepot.com', 'lowes.com', 'menards.com', 'acehardware.com', 'tractorsupply.com'],
+    'Health & Beauty': ['cvs.com', 'walgreens.com', 'target.com', 'walmart.com', 'amazon.com']
+  },
+  'AU': {
+    'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
+    'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
+    'Sports & Fitness': ['rebel.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
+    'Outdoors': ['anaconda.com.au', 'kathmandu.com.au', 'macpac.com.au', 'patagonia.com.au', 'columbia.com.au'],
+    'Art': ['eckersleys.com.au', 'officeworks.com.au', 'spotlight.com.au', 'lincraft.com.au', 'riotart.com.au'],
+    'Furniture': ['ikea.com.au', 'freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au'],
+    'Electronics': ['harveynorman.com.au', 'jb-hifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
+    'Home & Garden': ['bunnings.com.au', 'masters.com.au', 'mitre10.com.au', 'total-tools.com.au', 'sydney-tools.com.au'],
+    'Health & Beauty': ['chemistwarehouse.com.au', 'priceline.com.au', 'terrywhite.com.au', 'pharmacyonline.com.au', 'amcal.com.au']
   }
 };
 
@@ -396,55 +413,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Quick Start Section */}
-      <section className="mx-auto max-w-6xl px-6 pb-8">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-6 shadow-sm backdrop-blur">
-          <div className="text-center mb-6">
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">Quick Start</h3>
-            <p className="text-sm text-slate-600">Click any category to instantly compare popular brands</p>
-          </div>
-          
-          <div className="space-y-4">
-            {/* UK Categories */}
-            <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
-                🇬🇧 United Kingdom
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
-                  <button
-                    key={`UK-${category}`}
-                    onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* US Categories */}
-            <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
-                🇺🇸 United States
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
-                  <button
-                    key={`US-${category}`}
-                    onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    {/* Results */}
+      {/* Results */}
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -577,6 +546,72 @@ export default function Page() {
           </div>
         </section>
       )}
+
+      {/* Quick Start Section */}
+      <section className="mx-auto max-w-6xl px-6 pb-8">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-6 shadow-sm backdrop-blur">
+          <div className="text-center mb-6">
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Quick Start</h3>
+            <p className="text-sm text-slate-600">Click any category to instantly compare popular brands</p>
+          </div>
+          
+          <div className="space-y-4">
+            {/* UK Categories */}
+            <div className="flex items-center gap-4">
+              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+                🇬🇧 United Kingdom
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
+                  <button
+                    key={`UK-${category}`}
+                    onClick={() => handleQuickStart('UK', category as CategoryKey)}
+                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* US Categories */}
+            <div className="flex items-center gap-4">
+              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+                🇺🇸 United States
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
+                  <button
+                    key={`US-${category}`}
+                    onClick={() => handleQuickStart('US', category as CategoryKey)}
+                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* AU Categories */}
+            <div className="flex items-center gap-4">
+              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
+                🇦🇺 Australia
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
+                  <button
+                    key={`AU-${category}`}
+                    onClick={() => handleQuickStart('AU', category as CategoryKey)}
+                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Explainer */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
