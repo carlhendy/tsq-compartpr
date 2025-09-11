@@ -99,6 +99,15 @@ const getFaviconUrlWithFallback = (domain: string) => {
   return getFaviconUrl(domain);
 };
 
+// Helper function for results table favicons (larger size)
+const getResultsFaviconUrl = (domain: string) => {
+  // Use larger size for results table
+  if (domain === 'chemistwarehouse.com.au') {
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
+  }
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+};
+
 const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> = {
   'UK': {
     'Fashion': ['asos.com', 'next.co.uk', 'riverisland.com', 'boohoo.com', 'newlook.com'],
@@ -542,9 +551,35 @@ export default function Page() {
                           <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
+                              <img 
+                                src={s.logo_url} 
+                                alt="" 
+                                className="h-full w-full object-cover" 
+                                onError={(e) => {
+                                  const img = e.target as HTMLImageElement;
+                                  // Try our robust favicon service as fallback
+                                  img.src = getResultsFaviconUrl(row.domain);
+                                }}
+                              />
                             ) : (
-                              <div className="h-full w-full bg-slate-100" />
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img 
+                                src={getResultsFaviconUrl(row.domain)} 
+                                alt="" 
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                  const img = e.target as HTMLImageElement;
+                                  // Try alternative favicon services
+                                  if (img.src.includes('google.com/s2/favicons')) {
+                                    img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
+                                  } else if (img.src.includes('duckduckgo.com')) {
+                                    img.src = `https://favicons.githubusercontent.com/${row.domain}`;
+                                  } else {
+                                    // Final fallback to generic icon
+                                    img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iOCIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMzIgMTZMMTQ4IDMyTDMyIDQ4TDE2IDMyTDMyIDE2WiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K';
+                                  }
+                                }}
+                              />
                             )}
                           </div>
                           <div className="leading-5 min-w-0 flex-1">
