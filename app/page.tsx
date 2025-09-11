@@ -96,10 +96,6 @@ const getFaviconUrlWithFallback = (domain: string) => {
     // Try with www prefix first
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
   }
-  if (domain === 'tractorsupply.com') {
-    // Try DuckDuckGo first for Tractor Supply as Google might not have it
-    return `https://icons.duckduckgo.com/ip3/www.${domain}.ico`;
-  }
   if (domain === 'bhphotovideo.com') {
     // Try with www prefix for B&H
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
@@ -112,10 +108,6 @@ const getResultsFaviconUrl = (domain: string) => {
   // Special handling for domains that might have favicon issues
   if (domain === 'chemistwarehouse.com.au') {
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
-  }
-  if (domain === 'tractorsupply.com') {
-    // Try DuckDuckGo first for Tractor Supply as Google might not have it
-    return `https://icons.duckduckgo.com/ip3/www.${domain}.ico`;
   }
   if (domain === 'bhphotovideo.com') {
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
@@ -138,7 +130,7 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
     'Sports & Fitness': ['dickssportinggoods.com', 'academy.com', 'rei.com', 'nike.com', 'adidas.com'],
     'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com'],
     'Electronics': ['bestbuy.com', 'amazon.com', 'newegg.com', 'microcenter.com', 'bhphotovideo.com'],
-    'Home & Garden': ['homedepot.com', 'lowes.com', 'menards.com', 'acehardware.com', 'tractorsupply.com']
+    'Home & Garden': ['homedepot.com', 'lowes.com', 'menards.com', 'acehardware.com', 'harborfreight.com']
   },
   'AU': {
     'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
@@ -593,7 +585,7 @@ export default function Page() {
                                     img.src = `https://${row.domain}/favicon.ico`;
                                   } else if (img.src.includes('google.com/s2/favicons')) {
                                     // Try DuckDuckGo with different domain format
-                                    if (row.domain === 'tractorsupply.com' || row.domain === 'bhphotovideo.com') {
+                                    if (row.domain === 'bhphotovideo.com') {
                                       img.src = `https://icons.duckduckgo.com/ip3/www.${row.domain}.ico`;
                                     } else {
                                       img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
