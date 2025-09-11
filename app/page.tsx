@@ -371,7 +371,7 @@ export default function Page() {
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
                 <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
-                  <tr className="[&>th]:px-2 [&>th]:py-4 [&>th]:align-middle">
+                  <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle">
                     <th className="w-[4%] text-center"></th>
                     <th className="w-[18%] text-left">Store</th>
                     <th className="w-[6%] text-center">Top Quality Store</th>
@@ -408,7 +408,7 @@ export default function Page() {
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
-                      <tr key={i} className="[&>td]:px-2 [&>td]:py-4 [&>td]:align-middle hover:bg-slate-50 transition-colors">
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-slate-50 transition-colors">
                         <td className="text-center text-2xl" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
@@ -542,92 +542,93 @@ export default function Page() {
 
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="px-6 py-8">
-            <div className="prose prose-slate max-w-none">
-              <p className="text-slate-700 mb-4">
-                These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
-                The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
-              </p>
-              
-              <h3 className="text-lg font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700">Returns Quality</span>
-                    <span className="text-slate-600 font-mono">30%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700">Shipping Quality</span>
-                    <span className="text-slate-600 font-mono">25%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700">Competitive Pricing</span>
-                    <span className="text-slate-600 font-mono">25%</span>
-                  </div>
+            <p className="text-slate-700 mb-4 text-sm">
+              These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
+              The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
+            </p>
+            
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
+                  <span className="text-slate-600 font-mono text-sm">30%</span>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700">Website Quality</span>
-                    <span className="text-slate-600 font-mono">10%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700">Payment Wallets</span>
-                    <span className="text-slate-600 font-mono">5%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700">Trust Score</span>
-                    <span className="text-slate-600 font-mono">5%</span>
-                  </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
+                  <span className="text-slate-600 font-mono text-sm">25%</span>
+                </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
+                  <span className="text-slate-600 font-mono text-sm">25%</span>
                 </div>
               </div>
-
-              <h3 className="text-lg font-semibold text-slate-800 mb-3">Grade Values:</h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-                <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="font-semibold text-green-800">Exceptional</div>
-                  <div className="text-sm text-green-600">100 points</div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Website Quality</span>
+                  <span className="text-slate-600 font-mono text-sm">10%</span>
                 </div>
-                <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="font-semibold text-green-800">Great</div>
-                  <div className="text-sm text-green-600">85 points</div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
+                  <span className="text-slate-600 font-mono text-sm">5%</span>
                 </div>
-                <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <div className="font-semibold text-yellow-800">Good</div>
-                  <div className="text-sm text-yellow-600">70 points</div>
-                </div>
-                <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
-                  <div className="font-semibold text-orange-800">Fair</div>
-                  <div className="text-sm text-orange-600">40 points</div>
-                </div>
-                <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
-                  <div className="font-semibold text-red-800">Poor</div>
-                  <div className="text-sm text-red-600">20 points</div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Trust Score</span>
+                  <span className="text-slate-600 font-mono text-sm">5%</span>
                 </div>
               </div>
-
-              <h3 className="text-lg font-semibold text-slate-800 mb-3">Bonuses:</h3>
-              <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4">
-                <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
-                <li><strong>Top Quality Store Badge:</strong> +5 points</li>
-                <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
-                <li><strong>Trust Score:</strong> Normalized from 0-100 (e.g., 85/100 = 85% of 5 points)</li>
-              </ul>
-
-              <p className="text-sm text-slate-600 italic">
-                Final scores are capped at 100 points and rounded to the nearest integer. 
-                Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
-              </p>
             </div>
+
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">Grade Values:</h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                <div className="font-semibold text-green-800 text-sm">Exceptional</div>
+                <div className="text-xs text-green-600">100 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                <div className="font-semibold text-green-800 text-sm">Great</div>
+                <div className="text-xs text-green-600">85 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div className="font-semibold text-yellow-800 text-sm">Good</div>
+                <div className="text-xs text-yellow-600">70 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
+                <div className="font-semibold text-orange-800 text-sm">Fair</div>
+                <div className="text-xs text-orange-600">40 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
+                <div className="font-semibold text-red-800 text-sm">Poor</div>
+                <div className="text-xs text-red-600">20 points</div>
+              </div>
+            </div>
+
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
+            <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
+              <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
+              <li><strong>Top Quality Store Badge:</strong> +5 points</li>
+              <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
+              <li><strong>Trust Score:</strong> Normalized from 0-100 (e.g., 85/100 = 85% of 5 points)</li>
+            </ul>
+
+            <p className="text-xs text-slate-600 italic">
+              Final scores are capped at 100 points and rounded to the nearest integer. 
+              Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
+            </p>
           </div>
         </div>
       </section>
 
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="text-center mb-6">
+          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
-            <h2 className="text-sm font-medium text-slate-700">FAQs</h2>
-          </div>
           <div className="divide-y divide-slate-100">
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
