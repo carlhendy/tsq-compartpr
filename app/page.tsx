@@ -83,6 +83,101 @@ const DEFAULTS = ['asos.com','boohoo.com','next.co.uk','riverisland.com','newloo
 type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Furniture' | 'Electronics' | 'Home & Garden';
 type CountryKey = 'UK' | 'US' | 'AU';
 
+// Brand favicon mapping
+const BRAND_FAVICONS: Record<string, string> = {
+  // UK
+  'asos.com': 'https://www.asos.com/favicon.ico',
+  'next.co.uk': 'https://www.next.co.uk/favicon.ico',
+  'riverisland.com': 'https://www.riverisland.com/favicon.ico',
+  'boohoo.com': 'https://www.boohoo.com/favicon.ico',
+  'newlook.com': 'https://www.newlook.com/favicon.ico',
+  'boots.com': 'https://www.boots.com/favicon.ico',
+  'superdrug.com': 'https://www.superdrug.com/favicon.ico',
+  'lookfantastic.com': 'https://www.lookfantastic.com/favicon.ico',
+  'cultbeauty.com': 'https://www.cultbeauty.com/favicon.ico',
+  'feelunique.com': 'https://www.feelunique.com/favicon.ico',
+  'sportsdirect.com': 'https://www.sportsdirect.com/favicon.ico',
+  'decathlon.co.uk': 'https://www.decathlon.co.uk/favicon.ico',
+  'jdsports.co.uk': 'https://www.jdsports.co.uk/favicon.ico',
+  'mountainwarehouse.com': 'https://www.mountainwarehouse.com/favicon.ico',
+  'gymshark.com': 'https://www.gymshark.com/favicon.ico',
+  'ikea.com': 'https://www.ikea.com/favicon.ico',
+  'wayfair.co.uk': 'https://www.wayfair.co.uk/favicon.ico',
+  'dunelm.com': 'https://www.dunelm.com/favicon.ico',
+  'argos.co.uk': 'https://www.argos.co.uk/favicon.ico',
+  'bensonsforbeds.co.uk': 'https://www.bensonsforbeds.co.uk/favicon.ico',
+  'currys.co.uk': 'https://www.currys.co.uk/favicon.ico',
+  'johnlewis.com': 'https://www.johnlewis.com/favicon.ico',
+  'very.co.uk': 'https://www.very.co.uk/favicon.ico',
+  'ao.com': 'https://www.ao.com/favicon.ico',
+  'b&q.co.uk': 'https://www.diy.com/favicon.ico',
+  'homebase.co.uk': 'https://www.homebase.co.uk/favicon.ico',
+  'wickes.co.uk': 'https://www.wickes.co.uk/favicon.ico',
+  'screwfix.com': 'https://www.screwfix.com/favicon.ico',
+  'toolstation.com': 'https://www.toolstation.com/favicon.ico',
+  
+  // US
+  'nordstrom.com': 'https://www.nordstrom.com/favicon.ico',
+  'macys.com': 'https://www.macys.com/favicon.ico',
+  'gap.com': 'https://www.gap.com/favicon.ico',
+  'oldnavy.com': 'https://www.oldnavy.com/favicon.ico',
+  'bananarepublic.com': 'https://www.bananarepublic.com/favicon.ico',
+  'sephora.com': 'https://www.sephora.com/favicon.ico',
+  'ulta.com': 'https://www.ulta.com/favicon.ico',
+  'fentybeauty.com': 'https://www.fentybeauty.com/favicon.ico',
+  'beautylish.com': 'https://www.beautylish.com/favicon.ico',
+  'glossier.com': 'https://www.glossier.com/favicon.ico',
+  'dickssportinggoods.com': 'https://www.dickssportinggoods.com/favicon.ico',
+  'academy.com': 'https://www.academy.com/favicon.ico',
+  'rei.com': 'https://www.rei.com/favicon.ico',
+  'nike.com': 'https://www.nike.com/favicon.ico',
+  'adidas.com': 'https://www.adidas.com/favicon.ico',
+  'wayfair.com': 'https://www.wayfair.com/favicon.ico',
+  'westelm.com': 'https://www.westelm.com/favicon.ico',
+  'crateandbarrel.com': 'https://www.crateandbarrel.com/favicon.ico',
+  'potterybarn.com': 'https://www.potterybarn.com/favicon.ico',
+  'bestbuy.com': 'https://www.bestbuy.com/favicon.ico',
+  'amazon.com': 'https://www.amazon.com/favicon.ico',
+  'newegg.com': 'https://www.newegg.com/favicon.ico',
+  'microcenter.com': 'https://www.microcenter.com/favicon.ico',
+  'b&h.com': 'https://www.bhphotovideo.com/favicon.ico',
+  'homedepot.com': 'https://www.homedepot.com/favicon.ico',
+  'lowes.com': 'https://www.lowes.com/favicon.ico',
+  'menards.com': 'https://www.menards.com/favicon.ico',
+  'acehardware.com': 'https://www.acehardware.com/favicon.ico',
+  'tractorsupply.com': 'https://www.tractorsupply.com/favicon.ico',
+  
+  // AU
+  'theiconic.com.au': 'https://www.theiconic.com.au/favicon.ico',
+  'cottonon.com': 'https://www.cottonon.com/favicon.ico',
+  'countryroad.com.au': 'https://www.countryroad.com.au/favicon.ico',
+  'seedheritage.com': 'https://www.seedheritage.com/favicon.ico',
+  'witchery.com.au': 'https://www.witchery.com.au/favicon.ico',
+  'priceline.com.au': 'https://www.priceline.com.au/favicon.ico',
+  'chemistwarehouse.com.au': 'https://www.chemistwarehouse.com.au/favicon.ico',
+  'mecca.com.au': 'https://www.mecca.com.au/favicon.ico',
+  'adorebeauty.com.au': 'https://www.adorebeauty.com.au/favicon.ico',
+  'sephora.com.au': 'https://www.sephora.com.au/favicon.ico',
+  'rebelsport.com.au': 'https://www.rebelsport.com.au/favicon.ico',
+  'amart.com.au': 'https://www.amart.com.au/favicon.ico',
+  'anaconda.com.au': 'https://www.anaconda.com.au/favicon.ico',
+  'nike.com.au': 'https://www.nike.com.au/favicon.ico',
+  'adidas.com.au': 'https://www.adidas.com.au/favicon.ico',
+  'freedom.com.au': 'https://www.freedom.com.au/favicon.ico',
+  'fantasticfurniture.com.au': 'https://www.fantasticfurniture.com.au/favicon.ico',
+  'harveynorman.com.au': 'https://www.harveynorman.com.au/favicon.ico',
+  'domayne.com.au': 'https://www.domayne.com.au/favicon.ico',
+  'jbhifi.com.au': 'https://www.jbhifi.com.au/favicon.ico',
+  'officeworks.com.au': 'https://www.officeworks.com.au/favicon.ico',
+  'bigw.com.au': 'https://www.bigw.com.au/favicon.ico',
+  'target.com.au': 'https://www.target.com.au/favicon.ico',
+  'bunnings.com.au': 'https://www.bunnings.com.au/favicon.ico',
+  'homehardware.com.au': 'https://www.homehardware.com.au/favicon.ico',
+  'mitre10.com.au': 'https://www.mitre10.com.au/favicon.ico',
+  'totaltools.com.au': 'https://www.totaltools.com.au/favicon.ico',
+  'sydneytools.com.au': 'https://www.sydneytools.com.au/favicon.ico'
+};
+
 const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> = {
   'UK': {
     'Fashion': ['asos.com', 'next.co.uk', 'riverisland.com', 'boohoo.com', 'newlook.com'],
@@ -202,6 +297,33 @@ const badge = (label: string | number, tone: 'green'|'yellow'|'red'|'slate' = 's
 const validationUrl = (domain: string, country: string) => {
   const c = (country || 'US').toUpperCase();
   return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
+};
+
+// Component to show brand favicons for a category
+const CategoryFavicons = ({ brands }: { brands: string[] }) => {
+  const visibleBrands = brands.slice(0, 3); // Show first 3 brands
+  const remainingCount = brands.length - 3;
+  
+  return (
+    <div className="flex items-center gap-1">
+      {visibleBrands.map((brand, index) => (
+        <div key={brand} className="h-4 w-4 rounded-sm overflow-hidden bg-white ring-1 ring-slate-200">
+          <img
+            src={BRAND_FAVICONS[brand] || '/favicon.ico'}
+            alt=""
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              // Hide image if favicon fails to load
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        </div>
+      ))}
+      {remainingCount > 0 && (
+        <span className="text-xs text-slate-500 ml-1">+{remainingCount}</span>
+      )}
+    </div>
+  );
 };
 
 /** ---------- Page ---------- */
@@ -582,9 +704,10 @@ export default function Page() {
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-1 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
-                    {category}
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
+                    <span>{category}</span>
                   </button>
                 ))}
               </div>
@@ -600,9 +723,10 @@ export default function Page() {
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-1 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
-                    {category}
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
+                    <span>{category}</span>
                   </button>
                 ))}
               </div>
@@ -618,9 +742,10 @@ export default function Page() {
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="inline-flex items-center justify-center gap-1 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
-                    {category}
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
+                    <span>{category}</span>
                   </button>
                 ))}
               </div>
