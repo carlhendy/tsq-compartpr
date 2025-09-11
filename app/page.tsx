@@ -409,7 +409,7 @@ export default function Page() {
                     
                     return (
                       <tr key={i} className="[&>td]:px-2 [&>td]:py-4 [&>td]:align-middle hover:bg-slate-50 transition-colors">
-                        <td className="text-center text-lg" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
+                        <td className="text-center text-2xl" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
                         <td className="flex items-center gap-2 pr-1">
@@ -498,10 +498,44 @@ export default function Page() {
         </section>
       )}
 
+      {/* Explainer */}
+      <section className="mx-auto max-w-6xl px-6 pb-10">
+        <div className="text-center mb-6">
+          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
+            How Google Might Interpret These Signals?
+          </h2>
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-slate-50 text-sm text-slate-600">
+                <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left">
+                  <th className="w-[20%] text-left">Signal</th>
+                  <th className="w-[26%] text-left">What it means</th>
+                  <th className="w-[27%] text-left">How it's measured</th>
+                  <th className="w-[27%] text-left">Quick wins</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {EXPLAINER.map((r, idx) => (
+                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3">
+                    <td className="font-medium text-slate-900">{r.m}</td>
+                    <td className="text-slate-700">{r.w}</td>
+                    <td className="text-slate-600">{r.t}</td>
+                    <td className="text-slate-600">{r.q}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       {/* TSQ Scoring Explanation */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-blue-100/70 px-3 py-1 rounded-md">
+          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
             How Are These Scores Calculated?
           </h2>
         </div>
@@ -584,40 +618,6 @@ export default function Page() {
                 Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Explainer */}
-      <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
-            How Google Might Interpret These Signals?
-          </h2>
-        </div>
-
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-sm text-slate-600">
-                <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left">
-                  <th className="w-[20%] text-left">Signal</th>
-                  <th className="w-[26%] text-left">What it means</th>
-                  <th className="w-[27%] text-left">How it’s measured</th>
-                  <th className="w-[27%] text-left">Quick wins</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3">
-                    <td className="font-medium text-slate-900">{r.m}</td>
-                    <td className="text-slate-700">{r.w}</td>
-                    <td className="text-slate-600">{r.t}</td>
-                    <td className="text-slate-600">{r.q}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       </section>
