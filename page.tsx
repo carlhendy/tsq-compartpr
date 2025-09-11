@@ -63,6 +63,8 @@ type Signals = {
     shipping?: string;
     returns?: string;
     pricing?: string;
+    payments?: string;
+    website?: string;
   };
 
   [k: string]: any;

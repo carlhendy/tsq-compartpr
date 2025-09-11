@@ -16,7 +16,7 @@ function stripTags(html: string) {
 function sanitizeNoise(s: string) { return s.replace(/\+\s*\d+\s*more/gi, ""); }
 function textContent(html: string) { return sanitizeNoise(stripTags(html)); }
 function pick(text: string, res: RegExp[], gi = 1) {
-  for (const re of res) { const m = text.match(re); if (m && m[gi]) return m[gi].trim(); }
+  for (const re of res) { const m = text.match(re); if (m && m[gi]) return (""+m[gi]).trim(); }
   return "";
 }
 function allIdx(text: string, re: RegExp) {
@@ -28,79 +28,141 @@ function win(s: string, i: number, radius: number) { const a = Math.max(0, i - r
 function extractStructuredInsights(html: string, scopeHint?: { start: number; end: number }) {
   const segment = scopeHint ? html.slice(scopeHint.start, scopeHint.end) : html;
 
-  function afterHeader(seg: string, headerPattern: string) {
-    const re = new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,220}?<(?:(?:div)|(?:span))[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|span)>`,
+  // Extract data from the structured insights section based on the actual HTML structure
+  function extractInsightData(seg: string, headerPattern: string) {
+    // Look for the pattern: header text followed by description and grade
+    // Based on the actual HTML structure from Google Store pages
+    
+    // First, try to find the Store Insights section
+    const storeInsightsMatch = seg.match(/Store Insights[\s\S]*?(?=Other ratings|$)/i);
+    if (!storeInsightsMatch) {
+      return { description: "", grade: "" };
+    }
+    
+    const insightsSection = storeInsightsMatch[0];
+    
+    // Pattern 1: Look for the specific structure with proper HTML tags
+    const re1 = new RegExp(
+      `${headerPattern}[\\s\\S]*?<[^>]*>([^<]*?)<[^>]*>[\\s\\S]*?<[^>]*>([^<]*?)(?:Exceptional|Great|Good|Fair|Poor)[^<]*<[^>]*>`,
       "i"
     );
-    const m = seg.match(re);
-    return m ? stripTags(m[1]) : "";
-  }
-
-  const shippingRaw = afterHeader(segment, "Shipping");
-  const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
-  let paymentsRaw = "";
-  const payBlock = segment.match(
-    new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Payment\\s+options|Payment\\s+methods)\\s*<\\/(?:div|span)>[\\s\\S]{0,220}?<span[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`,
-      "i"
-    )
-  );
-  if (payBlock) {
-    const expanded = payBlock[1].match(/<span[^>]*class=["']NBMhyb["'][^>]*>([\s\S]*?)<\/span>/i);
-    const primary  = payBlock[1].match(/<span[^>]*jsname=["']u5tB8["'][^>]*>([\s\S]*?)<\/span>/i);
-    paymentsRaw = stripTags((expanded && expanded[1]) || (primary && primary[1]) || payBlock[1]);
-  }
-
-  function gradeFor(seg: string, headerPattern: string): string {
-    const re = new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,320}?<span[^>]*class=["']rMOWke-uDEFge\\s+hnGZye[^"']*["'][^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\\/span>`,
+    
+    // Pattern 2: Look for the structure in the actual Google Store page HTML
+    // Based on the live page structure where headers are followed by descriptions and grades
+    const re2 = new RegExp(
+      `${headerPattern}\\s*([^\\n]*?)\\s*(Exceptional|Great|Good|Fair|Poor)`,
       "i"
     );
-    const m = seg.match(re);
-    return m ? stripTags(m[1]) : "";
+    
+    // Pattern 3: Look for the specific structure where description comes after the header div
+    const re3 = new RegExp(
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 4: More flexible pattern that looks for the header anywhere followed by description and grade
+    const re4 = new RegExp(
+      `${headerPattern}[\\s\\S]*?(?:<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>)?[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 5: Nested span structure with KtbsVc-r4nke-haAclf
+    const re5 = new RegExp(
+      `<span[^>]*class="KtbsVc-r4nke-haAclf"[^>]*>[\\s\\S]*?<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?(?:<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>)?[\\s\\S]*?<\/span>[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 6: Original structure
+    const re6 = new RegExp(
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?(?:<(?:div|span) class="KtbsVc-ij8cu-fmcmS"[^>]*>([\\s\\S]*?)<\/(?:div|span)>)?[\\s\\S]*?<span[^>]*class="rMOWke-uDEFge hnGZye[^"']*"[^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\/span>`,
+      "i"
+    );
+    
+    let m = insightsSection.match(re1);
+    if (!m) {
+      m = insightsSection.match(re2);
+    }
+    if (!m) {
+      m = insightsSection.match(re3);
+    }
+    if (!m) {
+      m = insightsSection.match(re4);
+    }
+    if (!m) {
+      m = insightsSection.match(re5);
+    }
+    if (!m) {
+      m = insightsSection.match(re6);
+    }
+    
+    return {
+      description: m && m[1] ? stripTags(m[1]) : "",
+      grade: m && m[2] ? stripTags(m[2]) : ""
+    };
   }
 
-  // Delivery time
-  let delivery_time = pick(
-    [shippingRaw, returnsRaw, paymentsRaw].join(" "),
-    [
-      /(?:£|\$|€)\s*\d+(?:\.\d{2})?[^a-zA-Z]{0,6}(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i,
-      /(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)\s*(?:delivery|ship|shipping)\b/i,
-      /deliver[s]?\s+in\s+(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i
-    ],
-    1
-  );
-  if (!delivery_time && /\bfree\s+delivery\b/i.test(shippingRaw)) {
-    delivery_time = "Free delivery";
+  // Extract shipping data
+  const shippingData = extractInsightData(segment, "Shipping");
+  const shippingRaw = shippingData.description;
+  const shippingGrade = shippingData.grade;
+
+  // Extract returns data
+  const returnsData = extractInsightData(segment, "Returns?");
+  const returnsRaw = returnsData.description;
+  const returnsGrade = returnsData.grade;
+
+  // Extract payment options data
+  const paymentsData = extractInsightData(segment, "Payment options");
+  const paymentsRaw = paymentsData.description;
+  const paymentsGrade = paymentsData.grade;
+
+  // Extract website quality data
+  const websiteData = extractInsightData(segment, "Website quality");
+  const websiteGrade = websiteData.grade;
+
+  // Extract competitive pricing data
+  const pricingData = extractInsightData(segment, "Competitive pricing");
+  const pricingGrade = pricingData.grade;
+
+  // Delivery time - extract from shipping description
+  let delivery_time = "";
+  if (shippingRaw) {
+    // Look for time patterns in shipping description
+    const timeMatch = shippingRaw.match(/(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i);
+    if (timeMatch) {
+      delivery_time = timeMatch[1];
+    } else if (/\bfree\s+delivery\b/i.test(shippingRaw)) {
+      delivery_time = "Free delivery";
+    }
   }
 
   const shipping_cost_free =
     /\bfree\s+(delivery|shipping)\b/i.test(shippingRaw) ||
     /\b(?:delivery|shipping)\s*(?:cost|price)?[:\s-]*\s*free\b/i.test(shippingRaw);
 
-  const return_window = pick(
-    returnsRaw,
-    [
-      /(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)\s*returns?\b/i,
-      /returns?\s*(?:within|in)?\s*(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i,
-      /return\s*(?:window|period|policy)[:\s-]*\s*(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i
-    ],
-    1
-  );
+  // Return window - extract from returns description
+  let return_window = "";
+  if (returnsRaw) {
+    const timeMatch = returnsRaw.match(/(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i);
+    if (timeMatch) {
+      return_window = timeMatch[1];
+    }
+  }
+
   const return_cost_free =
     /\bfree\s+returns?\b/i.test(returnsRaw) ||
     /\breturn\s*(?:shipping|cost)[:\s-]*\s*free\b/i.test(returnsRaw);
 
-  const wallets = Array.from(new Set(Array.from((paymentsRaw || "").matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)\b/gi)).map(m => m[1])));
+  // Extract payment wallets from the payment options description
+  const wallets = Array.from(new Set(Array.from((paymentsRaw || "").matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna|Stripe|Square)\b/gi)).map(m => m[1])));
   const e_wallets = wallets.join(", ");
 
   const section_grades = {
-    shipping: gradeFor(segment, "Shipping"),
-    returns: gradeFor(segment, "Returns?|Return\\s+policy|Returns\\s+policy"),
-    pricing: gradeFor(segment, "Competitive\\s+pricing"),
-    payments: gradeFor(segment, "Payment\\s+options|Payment\\s+methods"),
-    website: gradeFor(segment, "Website\\s+quality")
+    shipping: shippingGrade,
+    returns: returnsGrade,
+    pricing: pricingGrade,
+    payments: paymentsGrade,
+    website: websiteGrade
   };
 
   return { delivery_time, shipping_cost_free, return_window, return_cost_free, e_wallets, section_grades };
@@ -112,11 +174,11 @@ function extractSignalsFromHtml(html: string, domain: string) {
   const domIdxVis = visAll.search(domRe);
   const domIdxRaw = html.search(domRe);
 
-  const near = domIdxRaw >= 0 ? ((s: string) => ({ start: Math.max(0, domIdxRaw - 25000), end: Math.min(s.length, domIdxRaw + 25000) }))(html) : null;
+  const near = domIdxRaw >= 0 ? ((s: string) => ({ start: Math.max(0, domIdxRaw - 32000), end: Math.min(s.length, domIdxRaw + 32000) }))(html) : null;
   const htmlNear = near ? html.slice(near.start, near.end) : html;
 
   // Logo (page image) or favicon fallback
-  let logoMatch = htmlNear.match(/<img[^>]*class=["']Kl6mye-l4eHX["'][^>]*src=["']([^"']+)["'][^>]*>/i) || html.match(/<img[^>]*class=["']Kl6mye-l4eHX["'][^>]*src=["']([^"']+)["'][^>]*>/i);
+  let logoMatch = htmlNear.match(/<img[^>]*class=["'][^"']*Kl6mye-l4eHX[^"']*["'][^>]*src=["']([^"']+)["'][^>]*>/i) || html.match(/<img[^>]*class=["'][^"']*Kl6mye-l4eHX[^"']*["'][^>]*src=["']([^"']+)["'][^>]*>/i);
   let logo_url = logoMatch ? logoMatch[1] : `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
 
   // TQS
@@ -126,34 +188,52 @@ function extractSignalsFromHtml(html: string, domain: string) {
     /\b(?:aria-label|alt)\s*=\s*["']Top\s+Quality\s+Store["']/gi
   ]) tqsMarkers.push(...allIdx(html, re));
   let tqs_badge = false;
-  for (const p of tqsMarkers) { const wnd = win(html, p, 2000); if (domRe.test(wnd)) { tqs_badge = true; break; } }
+  for (const p of tqsMarkers) { const wnd = win(html, p, 2200); if (domRe.test(wnd)) { tqs_badge = true; break; } }
 
   // Insights
   let ins = extractStructuredInsights(html, near || undefined);
   if (!ins.delivery_time && !ins.return_window && !ins.e_wallets) ins = extractStructuredInsights(html);
 
-  // Ratings/Reviews — add global fallbacks for Next-style markup
-  const h1Win = domIdxVis >= 0 ? win(visAll, domIdxVis, 6000) : visAll;
+  // Ratings/Reviews — robust Next-style fallbacks
+  const h1Win = domIdxVis >= 0 ? win(visAll, domIdxVis, 9000) : visAll;
 
-  // Try aria-label pattern near domain then globally
+  // Rating candidates:
   let store_rating =
-    pick(htmlNear, [/aria-label=["'][^"']*overall\s+score[^"']*?(\d(?:\.\d)?)\s+out\s+of\s+5[^"']*["']/i], 1) ||
-    pick(html,     [/aria-label=["'][^"']*overall\s+score[^"']*?(\d(?:\.\d)?)\s+out\s+of\s+5[^"']*["']/i], 1) ||
-    // Try the visible <p class="TRyy9-TY4T7c"><span>4.7</span>
-    pick(html,     [/<p[^>]*class=["']TRyy9-TY4T7c["'][^>]*>\s*<span[^>]*>\s*(\d(?:\.\d)?)\s*<\/span>\s*<\/p>/i], 1) ||
+    // aria-label anywhere: “overall score ... X out of 5”
+    pick(htmlNear, [/aria-label=["'][^"']*overall\s+score[^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["']/i], 1) ||
+    pick(html,     [/aria-label=["'][^"']*overall\s+score[^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["']/i], 1) ||
+    // Visible within TRyy9 block (with or without aria-label)
+    pick(htmlNear, [/<div[^>]*class=["'][^"']*TRyy9-sM5MNb[^"']*["'][\s\S]{0,800}?<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*?(?:aria-label=["'][^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["'][^>]*)?[^>]*>\s*(\d+(?:\.\d+)?)?\s*<\/span>/i], 1) ||
+    pick(html,     [/<div[^>]*class=["'][^"']*TRyy9-sM5MNb[^"']*["'][\s\S]{0,800}?<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*?(?:aria-label=["'][^"']*?(\d+(?:\.\d+)?)\s+out\s+of\s+5[^"']*["'][^>]*)?[^>]*>\s*(\d+(?:\.\d+)?)?\s*<\/span>/i], 1) ||
+    // Classic variants
     pick(h1Win, [
       /(?:^|\b)(\d\.\d|\d)\s*[★⭐]\s*store\s*rating\b/i,
       /(?:^|\b)(\d\.\d|\d)\s*\/\s*5\s*store\s*rating\b/i,
       /\bstore\s*rating\b[^0-9]{0,10}(\d\.\d|\d)(?=\s*(?:[★⭐]|\/\s*5|\b))/i
     ], 1) ||
-    pick(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,3000}?(\\d\\.\\d|\\d)\\s*(?:[★⭐]|/\\s*5)?\\s*store\\s*rating\\b", "i")], 1);
+    pick(visAll, [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,4000}?(\\d\\.\\d|\\d)\\s*(?:[★⭐]|/\\s*5)?\\s*store\\s*rating\\b", "i")], 1);
 
+  // Reviews candidates:
   let review_count =
     pick(htmlNear, [/store\s+rating\s*\(\s*<[^>]*>\s*([\d,]+)\s+reviews?\s*<\/span>\s*\)/i, /store\s+rating\s*\(\s*([\d,]+)\s+reviews?\s*\)/i], 1) ||
-    // class-based fallback
-    pick(html,     [/<span[^>]*class=["']dXIow-NnAfwf["'][^>]*>\s*([\d,]+)\s+reviews?\s*<\/span>/i], 1) ||
+    pick(html,     [/<span[^>]*class=["'][^"']*dXIow-NnAfwf[^"']*["'][^>]*>\s*([\d,]+)\s+reviews?\s*<\/span>/i], 1) ||
     pick(h1Win,    [/\(\s*(\d{1,3}(?:,\d{3})*)\s*reviews?\s*\)/i, /(\d{1,3}(?:,\d{3})*)\s*(?:reviews|ratings)/i], 1) ||
-    pick(visAll,   [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,3500}?(\\d{1,3}(?:,\\d{3})*)\\s*(?:reviews|ratings)", "i")], 1);
+    pick(visAll,   [new RegExp("(?:\\b" + esc(domain) + "\\b)[\\s\\S]{0,5000}?(\\d{1,3}(?:,\\d{3})*)\\s*(?:reviews|ratings)", "i")], 1);
+
+  // Prefer numeric text inside span if aria-label wasn't captured
+  if (!store_rating) {
+    const numericInSpan =
+      pick(htmlNear, [/<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*>\s*(\d+(?:\.\d+)?)\s*<\/span>/i], 1) ||
+      pick(html,     [/<p[^>]*class=["'][^"']*TRyy9-TY4T7c[^"']*["'][^>]*>[\s\S]{0,120}?<span[^>]*>\s*(\d+(?:\.\d+)?)\s*<\/span>/i], 1);
+    if (numericInSpan) store_rating = numericInSpan;
+  }
+
+  // Extract ScamAdviser trust score if available
+  let scamadviser_score = "";
+  const scamadviserMatch = html.match(/ScamAdviser trust score[^>]*>[\s\S]*?<span[^>]*>(\d+)\/100<\/span>/i);
+  if (scamadviserMatch) {
+    scamadviser_score = scamadviserMatch[1];
+  }
 
   return {
     tqs_badge,
@@ -164,6 +244,7 @@ function extractSignalsFromHtml(html: string, domain: string) {
     e_wallets: ins.e_wallets || "",
     store_rating: store_rating || "",
     review_count: review_count || "",
+    scamadviser_score: scamadviser_score || "",
     section_grades: ins.section_grades,
     logo_url
   };
