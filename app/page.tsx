@@ -369,19 +369,19 @@ export default function Page() {
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
-              <table className="min-w-[1000px] w-full table-fixed text-left">
+              <table className="min-w-[1200px] w-full table-fixed text-left">
                 <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
                   <tr className="[&>th]:px-4 [&>th]:py-3">
-                    <th className="w-[6%] text-center"></th>
-                    <th className="w-[20%] text-left">Store</th>
+                    <th className="w-[5%] text-center"></th>
+                    <th className="w-[18%] text-left">Store</th>
                     <th className="w-[8%] text-center">Top Quality Store</th>
-                    <th className="w-[12%] text-center">Shipping (quality)</th>
-                    <th className="w-[12%] text-center">Returns (quality)</th>
-                    <th className="w-[10%] text-center">Competitive pricing</th>
-                    <th className="w-[10%] text-center">Website quality</th>
-                    <th className="w-[10%] text-center">Wallets</th>
-                    <th className="w-[6%] text-center">Rating</th>
-                    <th className="w-[6%] text-center">Reviews</th>
+                    <th className="w-[13%] text-center">Shipping (quality)</th>
+                    <th className="w-[13%] text-center">Returns (quality)</th>
+                    <th className="w-[11%] text-center">Competitive pricing</th>
+                    <th className="w-[11%] text-center">Website quality</th>
+                    <th className="w-[11%] text-center">Wallets</th>
+                    <th className="w-[5%] text-center">Rating</th>
+                    <th className="w-[5%] text-center">Reviews</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
