@@ -79,6 +79,26 @@ type Row = {
 
 const DEFAULTS = ['asos.com','boohoo.com','next.co.uk','riverisland.com','newlook.com'];
 
+// Quick Start Categories
+const QUICK_START_CATEGORIES = {
+  'UK': {
+    'Fashion': ['asos.com', 'next.co.uk', 'riverisland.com', 'boohoo.com', 'newlook.com'],
+    'Cosmetics': ['boots.com', 'superdrug.com', 'lookfantastic.com', 'cultbeauty.com', 'feelunique.com'],
+    'Sports & Fitness': ['sportsdirect.com', 'decathlon.co.uk', 'jdsports.co.uk', 'mountainwarehouse.com', 'gymshark.com'],
+    'Outdoors': ['gooutdoors.co.uk', 'millets.co.uk', 'blacks.co.uk', 'cotswoldoutdoor.com', 'ellis-brigham.com'],
+    'Art': ['cassart.co.uk', 'jacksonart.com', 'artdiscount.co.uk', 'theworks.co.uk', 'hobbycraft.co.uk'],
+    'Furniture': ['ikea.com', 'wayfair.co.uk', 'dunelm.com', 'argos.co.uk', 'bensonsforbeds.co.uk']
+  },
+  'US': {
+    'Fashion': ['nordstrom.com', 'macys.com', 'gap.com', 'oldnavy.com', 'bananarepublic.com'],
+    'Cosmetics': ['sephora.com', 'ulta.com', 'ulta.com', 'beautylish.com', 'glossier.com'],
+    'Sports & Fitness': ['dickssportinggoods.com', 'academy.com', 'rei.com', 'nike.com', 'adidas.com'],
+    'Outdoors': ['rei.com', 'backcountry.com', 'patagonia.com', 'columbia.com', 'northface.com'],
+    'Art': ['dickblick.com', 'michaels.com', 'joann.com', 'hobbylobby.com', 'jerrysartarama.com'],
+    'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com']
+  }
+};
+
 /** ---------- helpers ---------- */
 const pick = <T,>(...vals: (T | undefined | null | '')[]) =>
   vals.find((v) => v !== undefined && v !== null && v !== '') as T | undefined;
@@ -186,6 +206,14 @@ export default function Page() {
     const next = [...domains];
     next[i] = v;
     setDomains(next);
+  };
+
+  const handleQuickStart = (country: 'UK' | 'US', category: string) => {
+    const brands = QUICK_START_CATEGORIES[country][category];
+    setDomains(brands);
+    setCountry(country);
+    // Auto-trigger comparison
+    setTimeout(() => compare(), 100);
   };
 
   async function compare() {
@@ -364,6 +392,55 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+      {/* Quick Start Section */}
+      <section className="mx-auto max-w-6xl px-6 pb-8">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-6 shadow-sm backdrop-blur">
+          <div className="text-center mb-6">
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Quick Start</h3>
+            <p className="text-sm text-slate-600">Click any category to instantly compare popular brands</p>
+          </div>
+          
+          <div className="space-y-4">
+            {/* UK Categories */}
+            <div>
+              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
+                🇬🇧 United Kingdom
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
+                  <button
+                    key={`UK-${category}`}
+                    onClick={() => handleQuickStart('UK', category)}
+                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* US Categories */}
+            <div>
+              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
+                🇺🇸 United States
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
+                  <button
+                    key={`US-${category}`}
+                    onClick={() => handleQuickStart('US', category)}
+                    className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     {/* Results */}
       {hasCompared && (
         <section className="mx-auto max-w-6xl px-6 pb-12">
