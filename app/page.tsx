@@ -438,8 +438,8 @@ export default function Page() {
         <h1 className="text-4xl font-bold tracking-tight text-black sm:text-5xl">
           Compare Google Store Ratings
         </h1>
-        <h2 className="mt-6 text-xl font-medium text-white bg-black px-3 py-1">
-          Benchmark Ecommerce Stores by Google's Public Quality Signals
+        <h2 className="mt-6 text-xl font-medium text-black">
+          <span className="bg-black text-white px-2 py-1">Benchmark Ecommerce Stores by Google's Public Quality Signals</span>
         </h2>
       </section>
 
