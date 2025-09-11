@@ -45,26 +45,35 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   }
   
   function extractFromSegment(segment: string, headerPattern: string) {
-    // Based on the actual HTML structure provided by the user
+    // More flexible patterns to handle variations in HTML structure
     
-    // Pattern 1: Match the exact structure from the HTML
-    // <div class="hnGZye">Shipping</div><div class="KtbsVc-ij8cu-fmcmS">Free delivery</div>...<span class="rMOWke-uDEFge hnGZye">Exceptional</span>
+    // Pattern 1: Match with description - more flexible spacing
     const re1 = new RegExp(
-      `<div class="hnGZye">${headerPattern}<\/div><div class="KtbsVc-ij8cu-fmcmS">([^<]*)<\/div>[^<]*<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>([^<]*)<\/span>`,
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<div class="KtbsVc-ij8cu-fmcmS">\\s*([^<]*?)\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
       "i"
     );
     
-    // Pattern 2: Match structure without description (like Competitive pricing)
-    // <div class="hnGZye">Competitive pricing</div>...<span class="rMOWke-uDEFge hnGZye">Great</span>
+    // Pattern 2: Match without description - more flexible spacing
     const re2 = new RegExp(
-      `<div class="hnGZye">${headerPattern}<\/div>[^<]*<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>([^<]*)<\/span>`,
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
       "i"
     );
     
-    // Pattern 3: Match Payment options with complex structure
-    // <div class="hnGZye">Payment options</div><span class="KtbsVc-ij8cu-fmcmS">...<span class="" jsname="aWXQDc">PayPal, Apple Pay, Google Pay</span>...
+    // Pattern 3: Match with span description instead of div
     const re3 = new RegExp(
-      `<div class="hnGZye">${headerPattern}<\/div><span class="KtbsVc-ij8cu-fmcmS">[^<]*<span[^>]*jsname="aWXQDc"[^>]*>([^<]*)<\/span>[^<]*<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>([^<]*)<\/span>`,
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<span class="KtbsVc-ij8cu-fmcmS">\\s*([^<]*?)\\s*<\/span>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 4: Match Payment options with complex nested structure
+    const re4 = new RegExp(
+      `<div class="hnGZye">\\s*${headerPattern}\\s*<\/div>\\s*<span class="KtbsVc-ij8cu-fmcmS">[\\s\\S]*?<span[^>]*jsname="aWXQDc"[^>]*>\\s*([^<]*?)\\s*<\/span>[\\s\\S]*?<span class="rMOWke-uDEFge hnGZye[^"]*"[^>]*>\\s*([^<]*?)\\s*<\/span>`,
+      "i"
+    );
+    
+    // Pattern 5: Simple text-based fallback
+    const re5 = new RegExp(
+      `${headerPattern}[\\s\\S]*?([^\\n]*?)[\\s\\S]*?(Exceptional|Great|Good|Fair|Poor)`,
       "i"
     );
     
@@ -74,6 +83,12 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     }
     if (!m) {
       m = segment.match(re3);
+    }
+    if (!m) {
+      m = segment.match(re4);
+    }
+    if (!m) {
+      m = segment.match(re5);
     }
     
     return {
