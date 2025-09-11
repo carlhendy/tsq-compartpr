@@ -516,7 +516,7 @@ export default function Page() {
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
                 <thead className="text-sm text-white bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
-                  <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle">
+                  <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-slate-700 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
                     <th className="w-[4%] text-center"></th>
                     <th className="w-[18%] text-left">Store</th>
                     <th className="w-[6%] text-center">Top Quality Store</th>
@@ -553,7 +553,7 @@ export default function Page() {
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
-                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors">
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors [&>td]:border-r [&>td]:border-slate-100 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0">
                         <td className="text-center text-2xl" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
@@ -748,7 +748,7 @@ export default function Page() {
       {/* Explainer */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="border border-black bg-white">
-          <div className="divide-y divide-black">
+          <div className="divide-y divide-slate-100">
             <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
               <h2 className="text-lg font-semibold text-white">
                 How Google Might Interpret These Signals?
@@ -757,7 +757,7 @@ export default function Page() {
             <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="text-sm">
-                <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left">
+                <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left [&>th]:border-r [&>th]:border-slate-300 [&>th:last-child]:border-r-0">
                   <th className="w-[20%] text-left font-bold text-black">Signal</th>
                   <th className="w-[26%] text-left font-bold text-black">What it means</th>
                   <th className="w-[27%] text-left font-bold text-black">How it's measured</th>
@@ -766,7 +766,7 @@ export default function Page() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3">
+                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3 [&>td]:border-r [&>td]:border-slate-100 [&>td:last-child]:border-r-0">
                     <td className="font-medium text-slate-900">{r.m}</td>
                     <td className="text-slate-700">{r.w}</td>
                     <td className="text-slate-600">{r.t}</td>
@@ -783,7 +783,7 @@ export default function Page() {
       {/* TSQ Scoring Explanation */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="border border-black bg-white">
-          <div className="divide-y divide-black">
+          <div className="divide-y divide-slate-100">
             <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
               <h2 className="text-lg font-semibold text-white">
                 How Are These Scores Calculated?
@@ -873,7 +873,7 @@ export default function Page() {
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="border border-black bg-white">
-          <div className="divide-y divide-black">
+          <div className="divide-y divide-slate-100">
             <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
               <h2 className="text-lg font-semibold text-white">
                 Frequently Asked Questions
