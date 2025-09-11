@@ -36,10 +36,15 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     // First, try to find the Store Insights section
     const storeInsightsMatch = seg.match(/Store Insights[\s\S]*?(?=Other ratings|$)/i);
     if (!storeInsightsMatch) {
-      return { description: "", grade: "" };
+      // If no Store Insights section found, search the entire segment
+      return extractFromSegment(seg, headerPattern);
     }
     
     const insightsSection = storeInsightsMatch[0];
+    return extractFromSegment(insightsSection, headerPattern);
+  }
+  
+  function extractFromSegment(segment: string, headerPattern: string) {
     
     // Pattern 1: Look for the specific structure with proper HTML tags
     const re1 = new RegExp(
@@ -78,21 +83,21 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       "i"
     );
     
-    let m = insightsSection.match(re1);
+    let m = segment.match(re1);
     if (!m) {
-      m = insightsSection.match(re2);
+      m = segment.match(re2);
     }
     if (!m) {
-      m = insightsSection.match(re3);
+      m = segment.match(re3);
     }
     if (!m) {
-      m = insightsSection.match(re4);
+      m = segment.match(re4);
     }
     if (!m) {
-      m = insightsSection.match(re5);
+      m = segment.match(re5);
     }
     if (!m) {
-      m = insightsSection.match(re6);
+      m = segment.match(re6);
     }
     
     return {
