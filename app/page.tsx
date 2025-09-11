@@ -573,11 +573,11 @@ export default function Page() {
           
           <div className="space-y-4">
             {/* UK Categories */}
-            <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
                 🇬🇧 United Kingdom
               </h4>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+              <div className="flex flex-wrap gap-2">
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
                   <button
                     key={`UK-${category}`}
@@ -591,11 +591,11 @@ export default function Page() {
             </div>
 
             {/* US Categories */}
-            <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
                 🇺🇸 United States
               </h4>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+              <div className="flex flex-wrap gap-2">
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
                   <button
                     key={`US-${category}`}
@@ -609,11 +609,11 @@ export default function Page() {
             </div>
 
             {/* AU Categories */}
-            <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <h4 className="text-sm font-medium text-slate-700 flex items-center gap-2 whitespace-nowrap">
                 🇦🇺 Australia
               </h4>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+              <div className="flex flex-wrap gap-2">
                 {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
                   <button
                     key={`AU-${category}`}
