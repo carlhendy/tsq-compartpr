@@ -445,35 +445,30 @@ export default function Page() {
         </div>
         
         {/* Inputs - Halfway down the black section */}
-        <div className="mx-auto max-w-6xl px-6 pb-8">
-          <div className="border border-white bg-white p-6">
-            <p className="mb-5 text-sm text-black text-center">
-              👉 Compare up to five store websites and choose a country. We'll compare what Google shows on{' '}
-              google.com/storepages.
-            </p>
-
-          {/* Domains row */}
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
+        <div className="mx-auto max-w-lg px-6 pb-6">
+          <div className="bg-white p-6 border border-black">
+            {/* Domains - Vertical Stack */}
+            <div className="space-y-2 mb-4">
             {domains.map((d, i) => (
               <input
                 key={i}
                 value={d}
                 onChange={(e) => updateDomain(i, e.target.value)}
                 placeholder="domain.com"
-                className="w-full h-10 border border-black px-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-0"
+                className="w-full h-12 border border-black px-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
               />
             ))}
           </div>
 
-          {/* Controls */}
-          <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-3">
-            <label className="text-sm text-gray-700 sm:mr-2" htmlFor="country-select">Select Country:</label>
-            <div className="relative">
+            {/* Country Selector */}
+            <div className="flex items-center gap-3 mb-3">
+              <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
+              <div className="relative flex-1">
               <select
                 id="country-select"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="h-10 w-full sm:w-48 border border-black bg-white px-3 pr-8 text-sm text-gray-700 outline-none focus:border-gray-500 focus:ring-0 appearance-none cursor-pointer"
+                className="h-12 w-full border border-black bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer"
                 aria-label="Country"
               >
               <option value="US">United States</option>
@@ -485,32 +480,32 @@ export default function Page() {
               <option value="DE">Germany</option>
               <option value="FR">France</option>
               </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
             </div>
 
+            </div>
+
+            {/* Compare Button - Own Row */}
             <button
               onClick={compare}
               disabled={loading}
-              className="inline-flex h-10 w-full sm:w-48 items-center justify-center gap-2 px-4 text-sm font-semibold text-white bg-black hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
             >
-              {loading ? (
-                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.25" />
-                  <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="4" fill="none" />
-                </svg>
-              ) : (
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 5l7 7-7 7" />
-                </svg>
-              )}
-              Compare
+              {loading ? 'Comparing...' : 'Compare Stores'}
             </button>
-          </div>
         </div>
+        </div>
+        
+        {/* Instruction text below container */}
+        <div className="text-center mt-6">
+          <p className="text-white text-xs">
+            👉 Compare up to five store websites and choose a country. We'll compare what Google shows on{' '}
+            google.com/storepages.
+          </p>
         </div>
       </section>
 
