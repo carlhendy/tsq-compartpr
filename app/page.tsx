@@ -80,7 +80,10 @@ type Row = {
 const DEFAULTS = ['asos.com','boohoo.com','next.co.uk','riverisland.com','newlook.com'];
 
 // Quick Start Categories
-const QUICK_START_CATEGORIES = {
+type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Outdoors' | 'Art' | 'Furniture';
+type CountryKey = 'UK' | 'US';
+
+const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> = {
   'UK': {
     'Fashion': ['asos.com', 'next.co.uk', 'riverisland.com', 'boohoo.com', 'newlook.com'],
     'Cosmetics': ['boots.com', 'superdrug.com', 'lookfantastic.com', 'cultbeauty.com', 'feelunique.com'],
@@ -208,7 +211,7 @@ export default function Page() {
     setDomains(next);
   };
 
-  const handleQuickStart = (country: 'UK' | 'US', category: string) => {
+  const handleQuickStart = (country: CountryKey, category: CategoryKey) => {
     const brands = QUICK_START_CATEGORIES[country][category];
     setDomains(brands);
     setCountry(country);
@@ -411,7 +414,7 @@ export default function Page() {
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
                   <button
                     key={`UK-${category}`}
-                    onClick={() => handleQuickStart('UK', category)}
+                    onClick={() => handleQuickStart('UK', category as CategoryKey)}
                     className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
@@ -429,7 +432,7 @@ export default function Page() {
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
                   <button
                     key={`US-${category}`}
-                    onClick={() => handleQuickStart('US', category)}
+                    onClick={() => handleQuickStart('US', category as CategoryKey)}
                     className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 hover:ring-slate-300 transition-colors"
                   >
                     {category}
