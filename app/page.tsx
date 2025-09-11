@@ -515,7 +515,7 @@ export default function Page() {
           <div className="border border-black bg-white">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-white bg-black">
+                <thead className="text-sm text-white bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle">
                     <th className="w-[4%] text-center"></th>
                     <th className="w-[18%] text-left">Store</th>
@@ -749,8 +749,8 @@ export default function Page() {
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="border border-black bg-white">
           <div className="divide-y divide-black">
-            <div className="text-center py-4 bg-gray-100">
-              <h2 className="text-lg font-semibold text-black">
+            <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
+              <h2 className="text-lg font-semibold text-white">
                 How Google Might Interpret These Signals?
               </h2>
             </div>
@@ -784,8 +784,8 @@ export default function Page() {
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="border border-black bg-white">
           <div className="divide-y divide-black">
-            <div className="text-center py-4 bg-gray-100">
-              <h2 className="text-lg font-semibold text-black">
+            <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
+              <h2 className="text-lg font-semibold text-white">
                 How Are These Scores Calculated?
               </h2>
             </div>
@@ -874,8 +874,8 @@ export default function Page() {
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="border border-black bg-white">
           <div className="divide-y divide-black">
-            <div className="text-center py-4 bg-gray-100">
-              <h2 className="text-lg font-semibold text-black">
+            <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
+              <h2 className="text-lg font-semibold text-white">
                 Frequently Asked Questions
               </h2>
             </div>
@@ -973,18 +973,18 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black bg-white/90 py-10 px-4 sm:px-6 text-center text-sm text-slate-600">
+      <footer className="border-t border-black bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 py-10 px-4 sm:px-6 text-center text-sm text-white">
         <p className="mb-2">
           Vibe coded by{' '}
-          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-black text-white px-2 py-1 no-underline font-normal">
+          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
             Carl Hendy
           </a>{' '}
         founder of{' '}
-          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-black text-white px-2 py-1 no-underline font-normal">
+          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
             Audits.com
           </a>.
         </p>
-        <p className="mx-auto max-w-3xl text-xs text-slate-500">
+        <p className="mx-auto max-w-3xl text-xs text-white">
           Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
           <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
         </p>
