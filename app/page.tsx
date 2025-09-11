@@ -96,13 +96,27 @@ const getFaviconUrlWithFallback = (domain: string) => {
     // Try with www prefix first
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
   }
+  if (domain === 'tractorsupply.com') {
+    // Try with www prefix for Tractor Supply
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
+  }
+  if (domain === 'bhphotovideo.com') {
+    // Try with www prefix for B&H
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
+  }
   return getFaviconUrl(domain);
 };
 
 // Helper function for results table favicons (larger size)
 const getResultsFaviconUrl = (domain: string) => {
-  // Use larger size for results table
+  // Special handling for domains that might have favicon issues
   if (domain === 'chemistwarehouse.com.au') {
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
+  }
+  if (domain === 'tractorsupply.com') {
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
+  }
+  if (domain === 'bhphotovideo.com') {
     return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
   }
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
@@ -122,7 +136,7 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
     'Cosmetics': ['sephora.com', 'ulta.com', 'fentybeauty.com', 'beautylish.com', 'glossier.com'],
     'Sports & Fitness': ['dickssportinggoods.com', 'academy.com', 'rei.com', 'nike.com', 'adidas.com'],
     'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com'],
-    'Electronics': ['bestbuy.com', 'amazon.com', 'newegg.com', 'microcenter.com', 'b&h.com'],
+    'Electronics': ['bestbuy.com', 'amazon.com', 'newegg.com', 'microcenter.com', 'bhphotovideo.com'],
     'Home & Garden': ['homedepot.com', 'lowes.com', 'menards.com', 'acehardware.com', 'tractorsupply.com']
   },
   'AU': {
@@ -569,14 +583,23 @@ export default function Page() {
                                 className="h-full w-full object-cover"
                                 onError={(e) => {
                                   const img = e.target as HTMLImageElement;
-                                  // Try alternative favicon services
+                                  // Try alternative favicon services with different approaches
                                   if (img.src.includes('google.com/s2/favicons')) {
-                                    img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
+                                    // Try DuckDuckGo with different domain format
+                                    if (row.domain === 'tractorsupply.com' || row.domain === 'bhphotovideo.com') {
+                                      img.src = `https://icons.duckduckgo.com/ip3/www.${row.domain}.ico`;
+                                    } else {
+                                      img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
+                                    }
                                   } else if (img.src.includes('duckduckgo.com')) {
+                                    // Try favicon.io service
                                     img.src = `https://favicons.githubusercontent.com/${row.domain}`;
+                                  } else if (img.src.includes('favicons.githubusercontent.com')) {
+                                    // Try direct favicon from website
+                                    img.src = `https://${row.domain}/favicon.ico`;
                                   } else {
-                                    // Final fallback to generic icon
-                                    img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iOCIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMzIgMTZMMTQ4IDMyTDMyIDQ4TDE2IDMyTDMyIDE2WiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K';
+                                    // Try one more Google service attempt with different parameters
+                                    img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64&t=2`;
                                   }
                                 }}
                               />
