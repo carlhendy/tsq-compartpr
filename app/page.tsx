@@ -230,12 +230,35 @@ export default function Page() {
 
   const handleQuickStart = (country: CountryKey, category: CategoryKey) => {
     const brands = QUICK_START_CATEGORIES[country][category];
-    setDomains(brands);
-    // Map country codes to match the selector options
     const countryCode = country === 'UK' ? 'GB' : country;
+    
+    // Update state
+    setDomains(brands);
     setCountry(countryCode);
-    // Auto-trigger comparison
-    setTimeout(() => compare(), 100);
+    
+    // Trigger comparison with the new values directly
+    compareWithValues(brands, countryCode);
+  };
+
+  const compareWithValues = async (domainList: string[], countryCode: string) => {
+    setLoading(true);
+    setHasCompared(true);
+    setRows([]);
+    const entries = domainList.map((d) => d.trim()).filter(Boolean).slice(0, 5);
+    const promises = entries.map(async (d) => {
+      try {
+        const r = await fetch(`/api/storepage?domain=${encodeURIComponent(d)}&country=${countryCode}`);
+        const json = await r.json();
+        if (json?.error) return { domain: d, country: countryCode, error: String(json.error) } as Row;
+        const payload = json?.signals ?? json?.data ?? json?.payload ?? json;
+        return { domain: d, country: countryCode, signals: payload as Signals } as Row;
+      } catch (e: any) {
+        return { domain: d, country: countryCode, error: e?.message || 'Fetch error' } as Row;
+      }
+    });
+    const res = await Promise.all(promises);
+    setRows(res);
+    setLoading(false);
   };
 
   async function compare() {
