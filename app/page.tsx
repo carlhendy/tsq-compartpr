@@ -153,17 +153,23 @@ export default function Page() {
 
   const copyResults = async () => {
     try {
-      const headers = ['Store','Top Quality Store','Delivery time','Shipping (quality)','Return window','Returns (quality)','Wallets','Rating','Reviews'];
+      const headers = ['Store','Top Quality Store','Shipping (quality)','Return window','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
       const lines: string[] = [headers.join('\t')];
       for (const row of rows) {
         const s = row.signals || {};
+        const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
+        const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
+        const pricingGrade = getAny(s, ['section_grades.pricing','pricing_quality','pricingGrade']);
+        const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
+        
         const values = [
           row.domain || '—',
           row.error ? 'Error' : (s?.tqs_badge === true ? 'Yes' : s?.tqs_badge === false ? 'No' : '—'),
-          getAny(s, ['delivery_time','deliveryTime','delivery_estimate']),
-          getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']),
+          delivery ? `${shipGrade} (${delivery})` : shipGrade,
           getAny(s, ['return_window','returnWindow','returns_window']),
           getAny(s, ['section_grades.returns','returns_quality','returnsGrade']),
+          pricingGrade,
+          websiteGrade,
           getAny(s, ['e_wallets','wallets','payment_wallets']),
           String(getAny(s, ['store_rating','rating','storeRating'])),
           String(getAny(s, ['review_count','reviews','reviewCount'])),
@@ -179,10 +185,11 @@ export default function Page() {
   };
 
   const EXPLAINER = [
-    { m: 'Delivery time', w: 'Estimated shipping time surfaced by Google.', t: 'From Google’s Store page for your domain & region.', q: 'Sync accurate shipping SLAs and expedited options.' },
-    { m: 'Shipping (quality)', w: 'Overall signal for shipping experience.', t: 'Google’s derived grade per region.', q: 'Clarify shipping costs, speed, and policies.' },
+    { m: 'Shipping (quality)', w: 'Overall signal for shipping experience with delivery time shown below.', t: 'Google\'s derived grade per region with delivery estimates.', q: 'Clarify shipping costs, speed, and policies.' },
     { m: 'Return window', w: 'How long customers have to return items.', t: 'Shown on Store page when detected.', q: 'Make your return window obvious site‑wide.' },
-    { m: 'Returns (quality)', w: 'Overall signal for your returns experience.', t: 'Google’s derived grade per region.', q: 'Free returns and clear policy improve trust.' },
+    { m: 'Returns (quality)', w: 'Overall signal for your returns experience.', t: 'Google\'s derived grade per region.', q: 'Free returns and clear policy improve trust.' },
+    { m: 'Competitive pricing', w: 'How your pricing compares to competitors.', t: 'Google\'s derived grade per region.', q: 'Ensure competitive pricing and clear value proposition.' },
+    { m: 'Website quality', w: 'Overall website user experience and trust signals.', t: 'Google\'s derived grade per region.', q: 'Improve site speed, mobile experience, and trust signals.' },
     { m: 'Wallets', w: 'Digital wallets available at checkout.', t: 'Detected by Google per region.', q: 'Add popular wallets (e.g., PayPal, Apple Pay).'},
     { m: 'Rating/Reviews', w: 'Aggregate rating and review count.', t: 'Sourced from approved review partners.', q: 'Grow recent, verified reviews.'},
   ] as const;
@@ -266,13 +273,12 @@ export default function Page() {
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
-              <table className="min-w-[1200px] w-full table-fixed text-left">
+              <table className="min-w-[1100px] w-full table-fixed text-left">
                 <thead className="bg-slate-50 text-sm text-slate-600">
                   <tr className="[&>th]:px-4 [&>th]:py-3">
                     <th className="w-[20%] text-left">Store</th>
                     <th className="w-[7%] text-center">Top Quality Store</th>
-                    <th className="w-[8%] text-center">Delivery time</th>
-                    <th className="w-[10%] text-center">Shipping (quality)</th>
+                    <th className="w-[12%] text-center">Shipping (quality)</th>
                     <th className="w-[9%] text-center">Return window</th>
                     <th className="w-[10%] text-center">Returns (quality)</th>
                     <th className="w-[9%] text-center">Competitive pricing</th>
@@ -285,7 +291,7 @@ export default function Page() {
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={11} className="px-4 py-10 text-center text-slate-500">
+                      <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
                         {loading ? 'Fetching signals…' : 'No results yet.'}
                       </td>
                     </tr>
@@ -341,8 +347,16 @@ export default function Page() {
                                 ? badge('No', 'red')
                                 : badge('—', 'slate')}
                         </td>
-                        <td className="text-center tabular-nums">{delivery}</td>
-                        <td className="text-center">{badge(shipGrade, qualityTone(shipGrade))}</td>
+                        <td className="text-center">
+                          <div className="flex flex-col items-center gap-1">
+                            {badge(shipGrade, qualityTone(shipGrade))}
+                            {delivery && (
+                              <div className="text-xs text-slate-500 tabular-nums">
+                                {delivery}
+                              </div>
+                            )}
+                          </div>
+                        </td>
                         <td className="text-center tabular-nums">{returnWindow}</td>
                         <td className="text-center">{badge(returnsGrade, qualityTone(returnsGrade))}</td>
                         <td className="text-center">{badge(pricingGrade, qualityTone(pricingGrade))}</td>
