@@ -545,6 +545,7 @@ export default function Page() {
             <p className="text-slate-700 mb-4 text-sm">
               These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
               The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
+              Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
             </p>
             
             <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
