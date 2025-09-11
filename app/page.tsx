@@ -369,22 +369,22 @@ export default function Page() {
         <section className="mx-auto max-w-6xl px-6 pb-12">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
-              <table className="min-w-[1400px] w-full table-fixed text-left">
-                <thead className="text-sm text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
-                  <tr className="[&>th]:px-4 [&>th]:py-3">
+              <table className="min-w-[1000px] w-full table-fixed text-left">
+                <thead className="text-xs text-slate-600" style={{ backgroundColor: '#fef9c3b3' }}>
+                  <tr className="[&>th]:px-2 [&>th]:py-2">
                     <th className="w-[4%] text-center"></th>
-                    <th className="w-[16%] text-left">Store</th>
-                    <th className="w-[7%] text-center">Top Quality Store</th>
-                    <th className="w-[12%] text-center">Shipping (quality)</th>
-                    <th className="w-[12%] text-center">Returns (quality)</th>
-                    <th className="w-[10%] text-center">Competitive pricing</th>
-                    <th className="w-[10%] text-center">Website quality</th>
-                    <th className="w-[10%] text-center">Wallets</th>
-                    <th className="w-[8%] text-center">Rating</th>
-                    <th className="w-[11%] text-center">Reviews</th>
+                    <th className="w-[18%] text-left">Store</th>
+                    <th className="w-[6%] text-center">Top Quality Store</th>
+                    <th className="w-[11%] text-center">Shipping (quality)</th>
+                    <th className="w-[11%] text-center">Returns (quality)</th>
+                    <th className="w-[9%] text-center">Competitive pricing</th>
+                    <th className="w-[9%] text-center">Website quality</th>
+                    <th className="w-[9%] text-center">Wallets</th>
+                    <th className="w-[6%] text-center">Rating</th>
+                    <th className="w-[7%] text-center">Reviews</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
+                <tbody className="divide-y divide-slate-100 text-xs text-slate-800">
                   {sortedRows.length === 0 && (
                     <tr>
                       <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
@@ -408,12 +408,12 @@ export default function Page() {
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
-                      <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-2 hover:bg-slate-50 transition-colors">
                         <td className="text-center text-lg" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
-                        <td className="flex items-center gap-3 pr-2">
-                          <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
+                        <td className="flex items-center gap-2 pr-1">
+                          <div className="h-8 w-8 overflow-hidden rounded-lg ring-1 ring-slate-200 bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
@@ -421,17 +421,17 @@ export default function Page() {
                               <div className="h-full w-full bg-slate-100" />
                             )}
                           </div>
-                          <div className="leading-5">
-                            <div className="font-medium text-slate-900 flex items-center gap-2">
+                          <div className="leading-4">
+                            <div className="font-medium text-slate-900 text-sm flex items-center gap-1">
                               {row.domain}
                               <a
                                 href={validationUrl(row.domain, row.country)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+                                className="inline-flex items-center rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
                                 title="Open source URL"
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">
                                   <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
                                 </svg>
                               </a>
@@ -451,7 +451,7 @@ export default function Page() {
                           <div className="flex flex-col items-center gap-1">
                             {badge(shipGrade, qualityTone(shipGrade))}
                             {delivery && (
-                              <div className="text-xs text-slate-500 tabular-nums">
+                              <div className="text-[10px] text-slate-500 tabular-nums">
                                 {delivery}
                               </div>
                             )}
@@ -461,7 +461,7 @@ export default function Page() {
                           <div className="flex flex-col items-center gap-1">
                             {badge(returnsGrade, qualityTone(returnsGrade))}
                             {returnWindow && (
-                              <div className="text-xs text-slate-500 tabular-nums">
+                              <div className="text-[10px] text-slate-500 tabular-nums">
                                 {returnWindow}
                               </div>
                             )}
