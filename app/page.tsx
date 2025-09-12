@@ -462,7 +462,7 @@ export default function Page() {
             </div>
             
             {/* Right Column - Input Boxes */}
-            <div className="max-w-md mx-auto lg:mx-0">
+            <div className="max-w-lg mx-auto lg:mx-0">
               <div className="bg-white p-6 border border-black">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
@@ -781,7 +781,7 @@ export default function Page() {
           <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
           <div className="divide-y divide-slate-100">
             <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <table className="min-w-[600px] w-full text-left text-sm">
               <thead className="text-sm">
                 <tr className="[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
                   <th className="w-[20%] text-left font-bold text-black">Signal</th>
@@ -994,11 +994,12 @@ export default function Page() {
       <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
         <p className="mb-4 text-base">
           Vibe coded by{' '}
-          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
+          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block mb-1 sm:mb-0">
             Carl Hendy
-          </a>{' '}
-        founder of{' '}
-          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
+          </a>
+          <span className="hidden sm:inline"> </span>
+          <span className="block sm:inline">founder of </span>
+          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block">
             Audits.com
           </a>.
         </p>
