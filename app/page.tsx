@@ -777,12 +777,12 @@ export default function Page() {
 
       {/* Explainer */}
       <section className="mx-auto max-w-6xl px-6 pb-10 pt-8">
-        <fieldset className="border border-black bg-white">
-          <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
-          <div className="divide-y divide-slate-100">
-            <div className="relative">
-              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0" style={{WebkitOverflowScrolling: 'touch', scrollbarWidth: 'thin'}}>
-            <table className="min-w-[900px] w-full text-left text-sm">
+        <div className="border border-black bg-white">
+          <div className="bg-gray-100 px-4 py-3">
+            <h3 className="text-lg font-semibold text-black">How Google Might Interpret These Signals?</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-[800px] w-full text-left text-sm">
               <thead className="text-sm">
                 <tr className="[&>th]:px-2 sm:[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
                   <th className="w-[18%] text-left font-bold text-black">Signal</th>
@@ -802,20 +802,16 @@ export default function Page() {
                 ))}
               </tbody>
             </table>
-              </div>
-              {/* Mobile scroll indicator */}
-              <div className="sm:hidden text-center py-2 text-xs text-gray-500">
-                ← Swipe to see more columns →
-              </div>
-            </div>
           </div>
-        </fieldset>
+        </div>
       </section>
 
       {/* TSQ Scoring Explanation */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
-        <fieldset className="border border-black bg-white">
-          <legend className="text-lg font-semibold text-black px-2">How Are These Scores Calculated?</legend>
+        <div className="border border-black bg-white">
+          <div className="bg-gray-100 px-4 py-3">
+            <h3 className="text-lg font-semibold text-black">How Are These Scores Calculated?</h3>
+          </div>
           <div className="divide-y divide-slate-100">
             <div className="px-6 py-8">
             <p className="text-slate-700 mb-4 text-sm">
@@ -895,13 +891,15 @@ export default function Page() {
             </p>
             </div>
           </div>
-        </fieldset>
+        </div>
       </section>
 
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <fieldset className="border border-black bg-white">
-          <legend className="text-lg font-semibold text-black px-2">Frequently Asked Questions</legend>
+        <div className="border border-black bg-white">
+          <div className="bg-gray-100 px-4 py-3">
+            <h3 className="text-lg font-semibold text-black">Frequently Asked Questions</h3>
+          </div>
           <div className="divide-y divide-slate-100">
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
@@ -947,7 +945,7 @@ export default function Page() {
               </p>
             </div>
           </div>
-        </fieldset>
+        </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -999,15 +997,13 @@ export default function Page() {
       {/* Footer */}
       <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
         <div className="mb-4 text-base">
-          <div className="mb-2">
+          <div>
             Vibe coded by{' '}
-            <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block">
+            <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="text-white underline hover:no-underline font-normal inline-block">
               Carl Hendy
             </a>
-          </div>
-          <div>
-            founder of{' '}
-            <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block">
+            {' '}founder of{' '}
+            <a href="https://audits.com" target="_blank" rel="noreferrer" className="text-white underline hover:no-underline font-normal inline-block">
               Audits.com
             </a>.
           </div>
