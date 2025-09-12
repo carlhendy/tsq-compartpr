@@ -462,7 +462,7 @@ export default function Page() {
             </div>
             
             {/* Right Column - Input Boxes */}
-            <div className="max-w-lg mx-auto lg:mx-0">
+            <div className="max-w-sm sm:max-w-lg mx-auto lg:mx-0">
               <div className="bg-white p-6 border border-black">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
@@ -781,18 +781,18 @@ export default function Page() {
           <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
           <div className="divide-y divide-slate-100">
             <div className="overflow-x-auto">
-            <table className="min-w-[600px] w-full text-left text-sm">
+            <table className="min-w-[700px] w-full text-left text-sm">
               <thead className="text-sm">
-                <tr className="[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
-                  <th className="w-[20%] text-left font-bold text-black">Signal</th>
-                  <th className="w-[26%] text-left font-bold text-black">What it means</th>
-                  <th className="w-[27%] text-left font-bold text-black">How it's measured</th>
-                  <th className="w-[27%] text-left font-bold text-black">Quick wins</th>
+                <tr className="[&>th]:px-2 sm:[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
+                  <th className="w-[18%] text-left font-bold text-black">Signal</th>
+                  <th className="w-[28%] text-left font-bold text-black">What it means</th>
+                  <th className="w-[28%] text-left font-bold text-black">How it's measured</th>
+                  <th className="w-[26%] text-left font-bold text-black">Quick wins</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
+                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
                     <td className="font-medium text-slate-900">{r.m}</td>
                     <td className="text-slate-700">{r.w}</td>
                     <td className="text-slate-600">{r.t}</td>
@@ -992,17 +992,20 @@ export default function Page() {
 
       {/* Footer */}
       <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
-        <p className="mb-4 text-base">
-          Vibe coded by{' '}
-          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block mb-1 sm:mb-0">
-            Carl Hendy
-          </a>
-          <span className="hidden sm:inline"> </span>
-          <span className="block sm:inline">founder of </span>
-          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block">
-            Audits.com
-          </a>.
-        </p>
+        <div className="mb-4 text-base">
+          <div className="mb-2">
+            Vibe coded by{' '}
+            <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block">
+              Carl Hendy
+            </a>
+          </div>
+          <div>
+            founder of{' '}
+            <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-3 py-1.5 no-underline font-normal inline-block">
+              Audits.com
+            </a>.
+          </div>
+        </div>
         <p className="mx-auto max-w-3xl text-sm text-white">
           Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
           <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
