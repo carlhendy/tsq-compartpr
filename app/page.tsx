@@ -449,11 +449,11 @@ export default function Page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
             <div className="text-left">
-              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
-                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-16 w-auto mx-2" /></div>
+              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
+                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 sm:h-16 w-auto mx-2" /></div>
                 <div>Store Ratings</div>
               </h1>
-              <h2 className="text-2xl font-medium text-white mb-6 max-w-md">
+              <h2 className="text-lg sm:text-2xl font-medium text-white mb-6 max-w-md">
                 Benchmark Ecommerce Stores by Google's Public Quality Signals
               </h2>
               <p className="text-white text-base max-w-md">
@@ -462,7 +462,7 @@ export default function Page() {
             </div>
             
             {/* Right Column - Input Boxes */}
-            <div className="max-w-sm sm:max-w-lg mx-auto lg:mx-0">
+            <div className="max-w-md mx-auto lg:mx-0">
               <div className="bg-white p-6 border border-black">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
@@ -780,7 +780,7 @@ export default function Page() {
         <fieldset className="border border-black bg-white">
           <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
           <div className="divide-y divide-slate-100">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 -mx-4 px-4 sm:mx-0 sm:px-0">
             <table className="min-w-[700px] w-full text-left text-sm">
               <thead className="text-sm">
                 <tr className="[&>th]:px-2 sm:[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
