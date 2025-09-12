@@ -118,7 +118,7 @@ const getResultsFaviconUrl = (domain: string) => {
 const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> = {
   'UK': {
     'Fashion': ['asos.com', 'next.co.uk', 'riverisland.com', 'boohoo.com', 'newlook.com'],
-    'Cosmetics': ['boots.com', 'superdrug.com', 'lookfantastic.com', 'cultbeauty.com', 'feelunique.com'],
+    'Cosmetics': ['boots.com', 'superdrug.com', 'lookfantastic.com', 'cultbeauty.com', 'sephora.co.uk'],
     'Sports & Fitness': ['sportsdirect.com', 'decathlon.co.uk', 'jdsports.co.uk', 'mountainwarehouse.com', 'gymshark.com'],
     'Furniture': ['ikea.com', 'wayfair.co.uk', 'dunelm.com', 'argos.co.uk', 'bensonsforbeds.co.uk'],
     'Electronics': ['currys.co.uk', 'argos.co.uk', 'johnlewis.com', 'very.co.uk', 'ao.com'],
@@ -303,14 +303,15 @@ export default function Page() {
   const removeDomain = (i: number) => {
     const next = domains.filter((_, index) => index !== i);
     setDomains(next);
-    // Always reduce visible fields by 1, but keep minimum of 1
-    setVisibleFields(Math.max(1, visibleFields - 1));
+    // Set visible fields to the new array length, but keep minimum of 1
+    setVisibleFields(Math.max(1, next.length));
   };
 
   const addDomain = () => {
     if (domains.length < 5) {
-      setDomains([...domains, '']);
-      setVisibleFields(domains.length + 1);
+      const newDomains = [...domains, ''];
+      setDomains(newDomains);
+      setVisibleFields(newDomains.length);
     }
   };
 
@@ -549,18 +550,18 @@ export default function Page() {
           <div className="border border-black bg-white">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-white bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600">
-                  <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-slate-700 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
-                    <th className="w-[4%] text-center"></th>
-                    <th className="w-[18%] text-left">Store</th>
-                    <th className="w-[6%] text-center">Top Quality Store</th>
-                    <th className="w-[11%] text-center">Shipping (quality)</th>
-                    <th className="w-[11%] text-center">Returns (quality)</th>
-                    <th className="w-[9%] text-center">Competitive pricing</th>
-                    <th className="w-[9%] text-center">Website quality</th>
-                    <th className="w-[9%] text-center">Wallets</th>
-                    <th className="w-[6%] text-center">Rating</th>
-                    <th className="w-[7%] text-center">Reviews</th>
+                <thead className="text-sm text-black bg-gray-100">
+                  <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
+                    <th className="w-[6%] text-center"></th>
+                    <th className="w-[16%] text-left">Store</th>
+                    <th className="w-[10%] text-center">Top Quality Store</th>
+                    <th className="w-[10%] text-center">Shipping (quality)</th>
+                    <th className="w-[10%] text-center">Returns (quality)</th>
+                    <th className="w-[10%] text-center">Competitive pricing</th>
+                    <th className="w-[10%] text-center">Website quality</th>
+                    <th className="w-[10%] text-center">Wallets</th>
+                    <th className="w-[10%] text-center">Rating</th>
+                    <th className="w-[10%] text-center">Reviews</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
@@ -587,12 +588,13 @@ export default function Page() {
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
                     
                     return (
-                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors [&>td]:border-r [&>td]:border-slate-100 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0">
-                        <td className="text-center text-2xl" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors [&>td]:border-r [&>td]:border-gray-300 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0">
+                        <td className="text-center text-4xl px-4" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
                           {medal}
                         </td>
-                        <td className="flex items-center gap-2 pr-1">
-                          <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white">
+                        <td className="text-left pl-2 pr-2">
+                          <div className="flex items-center gap-2">
+                            <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img 
@@ -636,7 +638,7 @@ export default function Page() {
                             )}
                           </div>
                           <div className="leading-5 min-w-0 flex-1">
-                            <div className="font-medium text-black text-base flex items-center gap-1">
+                            <div className="font-medium text-black text-xs flex items-center gap-1">
                               <span className="truncate">{row.domain}</span>
                               <a
                                 href={validationUrl(row.domain, row.country)}
@@ -650,6 +652,7 @@ export default function Page() {
                                 </svg>
                               </a>
                             </div>
+                          </div>
                           </div>
                         </td>
                         <td className="text-center">
@@ -698,7 +701,7 @@ export default function Page() {
           <div className="pt-4 flex justify-center">
             <button
               onClick={copyResults}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 active:translate-y-px"
+              className="inline-flex items-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px"
               aria-label="Copy table results"
               title="Copy table results"
             >
