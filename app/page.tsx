@@ -434,10 +434,10 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Half Black Section */}
-      <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
+      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-14 w-auto mx-2" /> Store Ratings
+            Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 w-auto mx-2" /> Store Ratings
           </h1>
           <h2 className="mt-6 text-xl font-medium text-white">
             Benchmark Ecommerce Stores by Google's Public Quality Signals
@@ -515,7 +515,7 @@ export default function Page() {
           <div className="border border-black bg-white">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-white bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
+                <thead className="text-sm text-white bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600">
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-slate-700 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
                     <th className="w-[4%] text-center"></th>
                     <th className="w-[18%] text-left">Store</th>
@@ -664,7 +664,7 @@ export default function Page() {
           <div className="pt-4 flex justify-center">
             <button
               onClick={copyResults}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 active:translate-y-px"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 active:translate-y-px"
               aria-label="Copy table results"
               title="Copy table results"
             >
@@ -679,67 +679,62 @@ export default function Page() {
       )}
 
       {/* Quick Start Section */}
-      <section className="mx-auto max-w-6xl px-6 pb-8 mt-2">
-        <div className="bg-white p-6">
-          <div className="text-center mb-6">
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="w-full pb-8">
+        <div className="bg-gray-100 p-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-6">
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
-            <div className="space-y-3">
-              <h4 className="text-lg font-medium text-black text-center flex items-center justify-center gap-2">
-                🇬🇧 United Kingdom
-              </h4>
-              <div className="space-y-2">
+            <fieldset className="border border-black bg-white relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto">United Kingdom</legend>
+              <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
                   <button
                     key={`UK-${category}`}
                     onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-base font-medium text-black hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
                   </button>
                 ))}
               </div>
-            </div>
+            </fieldset>
 
             {/* US Categories */}
-            <div className="space-y-3">
-              <h4 className="text-lg font-medium text-black text-center flex items-center justify-center gap-2">
-                🇺🇸 United States
-              </h4>
-              <div className="space-y-2">
+            <fieldset className="border border-black bg-white relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto">United States</legend>
+              <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
                   <button
                     key={`US-${category}`}
                     onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-base font-medium text-black hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
                   </button>
                 ))}
               </div>
-            </div>
+            </fieldset>
 
             {/* AU Categories */}
-            <div className="space-y-3">
-              <h4 className="text-lg font-medium text-black text-center flex items-center justify-center gap-2">
-                🇦🇺 Australia
-              </h4>
-              <div className="space-y-2">
+            <fieldset className="border border-black bg-white relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto">Australia</legend>
+              <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
                   <button
                     key={`AU-${category}`}
                     onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white border border-black text-base font-medium text-black hover:bg-gray-100 transition-colors"
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
                   >
                     <span>{category}</span>
                     <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
                   </button>
                 ))}
               </div>
+            </fieldset>
             </div>
           </div>
         </div>
@@ -747,17 +742,13 @@ export default function Page() {
 
       {/* Explainer */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="border border-black bg-white">
+        <fieldset className="border border-black bg-white">
+          <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
           <div className="divide-y divide-slate-100">
-            <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
-              <h2 className="text-lg font-semibold text-white">
-                How Google Might Interpret These Signals?
-              </h2>
-            </div>
             <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="text-sm">
-                <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left [&>th]:border-r [&>th]:border-slate-300 [&>th:last-child]:border-r-0">
+                <tr className="[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
                   <th className="w-[20%] text-left font-bold text-black">Signal</th>
                   <th className="w-[26%] text-left font-bold text-black">What it means</th>
                   <th className="w-[27%] text-left font-bold text-black">How it's measured</th>
@@ -766,7 +757,7 @@ export default function Page() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3 [&>td]:border-r [&>td]:border-slate-100 [&>td:last-child]:border-r-0">
+                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
                     <td className="font-medium text-slate-900">{r.m}</td>
                     <td className="text-slate-700">{r.w}</td>
                     <td className="text-slate-600">{r.t}</td>
@@ -777,18 +768,14 @@ export default function Page() {
             </table>
             </div>
           </div>
-        </div>
+        </fieldset>
       </section>
 
       {/* TSQ Scoring Explanation */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="border border-black bg-white">
+        <fieldset className="border border-black bg-white">
+          <legend className="text-lg font-semibold text-black px-2">How Are These Scores Calculated?</legend>
           <div className="divide-y divide-slate-100">
-            <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
-              <h2 className="text-lg font-semibold text-white">
-                How Are These Scores Calculated?
-              </h2>
-            </div>
             <div className="px-6 py-8">
             <p className="text-slate-700 mb-4 text-sm">
               These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
@@ -867,18 +854,14 @@ export default function Page() {
             </p>
             </div>
           </div>
-        </div>
+        </fieldset>
       </section>
 
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="border border-black bg-white">
+        <fieldset className="border border-black bg-white">
+          <legend className="text-lg font-semibold text-black px-2">Frequently Asked Questions</legend>
           <div className="divide-y divide-slate-100">
-            <div className="text-center py-4 bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900">
-              <h2 className="text-lg font-semibold text-white">
-                Frequently Asked Questions
-              </h2>
-            </div>
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
               <p className="mt-1 text-sm text-slate-600">
@@ -923,7 +906,7 @@ export default function Page() {
               </p>
             </div>
           </div>
-        </div>
+        </fieldset>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -973,7 +956,7 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 py-10 px-4 sm:px-6 text-center text-sm text-white">
+      <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-10 px-4 sm:px-6 text-center text-sm text-white">
         <p className="mb-2">
           Vibe coded by{' '}
           <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
