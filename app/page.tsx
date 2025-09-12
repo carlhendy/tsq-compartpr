@@ -462,7 +462,7 @@ export default function Page() {
             </div>
             
             {/* Right Column - Input Boxes */}
-            <div className="max-w-lg mx-auto lg:mx-0">
+            <div className="w-full sm:max-w-lg mx-auto lg:mx-0">
               <div className="bg-white p-6 border border-black">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
