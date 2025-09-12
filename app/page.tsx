@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 
 // --- Wallet pills renderer (no dependencies) ---
@@ -135,7 +135,7 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
   'AU': {
     'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
     'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
-    'Sports & Fitness': ['rebelsport.com.au', 'amart.com.au', 'anacondastores.com', 'intersport.com.au', 'adidas.com.au'],
+    'Sports & Fitness': ['rebelsport.com.au', 'decathlon.com.au', 'anacondastores.com', 'intersport.com.au', 'adidas.com.au'],
     'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au', 'domayne.com.au'],
     'Electronics': ['harveynorman.com.au', 'jbhifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
     'Home & Garden': ['bunnings.com.au', 'homehardware.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
@@ -293,6 +293,7 @@ export default function Page() {
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [visibleFields, setVisibleFields] = useState<number>(3);
+  const resultsTableRef = useRef<HTMLDivElement>(null);
 
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
@@ -325,6 +326,11 @@ export default function Page() {
     
     // Trigger comparison with the new values directly
     compareWithValues(brands, countryCode);
+    
+    // Scroll to results table if it exists
+    if (resultsTableRef.current) {
+      resultsTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const compareWithValues = async (domainList: string[], countryCode: string) => {
@@ -546,7 +552,7 @@ export default function Page() {
 
       {/* Results */}
       {hasCompared && (
-        <section className="mx-auto max-w-6xl px-6 pb-12 mt-8">
+        <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12 mt-8">
           <div className="border border-black bg-white">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
