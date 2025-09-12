@@ -286,7 +286,7 @@ const EXPLAINER = [
 ] as const;
 
 export default function Page() {
-  const [domains, setDomains] = useState<string[]>(DEFAULTS);
+  const [domains, setDomains] = useState<string[]>(['asos.com', 'boohoo.com', 'next.co.uk']);
   const [country, setCountry] = useState<string>('GB');
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -303,9 +303,15 @@ export default function Page() {
   const removeDomain = (i: number) => {
     const next = domains.filter((_, index) => index !== i);
     setDomains(next);
-    // Adjust visible fields if needed
-    if (visibleFields > next.length) {
-      setVisibleFields(Math.max(3, next.length));
+    // Set visible fields to the new array length, but keep minimum of 1
+    setVisibleFields(Math.max(1, next.length));
+  };
+
+  const addDomain = () => {
+    if (domains.length < 5) {
+      const newDomains = [...domains, ''];
+      setDomains(newDomains);
+      setVisibleFields(newDomains.length);
     }
   };
 
@@ -468,7 +474,7 @@ export default function Page() {
                       placeholder="domain.com"
                       className="w-full h-12 border border-black px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
                     />
-                    {domains.length > 1 && (
+                    {visibleFields > 1 && (
                       <button
                         type="button"
                         onClick={() => removeDomain(i)}
@@ -482,11 +488,11 @@ export default function Page() {
                 ))}
                 
                 {/* Add More Link */}
-                {visibleFields < 5 && (
+                {domains.length < 5 && (
                   <div className="text-right">
                     <button
                       type="button"
-                      onClick={() => setVisibleFields(prev => prev + 1)}
+                      onClick={addDomain}
                       className="text-sm text-gray-500 hover:text-gray-700 underline"
                     >
                       + Add More
