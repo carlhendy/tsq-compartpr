@@ -238,12 +238,9 @@ const validationUrl = (domain: string, country: string) => {
 
 // Component to show brand favicons for a category
 const CategoryFavicons = ({ brands }: { brands: string[] }) => {
-  const visibleBrands = brands.slice(0, 3); // Show first 3 brands
-  const remainingCount = brands.length - 3;
-  
   return (
-    <div className="flex items-center gap-1.5">
-      {visibleBrands.map((brand, index) => (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {brands.map((brand, index) => (
         <div key={brand} className="h-6 w-6 rounded-sm overflow-hidden bg-white">
           <img
             src={getFaviconUrlWithFallback(brand)}
@@ -274,9 +271,6 @@ const CategoryFavicons = ({ brands }: { brands: string[] }) => {
           />
         </div>
       ))}
-      {remainingCount > 0 && (
-        <span className="text-xs text-slate-500 ml-1">+{remainingCount}</span>
-      )}
     </div>
   );
 };
@@ -433,79 +427,80 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero - Half Black Section */}
-      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600">
-        <div className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 w-auto mx-2" /> Store Ratings
-          </h1>
-          <h2 className="mt-6 text-xl font-medium text-white">
-            Benchmark Ecommerce Stores by Google's Public Quality Signals
-          </h2>
-        </div>
-        
-        {/* Inputs - Halfway down the black section */}
-        <div className="mx-auto max-w-lg px-6 pb-6">
-          <div className="bg-white p-6 border border-black">
-            {/* Domains - Vertical Stack */}
-            <div className="space-y-2 mb-4">
-            {domains.map((d, i) => (
-              <input
-                key={i}
-                value={d}
-                onChange={(e) => updateDomain(i, e.target.value)}
-                placeholder="domain.com"
-                className="w-full h-12 border border-black px-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
-              />
-            ))}
-          </div>
-
-            {/* Country Selector */}
-            <div className="flex items-center gap-3 mb-3">
-              <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
-              <div className="relative flex-1">
-              <select
-                id="country-select"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="h-12 w-full border border-black bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer"
-                aria-label="Country"
-              >
-              <option value="US">United States</option>
-              <option value="GB">United Kingdom</option>
-              <option value="AU">Australia</option>
-              <option value="CA">Canada</option>
-              <option value="IE">Ireland</option>
-              <option value="NZ">New Zealand</option>
-              <option value="DE">Germany</option>
-              <option value="FR">France</option>
-              </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+      {/* Hero - Two Column Layout */}
+      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Text and Headers */}
+            <div className="text-left">
+              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
+                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-16 w-auto mx-2" /></div>
+                <div>Store Ratings</div>
+              </h1>
+              <h2 className="text-2xl font-medium text-white mb-6 max-w-md">
+                Benchmark Ecommerce Stores by Google's Public Quality Signals
+              </h2>
+              <p className="text-white text-base max-w-md">
+                Compare up to five store websites and choose a country. We'll compare what Google shows on google.com/storepages.
+              </p>
+            </div>
+            
+            {/* Right Column - Input Boxes */}
+            <div className="max-w-md mx-auto lg:mx-0">
+              <div className="bg-white p-6 border border-black">
+                {/* Domains - Vertical Stack */}
+                <div className="space-y-2 mb-4">
+                {domains.map((d, i) => (
+                  <input
+                    key={i}
+                    value={d}
+                    onChange={(e) => updateDomain(i, e.target.value)}
+                    placeholder="domain.com"
+                    className="w-full h-12 border border-black px-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
+                  />
+                ))}
               </div>
-            </div>
 
-            </div>
+              {/* Country Selector */}
+              <div className="flex items-center gap-3 mb-3">
+                <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
+                <div className="relative flex-1">
+                <select
+                  id="country-select"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="h-12 w-full border border-black bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer"
+                  aria-label="Country"
+                >
+                <option value="US">United States</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="CA">Canada</option>
+                <option value="IE">Ireland</option>
+                <option value="NZ">New Zealand</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
 
-            {/* Compare Button - Own Row */}
-            <button
-              onClick={compare}
-              disabled={loading}
-              className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
-            >
-              {loading ? 'Comparing...' : 'Compare Stores'}
-            </button>
+              </div>
+
+              {/* Compare Button - Own Row */}
+              <button
+                onClick={compare}
+                disabled={loading}
+                className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
+              >
+                {loading ? 'Comparing...' : 'Compare Stores'}
+              </button>
+          </div>
+          </div>
         </div>
-        </div>
-        
-        {/* Instruction text below container */}
-        <div className="text-center mt-4 pb-12">
-          <p className="text-white text-xs">
-            👉 Compare up to five store websites and choose a country. We'll compare what Google shows on{' '}
-            google.com/storepages.
-          </p>
         </div>
       </section>
 
@@ -679,11 +674,9 @@ export default function Page() {
       )}
 
       {/* Quick Start Section */}
-      <section className="w-full pb-8">
-        <div className="bg-gray-100 p-6">
+      <section className="w-full">
+        <div className="bg-gray-100 pt-6 pb-8 px-6">
           <div className="mx-auto max-w-6xl">
-            <div className="text-center mb-6">
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
             <fieldset className="border border-black bg-white relative">
@@ -741,7 +734,7 @@ export default function Page() {
       </section>
 
       {/* Explainer */}
-      <section className="mx-auto max-w-6xl px-6 pb-10">
+      <section className="mx-auto max-w-6xl px-6 pb-10 pt-8">
         <fieldset className="border border-black bg-white">
           <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
           <div className="divide-y divide-slate-100">
