@@ -449,8 +449,8 @@ export default function Page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
             <div className="text-left">
-              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
-                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-8 sm:h-16 w-auto mx-1 sm:mx-2" /></div>
+              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
+                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-10 sm:h-16 w-auto mx-1 sm:mx-2" /></div>
                 <div>Store Ratings</div>
               </h1>
               <h2 className="text-lg sm:text-2xl font-medium text-white mb-6 max-w-md">
@@ -780,8 +780,9 @@ export default function Page() {
         <fieldset className="border border-black bg-white">
           <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
           <div className="divide-y divide-slate-100">
-            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0" style={{WebkitOverflowScrolling: 'touch'}}>
-            <table className="min-w-[800px] w-full text-left text-sm">
+            <div className="relative">
+              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0" style={{WebkitOverflowScrolling: 'touch', scrollbarWidth: 'thin'}}>
+            <table className="min-w-[900px] w-full text-left text-sm">
               <thead className="text-sm">
                 <tr className="[&>th]:px-2 sm:[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
                   <th className="w-[18%] text-left font-bold text-black">Signal</th>
@@ -801,6 +802,11 @@ export default function Page() {
                 ))}
               </tbody>
             </table>
+              </div>
+              {/* Mobile scroll indicator */}
+              <div className="sm:hidden text-center py-2 text-xs text-gray-500">
+                ← Swipe to see more columns →
+              </div>
             </div>
           </div>
         </fieldset>
