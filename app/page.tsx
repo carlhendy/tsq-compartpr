@@ -135,7 +135,7 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
   'AU': {
     'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
     'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
-    'Sports & Fitness': ['rebelsport.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
+    'Sports & Fitness': ['rebelsport.com.au', 'amart.com.au', 'anacondastores.com', 'intersport.com.au', 'adidas.com.au'],
     'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au', 'domayne.com.au'],
     'Electronics': ['harveynorman.com.au', 'jbhifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
     'Home & Garden': ['bunnings.com.au', 'homehardware.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
@@ -719,6 +719,7 @@ export default function Page() {
       <section className="w-full">
         <div className="bg-gray-100 pt-6 pb-8 px-6">
           <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-black text-center mb-6">Quick Start</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
             <fieldset className="border border-black bg-white relative">
