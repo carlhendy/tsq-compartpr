@@ -457,7 +457,7 @@ export default function Page() {
                 Benchmark Ecommerce Stores by Google's Public Quality Signals
               </h2>
               <p className="text-white text-sm max-w-md">
-                Compare up to five store websites and choose a country. We'll compare what Google shows on google.com/storepages.
+                Compare up to five store websites and pick a country. We'll show what Google lists on google.com/storepages.
               </p>
             </div>
             
@@ -998,7 +998,7 @@ export default function Page() {
       <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
         <div className="mb-4 text-base">
           <div>
-            Vibe coded by{' '}
+            Badly vibe coded by{' '}
             <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="text-white underline hover:no-underline font-normal inline-block">
               Carl Hendy
             </a>
