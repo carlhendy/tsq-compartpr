@@ -444,7 +444,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Two Column Layout */}
-      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-6">
+      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 pt-4 sm:pt-8 pb-16 px-6">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
@@ -456,7 +456,7 @@ export default function Page() {
               <h2 className="text-lg sm:text-2xl font-medium text-white mb-6 max-w-md">
                 Benchmark Ecommerce Stores by Google's Public Quality Signals
               </h2>
-              <p className="text-white text-base max-w-md">
+              <p className="text-white text-sm max-w-md">
                 Compare up to five store websites and choose a country. We'll compare what Google shows on google.com/storepages.
               </p>
             </div>
