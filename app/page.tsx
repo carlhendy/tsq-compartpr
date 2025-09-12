@@ -292,11 +292,21 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [visibleFields, setVisibleFields] = useState<number>(3);
 
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
     next[i] = v;
     setDomains(next);
+  };
+
+  const removeDomain = (i: number) => {
+    const next = domains.filter((_, index) => index !== i);
+    setDomains(next);
+    // Adjust visible fields if needed
+    if (visibleFields > next.length) {
+      setVisibleFields(Math.max(3, next.length));
+    }
   };
 
   const handleQuickStart = (country: CountryKey, category: CategoryKey) => {
@@ -450,15 +460,39 @@ export default function Page() {
               <div className="bg-white p-6 border border-black">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
-                {domains.map((d, i) => (
-                  <input
-                    key={i}
-                    value={d}
-                    onChange={(e) => updateDomain(i, e.target.value)}
-                    placeholder="domain.com"
-                    className="w-full h-12 border border-black px-3 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
-                  />
+                {domains.slice(0, visibleFields).map((d, i) => (
+                  <div key={i} className="relative">
+                    <input
+                      value={d}
+                      onChange={(e) => updateDomain(i, e.target.value)}
+                      placeholder="domain.com"
+                      className="w-full h-12 border border-black px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
+                    />
+                    {domains.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeDomain(i)}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                        aria-label="Remove field"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
                 ))}
+                
+                {/* Add More Link */}
+                {visibleFields < 5 && (
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => setVisibleFields(prev => prev + 1)}
+                      className="text-sm text-gray-500 hover:text-gray-700 underline"
+                    >
+                      + Add More
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Country Selector */}
@@ -949,8 +983,8 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-10 px-4 sm:px-6 text-center text-sm text-white">
-        <p className="mb-2">
+      <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
+        <p className="mb-4 text-base">
           Vibe coded by{' '}
           <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
             Carl Hendy
@@ -960,7 +994,7 @@ export default function Page() {
             Audits.com
           </a>.
         </p>
-        <p className="mx-auto max-w-3xl text-xs text-white">
+        <p className="mx-auto max-w-3xl text-sm text-white">
           Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
           <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
         </p>
