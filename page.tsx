@@ -59,6 +59,7 @@ type Signals = {
   store_rating?: string | number;
   review_count?: string | number;
   logo_url?: string;
+  scamadviser_score?: string | number;
   section_grades?: {
     shipping?: string;
     returns?: string;
@@ -78,6 +79,69 @@ type Row = {
 
 const DEFAULTS = ['asos.com','boohoo.com','next.co.uk','riverisland.com','newlook.com'];
 
+// Quick Start Categories
+type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Furniture' | 'Electronics' | 'Home & Garden';
+type CountryKey = 'UK' | 'US' | 'AU';
+
+// Helper function to get favicon URL using a proxy service
+const getFaviconUrl = (domain: string) => {
+  // Use Google's favicon service which is reliable and cached
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+};
+
+// Special handling for domains that might have favicon issues
+const getFaviconUrlWithFallback = (domain: string) => {
+  // For specific domains that might have issues, try multiple approaches
+  if (domain === 'chemistwarehouse.com.au') {
+    // Try with www prefix first
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
+  }
+  if (domain === 'bhphotovideo.com') {
+    // Try with www prefix for B&H
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
+  }
+  return getFaviconUrl(domain);
+};
+
+// Helper function for results table favicons (larger size)
+const getResultsFaviconUrl = (domain: string) => {
+  // Special handling for domains that might have favicon issues
+  if (domain === 'chemistwarehouse.com.au') {
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
+  }
+  if (domain === 'bhphotovideo.com') {
+    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=64&t=1`;
+  }
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+};
+
+const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> = {
+  'UK': {
+    'Fashion': ['asos.com', 'next.co.uk', 'riverisland.com', 'boohoo.com', 'newlook.com'],
+    'Cosmetics': ['boots.com', 'superdrug.com', 'lookfantastic.com', 'cultbeauty.com', 'feelunique.com'],
+    'Sports & Fitness': ['sportsdirect.com', 'decathlon.co.uk', 'jdsports.co.uk', 'mountainwarehouse.com', 'gymshark.com'],
+    'Furniture': ['ikea.com', 'wayfair.co.uk', 'dunelm.com', 'argos.co.uk', 'bensonsforbeds.co.uk'],
+    'Electronics': ['currys.co.uk', 'argos.co.uk', 'johnlewis.com', 'very.co.uk', 'ao.com'],
+    'Home & Garden': ['diy.com', 'homebase.co.uk', 'wickes.co.uk', 'screwfix.com', 'toolstation.com']
+  },
+  'US': {
+    'Fashion': ['nordstrom.com', 'macys.com', 'gap.com', 'oldnavy.com', 'bananarepublic.com'],
+    'Cosmetics': ['sephora.com', 'ulta.com', 'fentybeauty.com', 'beautylish.com', 'glossier.com'],
+    'Sports & Fitness': ['dickssportinggoods.com', 'academy.com', 'rei.com', 'nike.com', 'adidas.com'],
+    'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com'],
+    'Electronics': ['bestbuy.com', 'amazon.com', 'newegg.com', 'microcenter.com', 'bhphotovideo.com'],
+    'Home & Garden': ['homedepot.com', 'lowes.com', 'menards.com', 'acehardware.com', 'harborfreight.com']
+  },
+  'AU': {
+    'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
+    'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
+    'Sports & Fitness': ['rebelsport.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
+    'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au', 'domayne.com.au'],
+    'Electronics': ['harveynorman.com.au', 'jbhifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
+    'Home & Garden': ['bunnings.com.au', 'homehardware.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
+  }
+};
+
 /** ---------- helpers ---------- */
 const pick = <T,>(...vals: (T | undefined | null | '')[]) =>
   vals.find((v) => v !== undefined && v !== null && v !== '') as T | undefined;
@@ -87,6 +151,63 @@ const get = (obj: any, path: string) =>
 
 const getAny = (obj: any, paths: string[], fallback: any = '—') =>
   (pick(...paths.map((p) => get(obj, p))) as any) ?? fallback;
+
+// TSQ Scoring system
+const levelScore = (grade?: string): number => {
+  if (!grade) return 0.00;
+  const g = String(grade).toLowerCase();
+  if (g.startsWith('exception')) return 1.00;
+  if (g.startsWith('great')) return 0.85;
+  if (g.startsWith('good')) return 0.70;
+  if (g.startsWith('fair')) return 0.40;
+  if (g.startsWith('poor')) return 0.20;
+  return 0.00;
+};
+
+const computeTsqScore = (signals: Signals): number => {
+  // Base scores from quality grades
+  const returnsScore = levelScore(signals.section_grades?.returns) * 30;
+  const shippingScore = levelScore(signals.section_grades?.shipping) * 25;
+  const pricingScore = levelScore(signals.section_grades?.pricing) * 25;
+  const websiteScore = levelScore(signals.section_grades?.website) * 10;
+  
+  // Wallets score (5% max, based on unique wallet count)
+  const wallets = signals.e_wallets || '';
+  const uniqueWallets = new Set(
+    wallets.split(',').map(w => w.trim()).filter(Boolean)
+  );
+  const walletsScore = Math.min(uniqueWallets.size / 3, 1.0) * 5;
+  
+  // Trust score (5% max, normalized from 0-100)
+  let trustScore = 0;
+  if (signals.scamadviser_score) {
+    const trustValue = parseInt(String(signals.scamadviser_score), 10);
+    if (!isNaN(trustValue)) {
+      trustScore = (trustValue / 100) * 5;
+    }
+  }
+  
+  // Bonuses
+  let bonuses = 0;
+  
+  // Return window bonus
+  const returnWindow = signals.return_window || '';
+  const maxDaysMatch = returnWindow.match(/(\d+)/g);
+  if (maxDaysMatch) {
+    const maxDays = Math.max(...maxDaysMatch.map(Number));
+    if (maxDays >= 30) bonuses += 5;
+    else if (maxDays >= 28) bonuses += 3;
+  }
+  
+  // Top Quality Store bonus
+  if (signals.tqs_badge === true) bonuses += 5;
+  
+  // Calculate final score
+  const totalScore = returnsScore + shippingScore + pricingScore + websiteScore + walletsScore + trustScore + bonuses;
+  
+  // Cap at 100, floor at 0, round to nearest integer
+  return Math.round(Math.max(0, Math.min(100, totalScore)));
+};
 
 const qualityTone = (grade?: string) => {
   if (!grade) return 'slate';
@@ -115,19 +236,115 @@ const validationUrl = (domain: string, country: string) => {
   return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
 };
 
+// Component to show brand favicons for a category
+const CategoryFavicons = ({ brands }: { brands: string[] }) => {
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {brands.map((brand, index) => (
+        <div key={brand} className="h-6 w-6 rounded-sm overflow-hidden bg-white">
+          <img
+            src={getFaviconUrlWithFallback(brand)}
+            alt=""
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+              // Try alternative favicon services as fallback
+              if (img.src.includes('google.com/s2/favicons')) {
+                // For Chemist Warehouse, try different domain formats
+                if (brand === 'chemistwarehouse.com.au') {
+                  img.src = `https://www.google.com/s2/favicons?domain=${brand}&sz=32&t=2`;
+                } else {
+                  // Try DuckDuckGo favicon service for other domains
+                  img.src = `https://icons.duckduckgo.com/ip3/${brand}.ico`;
+                }
+              } else if (img.src.includes('duckduckgo.com') || (brand === 'chemistwarehouse.com.au' && img.src.includes('google.com/s2/favicons'))) {
+                // Try favicon.io service
+                img.src = `https://favicons.githubusercontent.com/${brand}`;
+              } else if (brand === 'chemistwarehouse.com.au') {
+                // Special case for Chemist Warehouse - try direct favicon
+                img.src = `https://${brand}/favicon.ico`;
+              } else {
+                // Final fallback to generic icon
+                img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMTAgNUwxNSAxMEwxMCAxNUw1IDEwTDEwIDVaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';
+              }
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 /** ---------- Page ---------- */
+const EXPLAINER = [
+  { m: 'Shipping (quality)', w: 'Overall signal for shipping experience with delivery time shown below.', t: 'Google\'s derived grade per region with delivery estimates.', q: 'Clarify shipping costs, speed, and policies.' },
+  { m: 'Returns (quality)', w: 'Overall signal for your returns experience with return window shown below.', t: 'Google\'s derived grade per region with return timeframes.', q: 'Free returns and clear policy improve trust.' },
+  { m: 'Competitive pricing', w: 'How your pricing compares to competitors.', t: 'Google\'s derived grade per region.', q: 'Ensure competitive pricing and clear value proposition.' },
+  { m: 'Website quality', w: 'Overall website user experience and trust signals.', t: 'Google\'s derived grade per region.', q: 'Improve site speed, mobile experience, and trust signals.' },
+  { m: 'Wallets', w: 'Digital wallets available at checkout.', t: 'Detected by Google per region.', q: 'Add popular wallets (e.g., PayPal, Apple Pay).'},
+  { m: 'Rating/Reviews', w: 'Aggregate rating and review count.', t: 'Sourced from approved review partners.', q: 'Grow recent, verified reviews.'},
+] as const;
+
 export default function Page() {
-  const [domains, setDomains] = useState<string[]>(DEFAULTS);
+  const [domains, setDomains] = useState<string[]>(['asos.com', 'boohoo.com', 'next.co.uk']);
   const [country, setCountry] = useState<string>('GB');
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [visibleFields, setVisibleFields] = useState<number>(3);
 
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
     next[i] = v;
     setDomains(next);
+  };
+
+  const removeDomain = (i: number) => {
+    const next = domains.filter((_, index) => index !== i);
+    setDomains(next);
+    // Always reduce visible fields by 1, but keep minimum of 1
+    setVisibleFields(Math.max(1, visibleFields - 1));
+  };
+
+  const addDomain = () => {
+    if (domains.length < 5) {
+      setDomains([...domains, '']);
+      setVisibleFields(domains.length + 1);
+    }
+  };
+
+  const handleQuickStart = (country: CountryKey, category: CategoryKey) => {
+    const brands = QUICK_START_CATEGORIES[country][category];
+    const countryCode = country === 'UK' ? 'GB' : country;
+    
+    // Update state
+    setDomains(brands);
+    setCountry(countryCode);
+    
+    // Trigger comparison with the new values directly
+    compareWithValues(brands, countryCode);
+  };
+
+  const compareWithValues = async (domainList: string[], countryCode: string) => {
+    setLoading(true);
+    setHasCompared(true);
+    setRows([]);
+    const entries = domainList.map((d) => d.trim()).filter(Boolean).slice(0, 5);
+    const promises = entries.map(async (d) => {
+      try {
+        const r = await fetch(`/api/storepage?domain=${encodeURIComponent(d)}&country=${countryCode}`);
+        const json = await r.json();
+        if (json?.error) return { domain: d, country: countryCode, error: String(json.error) } as Row;
+        const payload = json?.signals ?? json?.data ?? json?.payload ?? json;
+        return { domain: d, country: countryCode, signals: payload as Signals } as Row;
+      } catch (e: any) {
+        return { domain: d, country: countryCode, error: e?.message || 'Fetch error' } as Row;
+      }
+    });
+    const res = await Promise.all(promises);
+    setRows(res);
+    setLoading(false);
   };
 
   async function compare() {
@@ -149,13 +366,46 @@ export default function Page() {
     const res = await Promise.all(promises);
     setRows(res);
     setLoading(false);
-  }
+  };
+
+  // Sort rows by TSQ score (best to worst)
+  const sortedRows = [...rows].sort((a, b) => {
+    const aScore = a.signals ? computeTsqScore(a.signals) : 0;
+    const bScore = b.signals ? computeTsqScore(b.signals) : 0;
+    
+    if (aScore !== bScore) return bScore - aScore; // Higher score first
+    
+    // Tie-breakers
+    const aSignals = a.signals || {};
+    const bSignals = b.signals || {};
+    
+    // 1. Competitive pricing level
+    const aPricing = levelScore(aSignals.section_grades?.pricing);
+    const bPricing = levelScore(bSignals.section_grades?.pricing);
+    if (aPricing !== bPricing) return bPricing - aPricing;
+    
+    // 2. Returns quality level
+    const aReturns = levelScore(aSignals.section_grades?.returns);
+    const bReturns = levelScore(bSignals.section_grades?.returns);
+    if (aReturns !== bReturns) return bReturns - aReturns;
+    
+    // 3. Shipping quality level
+    const aShipping = levelScore(aSignals.section_grades?.shipping);
+    const bShipping = levelScore(bSignals.section_grades?.shipping);
+    if (aShipping !== bShipping) return bShipping - aShipping;
+    
+    // 4. Number of unique wallets
+    const aWallets = new Set((aSignals.e_wallets || '').split(',').map(w => w.trim()).filter(Boolean));
+    const bWallets = new Set((bSignals.e_wallets || '').split(',').map(w => w.trim()).filter(Boolean));
+    return bWallets.size - aWallets.size;
+  });
 
   const copyResults = async () => {
     try {
-      const headers = ['Store','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
+      const headers = ['Medal','Store','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
       const lines: string[] = [headers.join('\t')];
-      for (const row of rows) {
+      for (let i = 0; i < sortedRows.length; i++) {
+        const row = sortedRows[i];
         const s = row.signals || {};
         const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
         const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
@@ -163,8 +413,13 @@ export default function Page() {
         const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
         const pricingGrade = getAny(s, ['section_grades.pricing','pricing_quality','pricingGrade']);
         const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
+        const rating = getAny(s, ['store_rating','rating','storeRating']);
+        const reviews = getAny(s, ['review_count','reviews','reviewCount']);
+        
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
         
         const values = [
+          medal,
           row.domain || '—',
           row.error ? 'Error' : (s?.tqs_badge === true ? 'Yes' : s?.tqs_badge === false ? 'No' : '—'),
           delivery ? `${shipGrade} (${delivery})` : shipGrade,
@@ -172,8 +427,8 @@ export default function Page() {
           pricingGrade,
           websiteGrade,
           getAny(s, ['e_wallets','wallets','payment_wallets']),
-          String(getAny(s, ['store_rating','rating','storeRating'])),
-          String(getAny(s, ['review_count','reviews','reviewCount'])),
+          String(rating),
+          String(reviews),
         ];
         lines.push(values.join('\t'));
       }
@@ -185,117 +440,138 @@ export default function Page() {
     }
   };
 
-  const EXPLAINER = [
-    { m: 'Shipping (quality)', w: 'Overall signal for shipping experience with delivery time shown below.', t: 'Google\'s derived grade per region with delivery estimates.', q: 'Clarify shipping costs, speed, and policies.' },
-    { m: 'Returns (quality)', w: 'Overall signal for your returns experience with return window shown below.', t: 'Google\'s derived grade per region with return timeframes.', q: 'Free returns and clear policy improve trust.' },
-    { m: 'Competitive pricing', w: 'How your pricing compares to competitors.', t: 'Google\'s derived grade per region.', q: 'Ensure competitive pricing and clear value proposition.' },
-    { m: 'Website quality', w: 'Overall website user experience and trust signals.', t: 'Google\'s derived grade per region.', q: 'Improve site speed, mobile experience, and trust signals.' },
-    { m: 'Wallets', w: 'Digital wallets available at checkout.', t: 'Detected by Google per region.', q: 'Add popular wallets (e.g., PayPal, Apple Pay).'},
-    { m: 'Rating/Reviews', w: 'Aggregate rating and review count.', t: 'Sourced from approved review partners.', q: 'Grow recent, verified reviews.'},
-  ] as const;
-
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 pt-16 pb-6 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl inline-block bg-yellow-100/70 px-3 py-1 rounded-md">
-          Compare Google Store Ratings
-        </h1>
-        <h2 className="mt-6 text-xl font-medium text-slate-700 inline-block bg-green-100/70 px-3 py-1 rounded-md">
-          Benchmark Ecommerce Stores by Google’s Public Quality Signals
-        </h2>
-      </section>
+    <main className="min-h-screen bg-white">
+      {/* Hero - Two Column Layout */}
+      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Text and Headers */}
+            <div className="text-left">
+              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
+                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-16 w-auto mx-2" /></div>
+                <div>Store Ratings</div>
+              </h1>
+              <h2 className="text-2xl font-medium text-white mb-6 max-w-md">
+                Benchmark Ecommerce Stores by Google's Public Quality Signals
+              </h2>
+              <p className="text-white text-base max-w-md">
+                Compare up to five store websites and choose a country. We'll compare what Google shows on google.com/storepages.
+              </p>
+            </div>
+            
+            {/* Right Column - Input Boxes */}
+            <div className="max-w-md mx-auto lg:mx-0">
+              <div className="bg-white p-6 border border-black">
+                {/* Domains - Vertical Stack */}
+                <div className="space-y-2 mb-4">
+                {domains.slice(0, visibleFields).map((d, i) => (
+                  <div key={i} className="relative">
+                    <input
+                      value={d}
+                      onChange={(e) => updateDomain(i, e.target.value)}
+                      placeholder="domain.com"
+                      className="w-full h-12 border border-black px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
+                    />
+                    {visibleFields > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeDomain(i)}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                        aria-label="Remove field"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+                ))}
+                
+                {/* Add More Link */}
+                {domains.length < 5 && (
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={addDomain}
+                      className="text-sm text-gray-500 hover:text-gray-700 underline"
+                    >
+                      + Add More
+                    </button>
+                  </div>
+                )}
+              </div>
 
+              {/* Country Selector */}
+              <div className="flex items-center gap-3 mb-3">
+                <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
+                <div className="relative flex-1">
+                <select
+                  id="country-select"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="h-12 w-full border border-black bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer"
+                  aria-label="Country"
+                >
+                <option value="US">United States</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="CA">Canada</option>
+                <option value="IE">Ireland</option>
+                <option value="NZ">New Zealand</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
 
-      {/* Inputs */}
-      <section className="mx-auto max-w-6xl px-6 pb-8">
-        <div className="rounded-2xl border border-slate-200 bg-blue-50/70 p-6 shadow-sm backdrop-blur">
-          <p className="mb-5 text-sm text-slate-700 text-center">
-            👉 Compare up to five store websites and choose a country. We’ll compare what Google shows on{' '}
-            google.com/storepages.
-          </p>
+              </div>
 
-          {/* Domains row */}
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
-            {domains.map((d, i) => (
-              <input
-                key={i}
-                value={d}
-                onChange={(e) => updateDomain(i, e.target.value)}
-                placeholder="domain.com"
-                className="w-full h-10 rounded-lg border border-slate-200 px-3 text-sm outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
-              />
-            ))}
+              {/* Compare Button - Own Row */}
+              <button
+                onClick={compare}
+                disabled={loading}
+                className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
+              >
+                {loading ? 'Comparing...' : 'Compare Stores'}
+              </button>
           </div>
-
-          {/* Controls */}
-          <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-3">
-            <label className="text-sm text-slate-700 sm:mr-2" htmlFor="country-select">Select Country:</label>
-            <select
-              id="country-select"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="h-10 w-full sm:w-48 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-200"
-              aria-label="Country"
-            >
-              <option value="US">United States</option>
-              <option value="GB">United Kingdom</option>
-              <option value="AU">Australia</option>
-              <option value="CA">Canada</option>
-              <option value="IE">Ireland</option>
-              <option value="NZ">New Zealand</option>
-              <option value="DE">Germany</option>
-              <option value="FR">France</option>
-            </select>
-
-            <button
-              onClick={compare}
-              disabled={loading}
-              className="inline-flex h-10 w-full sm:w-48 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-sm bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? (
-                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.25" />
-                  <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="4" fill="none" />
-                </svg>
-              ) : (
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 5l7 7-7 7" />
-                </svg>
-              )}
-              Compare
-            </button>
           </div>
         </div>
+        </div>
       </section>
-    {/* Results */}
+
+      {/* Results */}
       {hasCompared && (
-        <section className="mx-auto max-w-6xl px-6 pb-12">
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <section className="mx-auto max-w-6xl px-6 pb-12 mt-8">
+          <div className="border border-black bg-white">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="bg-slate-50 text-sm text-slate-600">
-                  <tr className="[&>th]:px-4 [&>th]:py-3">
-                    <th className="w-[20%] text-left">Store</th>
-                    <th className="w-[8%] text-center">Top Quality Store</th>
-                    <th className="w-[12%] text-center">Shipping (quality)</th>
-                    <th className="w-[12%] text-center">Returns (quality)</th>
-                    <th className="w-[10%] text-center">Competitive pricing</th>
-                    <th className="w-[10%] text-center">Website quality</th>
-                    <th className="w-[12%] text-center">Wallets</th>
-                    <th className="w-[8%] text-center">Rating</th>
-                    <th className="w-[8%] text-center">Reviews</th>
+                <thead className="text-sm text-white bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600">
+                  <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-slate-700 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
+                    <th className="w-[4%] text-center"></th>
+                    <th className="w-[18%] text-left">Store</th>
+                    <th className="w-[6%] text-center">Top Quality Store</th>
+                    <th className="w-[11%] text-center">Shipping (quality)</th>
+                    <th className="w-[11%] text-center">Returns (quality)</th>
+                    <th className="w-[9%] text-center">Competitive pricing</th>
+                    <th className="w-[9%] text-center">Website quality</th>
+                    <th className="w-[9%] text-center">Wallets</th>
+                    <th className="w-[6%] text-center">Rating</th>
+                    <th className="w-[7%] text-center">Reviews</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
-                  {rows.length === 0 && (
+                  {sortedRows.length === 0 && (
                     <tr>
-                      <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
+                      <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
                         {loading ? 'Fetching signals…' : 'No results yet.'}
                       </td>
                     </tr>
                   )}
-                  {rows.map((row, i) => {
+                  {sortedRows.map((row, i) => {
                     const s: Signals = row.signals || {};
                     const tqs = s?.tqs_badge;
                     const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
@@ -308,35 +584,74 @@ export default function Page() {
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
 
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+                    
                     return (
-                      <tr key={i} className="[&>td]:px-4 [&>td]:py-4 hover:bg-slate-50 transition-colors">
-                        <td className="flex items-center gap-3 pr-2">
-                          <div className="h-10 w-10 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
+                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors [&>td]:border-r [&>td]:border-slate-100 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0">
+                        <td className="text-center text-2xl" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
+                          {medal}
+                        </td>
+                        <td className="flex items-center gap-2 pr-1">
+                          <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white">
                             {s?.logo_url ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={s.logo_url} alt="" className="h-full w-full object-cover" />
+                              <img 
+                                src={s.logo_url} 
+                                alt="" 
+                                className="h-full w-full object-cover" 
+                                onError={(e) => {
+                                  const img = e.target as HTMLImageElement;
+                                  // Try our robust favicon service as fallback
+                                  img.src = getResultsFaviconUrl(row.domain);
+                                }}
+                              />
                             ) : (
-                              <div className="h-full w-full bg-slate-100" />
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img 
+                                src={getResultsFaviconUrl(row.domain)} 
+                                alt="" 
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                  const img = e.target as HTMLImageElement;
+                                  // Try alternative favicon services with different approaches
+                                  if (img.src.includes('duckduckgo.com')) {
+                                    // Try favicon.io service
+                                    img.src = `https://favicons.githubusercontent.com/${row.domain}`;
+                                  } else if (img.src.includes('favicons.githubusercontent.com')) {
+                                    // Try direct favicon from website
+                                    img.src = `https://${row.domain}/favicon.ico`;
+                                  } else if (img.src.includes('google.com/s2/favicons')) {
+                                    // Try DuckDuckGo with different domain format
+                                    if (row.domain === 'bhphotovideo.com') {
+                                      img.src = `https://icons.duckduckgo.com/ip3/www.${row.domain}.ico`;
+                                    } else {
+                                      img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
+                                    }
+                                  } else {
+                                    // Try one more Google service attempt with different parameters
+                                    img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64&t=2`;
+                                  }
+                                }}
+                              />
                             )}
                           </div>
-                          <div className="leading-5">
-                            <div className="font-medium text-slate-900 flex items-center gap-2">
-                              {row.domain}
+                          <div className="leading-5 min-w-0 flex-1">
+                            <div className="font-medium text-black text-base flex items-center gap-1">
+                              <span className="truncate">{row.domain}</span>
                               <a
                                 href={validationUrl(row.domain, row.country)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center rounded-md border border-slate-200 bg-white px-1.5 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition"
+                                className="inline-flex items-center rounded bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition flex-shrink-0"
                                 title="Open source URL"
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">
                                   <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
                                 </svg>
                               </a>
                             </div>
                           </div>
                         </td>
-
                         <td className="text-center">
                           {row.error
                             ? badge('Error', 'red')
@@ -348,7 +663,7 @@ export default function Page() {
                         </td>
                         <td className="text-center">
                           <div className="flex flex-col items-center gap-1">
-                            {badge(shipGrade, qualityTone(shipGrade))}
+                            {shipGrade && shipGrade !== '—' ? badge(shipGrade, qualityTone(shipGrade)) : null}
                             {delivery && (
                               <div className="text-xs text-slate-500 tabular-nums">
                                 {delivery}
@@ -358,7 +673,7 @@ export default function Page() {
                         </td>
                         <td className="text-center">
                           <div className="flex flex-col items-center gap-1">
-                            {badge(returnsGrade, qualityTone(returnsGrade))}
+                            {returnsGrade && returnsGrade !== '—' ? badge(returnsGrade, qualityTone(returnsGrade)) : null}
                             {returnWindow && (
                               <div className="text-xs text-slate-500 tabular-nums">
                                 {returnWindow}
@@ -383,7 +698,7 @@ export default function Page() {
           <div className="pt-4 flex justify-center">
             <button
               onClick={copyResults}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:translate-y-px"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 active:translate-y-px"
               aria-label="Copy table results"
               title="Copy table results"
             >
@@ -397,28 +712,84 @@ export default function Page() {
         </section>
       )}
 
-      {/* Explainer */}
-      <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="text-center mb-6">
-          <h2 className="inline-block text-xl sm:text-2xl font-semibold text-slate-800 bg-green-100/70 px-3 py-1 rounded-md">
-            How Google Might Interpret These Signals?
-          </h2>
-        </div>
+      {/* Quick Start Section */}
+      <section className="w-full">
+        <div className="bg-gray-100 pt-6 pb-8 px-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* UK Categories */}
+            <fieldset className="border border-black bg-white relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto">United Kingdom</legend>
+              <div className="p-4 space-y-2">
+                {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
+                  <button
+                    key={`UK-${category}`}
+                    onClick={() => handleQuickStart('UK', category as CategoryKey)}
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
+                  >
+                    <span>{category}</span>
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
+                  </button>
+                ))}
+              </div>
+            </fieldset>
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
+            {/* US Categories */}
+            <fieldset className="border border-black bg-white relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto">United States</legend>
+              <div className="p-4 space-y-2">
+                {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
+                  <button
+                    key={`US-${category}`}
+                    onClick={() => handleQuickStart('US', category as CategoryKey)}
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
+                  >
+                    <span>{category}</span>
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            {/* AU Categories */}
+            <fieldset className="border border-black bg-white relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto">Australia</legend>
+              <div className="p-4 space-y-2">
+                {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
+                  <button
+                    key={`AU-${category}`}
+                    onClick={() => handleQuickStart('AU', category as CategoryKey)}
+                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
+                  >
+                    <span>{category}</span>
+                    <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Explainer */}
+      <section className="mx-auto max-w-6xl px-6 pb-10 pt-8">
+        <fieldset className="border border-black bg-white">
+          <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
+          <div className="divide-y divide-slate-100">
+            <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-sm text-slate-600">
-                <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle text-left">
-                  <th className="w-[20%] text-left">Signal</th>
-                  <th className="w-[26%] text-left">What it means</th>
-                  <th className="w-[27%] text-left">How it’s measured</th>
-                  <th className="w-[27%] text-left">Quick wins</th>
+              <thead className="text-sm">
+                <tr className="[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
+                  <th className="w-[20%] text-left font-bold text-black">Signal</th>
+                  <th className="w-[26%] text-left font-bold text-black">What it means</th>
+                  <th className="w-[27%] text-left font-bold text-black">How it's measured</th>
+                  <th className="w-[27%] text-left font-bold text-black">Quick wins</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-3">
+                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
                     <td className="font-medium text-slate-900">{r.m}</td>
                     <td className="text-slate-700">{r.w}</td>
                     <td className="text-slate-600">{r.t}</td>
@@ -427,16 +798,101 @@ export default function Page() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
-        </div>
+        </fieldset>
+      </section>
+
+      {/* TSQ Scoring Explanation */}
+      <section className="mx-auto max-w-6xl px-6 pb-10">
+        <fieldset className="border border-black bg-white">
+          <legend className="text-lg font-semibold text-black px-2">How Are These Scores Calculated?</legend>
+          <div className="divide-y divide-slate-100">
+            <div className="px-6 py-8">
+            <p className="text-slate-700 mb-4 text-sm">
+              These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
+              The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
+              Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
+            </p>
+            
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
+                  <span className="text-slate-600 font-mono text-sm">30%</span>
+                </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
+                  <span className="text-slate-600 font-mono text-sm">25%</span>
+                </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
+                  <span className="text-slate-600 font-mono text-sm">25%</span>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Website Quality</span>
+                  <span className="text-slate-600 font-mono text-sm">10%</span>
+                </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
+                  <span className="text-slate-600 font-mono text-sm">5%</span>
+                </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Trust Score</span>
+                  <span className="text-slate-600 font-mono text-sm">5%</span>
+                </div>
+              </div>
+            </div>
+
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">Grade Values:</h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                <div className="font-semibold text-green-800 text-sm">Exceptional</div>
+                <div className="text-xs text-green-600">100 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                <div className="font-semibold text-green-800 text-sm">Great</div>
+                <div className="text-xs text-green-600">85 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div className="font-semibold text-yellow-800 text-sm">Good</div>
+                <div className="text-xs text-yellow-600">70 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
+                <div className="font-semibold text-orange-800 text-sm">Fair</div>
+                <div className="text-xs text-orange-600">40 points</div>
+              </div>
+              <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
+                <div className="font-semibold text-red-800 text-sm">Poor</div>
+                <div className="text-xs text-red-600">20 points</div>
+              </div>
+            </div>
+
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
+            <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
+              <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
+              <li><strong>Top Quality Store Badge:</strong> +5 points</li>
+              <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
+              <li><strong>Trust Score:</strong> Normalized from 0-100 (e.g., 85/100 = 85% of 5 points)</li>
+            </ul>
+
+            <p className="text-xs text-slate-600 italic">
+              Final scores are capped at 100 points and rounded to the nearest integer. 
+              Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
+            </p>
+            </div>
+          </div>
+        </fieldset>
       </section>
 
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
-            <h2 className="text-sm font-medium text-slate-700">FAQs</h2>
-          </div>
+        <fieldset className="border border-black bg-white">
+          <legend className="text-lg font-semibold text-black px-2">Frequently Asked Questions</legend>
           <div className="divide-y divide-slate-100">
             <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
@@ -469,14 +925,20 @@ export default function Page() {
               </p>
             </div>
             <div className="px-5 py-4">
+              <h3 className="font-medium text-slate-900">Why does a store have a rating but no review count?</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
+              </p>
+            </div>
+            <div className="px-5 py-4">
               <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
               <p className="mt-1 text-sm text-slate-600">
-                We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed “quality” grades
-                (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page.
+                We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
+                (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
               </p>
             </div>
           </div>
-        </div>
+        </fieldset>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -507,12 +969,17 @@ export default function Page() {
                 {
                   "@type": "Question",
                   "name": "Can I export the results?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "You can copy the table using the “Copy results” button and paste into a spreadsheet. CSV export is on the roadmap." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "You can copy the table using the \"Copy results\" button and paste into a spreadsheet. CSV export is on the roadmap." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why does a store have a rating but no review count?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count." }
                 },
                 {
                   "@type": "Question",
                   "name": "How do we collect and display the quality signals for store websites from google.com/storepages?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed “quality” grades (Exceptional/Great/Good/etc.) are Google’s public indicators on the Store page." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed \"quality\" grades (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page." }
                 }
               ]
             })
@@ -521,19 +988,19 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white/90 py-10 text-center text-sm text-slate-600">
-        <p className="mb-2">
+      <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
+        <p className="mb-4 text-base">
           Vibe coded by{' '}
-          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
+          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
             Carl Hendy
           </a>{' '}
-        — founder of{' '}
-          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-amber-100 text-slate-900 px-2 py-1 rounded-md no-underline font-normal">
+        founder of{' '}
+          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
             Audits.com
           </a>.
         </p>
-        <p className="mx-auto max-w-3xl text-xs text-slate-500">
-          Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google’s public
+        <p className="mx-auto max-w-3xl text-sm text-white">
+          Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
           <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
         </p>
       </footer>
