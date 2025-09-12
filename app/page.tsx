@@ -136,7 +136,7 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
     'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
     'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
     'Sports & Fitness': ['rebelsport.com.au', 'decathlon.com.au', 'anacondastores.com', 'intersport.com.au', 'adidas.com.au'],
-    'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au', 'domayne.com.au'],
+    'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'nickscali.com.au', 'domayne.com.au'],
     'Electronics': ['harveynorman.com.au', 'jbhifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
     'Home & Garden': ['bunnings.com.au', 'homehardware.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
   }
