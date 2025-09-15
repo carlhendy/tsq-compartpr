@@ -437,7 +437,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Two Column Layout */}
-      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 pt-4 sm:pt-8 pb-16 px-6">
+      <section className="pt-4 sm:pt-8 pb-16 px-6" style={{ background: 'linear-gradient(to right, #0a4bf1, #1e40af, #3b82f6)' }}>
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
@@ -542,7 +542,7 @@ export default function Page() {
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-black bg-blue-50">
+                <thead className="text-sm text-black" style={{ backgroundColor: '#e3ff75' }}>
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
                     <th className="w-[16%] text-left">Store</th>
                     <th className="w-[10%] text-center">Score<br/>(out of 100)</th>
@@ -803,9 +803,10 @@ export default function Page() {
                 onClick={() => setActiveTab('signals')}
                 className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
                   activeTab === 'signals'
-                    ? 'border-blue-500 bg-blue-50 text-blue-900'
+                    ? 'border-blue-500 text-blue-900'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                 }`}
+                style={activeTab === 'signals' ? { backgroundColor: '#e3ff75' } : {}}
               >
                 <h3 className="font-semibold text-sm">How Google Might Interpret These Signals?</h3>
               </button>
@@ -835,7 +836,7 @@ export default function Page() {
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-3">
             <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
-              <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
+              <div className="px-4 py-3 rounded-t-lg" style={{ backgroundColor: '#e3ff75' }}>
                 <h3 className="text-lg font-semibold text-black">
                   {activeTab === 'signals' && 'How Google Might Interpret These Signals?'}
                   {activeTab === 'scoring' && 'How Are These Scores Calculated?'}
@@ -845,14 +846,6 @@ export default function Page() {
               <div className="overflow-x-auto">
                 {activeTab === 'signals' && (
                   <table className="min-w-[800px] w-full text-left text-sm">
-                    <thead className="text-sm">
-                      <tr className="[&>th]:px-2 sm:[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
-                        <th className="w-[18%] text-left font-bold text-black">Signal</th>
-                        <th className="w-[28%] text-left font-bold text-black">What it means</th>
-                        <th className="w-[28%] text-left font-bold text-black">How it's measured</th>
-                        <th className="w-[26%] text-left font-bold text-black">Quick wins</th>
-                      </tr>
-                    </thead>
                     <tbody className="divide-y divide-slate-100">
                       {EXPLAINER.map((r, idx) => (
                         <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
@@ -1045,7 +1038,7 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
+      <footer className="border-t border-black py-16 px-4 sm:px-6 text-center text-white" style={{ background: 'linear-gradient(to right, #0a4bf1, #1e40af, #3b82f6)' }}>
         <div className="mb-4 text-base">
           <div>
             Badly vibe coded by{' '}
