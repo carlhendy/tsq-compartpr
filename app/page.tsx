@@ -166,9 +166,9 @@ const levelScore = (grade?: string): number => {
 
 const computeTsqScore = (signals: Signals): number => {
   // Base scores from quality grades
-  const returnsScore = levelScore(signals.section_grades?.returns) * 30;
-  const shippingScore = levelScore(signals.section_grades?.shipping) * 25;
-  const pricingScore = levelScore(signals.section_grades?.pricing) * 25;
+  const returnsScore = levelScore(signals.section_grades?.returns) * 25;
+  const shippingScore = levelScore(signals.section_grades?.shipping) * 20;
+  const pricingScore = levelScore(signals.section_grades?.pricing) * 20;
   const websiteScore = levelScore(signals.section_grades?.website) * 10;
   
   // Wallets score (5% max, based on unique wallet count)
@@ -177,15 +177,6 @@ const computeTsqScore = (signals: Signals): number => {
     wallets.split(',').map(w => w.trim()).filter(Boolean)
   );
   const walletsScore = Math.min(uniqueWallets.size / 3, 1.0) * 5;
-  
-  // Trust score (5% max, normalized from 0-100)
-  let trustScore = 0;
-  if (signals.scamadviser_score) {
-    const trustValue = parseInt(String(signals.scamadviser_score), 10);
-    if (!isNaN(trustValue)) {
-      trustScore = (trustValue / 100) * 5;
-    }
-  }
   
   // Bonuses
   let bonuses = 0;
@@ -199,11 +190,11 @@ const computeTsqScore = (signals: Signals): number => {
     else if (maxDays >= 28) bonuses += 3;
   }
   
-  // Top Quality Store bonus
-  if (signals.tqs_badge === true) bonuses += 5;
+  // Top Quality Store bonus - MAJOR WEIGHT (15 points)
+  if (signals.tqs_badge === true) bonuses += 15;
   
   // Calculate final score
-  const totalScore = returnsScore + shippingScore + pricingScore + websiteScore + walletsScore + trustScore + bonuses;
+  const totalScore = returnsScore + shippingScore + pricingScore + websiteScore + walletsScore + bonuses;
   
   // Cap at 100, floor at 0, round to nearest integer
   return Math.round(Math.max(0, Math.min(100, totalScore)));
@@ -855,15 +846,15 @@ export default function Page() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
                   <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">30%</span>
+                  <span className="text-slate-600 font-mono text-sm">25%</span>
                 </div>
                 <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
                   <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">25%</span>
+                  <span className="text-slate-600 font-mono text-sm">20%</span>
                 </div>
                 <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
                   <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
-                  <span className="text-slate-600 font-mono text-sm">25%</span>
+                  <span className="text-slate-600 font-mono text-sm">20%</span>
                 </div>
               </div>
               <div className="space-y-3">
@@ -875,9 +866,9 @@ export default function Page() {
                   <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
                   <span className="text-slate-600 font-mono text-sm">5%</span>
                 </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Trust Score</span>
-                  <span className="text-slate-600 font-mono text-sm">5%</span>
+                <div className="flex justify-between items-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                  <span className="font-medium text-green-700 text-sm">Top Quality Store Badge</span>
+                  <span className="text-green-600 font-mono text-sm font-bold">15%</span>
                 </div>
               </div>
             </div>
@@ -909,9 +900,8 @@ export default function Page() {
             <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
             <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
               <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
-              <li><strong>Top Quality Store Badge:</strong> +5 points</li>
+              <li><strong>Top Quality Store Badge:</strong> +15 points (major weighting)</li>
               <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
-              <li><strong>Trust Score:</strong> Normalized from 0-100 (e.g., 85/100 = 85% of 5 points)</li>
             </ul>
 
             <p className="text-xs text-slate-600 italic">
