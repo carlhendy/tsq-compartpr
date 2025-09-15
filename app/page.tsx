@@ -549,7 +549,7 @@ export default function Page() {
                 <thead className="text-sm text-black bg-gray-100">
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
                     <th className="w-[16%] text-left">Store</th>
-                    <th className="w-[10%] text-center">Score</th>
+                    <th className="w-[10%] text-center">Score<br/>(out of 100)</th>
                     <th className="w-[10%] text-center">Top Quality Store</th>
                     <th className="w-[10%] text-center">Shipping (quality)</th>
                     <th className="w-[10%] text-center">Returns (quality)</th>
@@ -652,17 +652,14 @@ export default function Page() {
                           {row.error ? (
                             <span className="text-red-600 font-mono text-sm">—</span>
                           ) : (
-                            <div className="flex flex-col items-center gap-1">
-                              <span className={`font-bold text-lg ${
-                                tsqScore >= 80 ? 'text-green-600' : 
-                                tsqScore >= 60 ? 'text-yellow-600' : 
-                                tsqScore >= 40 ? 'text-orange-600' : 
-                                'text-red-600'
-                              }`}>
-                                {tsqScore}
-                              </span>
-                              <span className="text-xs text-gray-500">/100</span>
-                            </div>
+                            <span className={`font-bold text-lg ${
+                              tsqScore >= 80 ? 'text-green-600' : 
+                              tsqScore >= 60 ? 'text-yellow-600' : 
+                              tsqScore >= 40 ? 'text-orange-600' : 
+                              'text-red-600'
+                            }`}>
+                              {tsqScore}
+                            </span>
                           )}
                         </td>
                         <td className="text-center">
