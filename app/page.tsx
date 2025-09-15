@@ -400,7 +400,7 @@ export default function Page() {
 
   const copyResults = async () => {
     try {
-      const headers = ['Store','TSQ Score','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
+      const headers = ['Store','Score','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
       const lines: string[] = [headers.join('\t')];
       for (let i = 0; i < sortedRows.length; i++) {
         const row = sortedRows[i];
@@ -549,7 +549,7 @@ export default function Page() {
                 <thead className="text-sm text-black bg-gray-100">
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
                     <th className="w-[16%] text-left">Store</th>
-                    <th className="w-[10%] text-center">TSQ Score</th>
+                    <th className="w-[10%] text-center">Score</th>
                     <th className="w-[10%] text-center">Top Quality Store</th>
                     <th className="w-[10%] text-center">Shipping (quality)</th>
                     <th className="w-[10%] text-center">Returns (quality)</th>
@@ -857,9 +857,9 @@ export default function Page() {
                   <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
                   <span className="text-slate-600 font-mono text-sm">5%</span>
                 </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                  <span className="font-medium text-green-700 text-sm">Top Quality Store Badge</span>
-                  <span className="text-green-600 font-mono text-sm font-bold">15%</span>
+                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                  <span className="font-medium text-slate-700 text-sm">Top Quality Store Badge</span>
+                  <span className="text-slate-600 font-mono text-sm">15%</span>
                 </div>
               </div>
             </div>
