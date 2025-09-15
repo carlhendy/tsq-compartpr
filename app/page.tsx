@@ -365,7 +365,7 @@ export default function Page() {
     const res = await Promise.all(promises);
     setRows(res);
     setLoading(false);
-  };
+  }
 
   // Sort rows by TSQ score (best to worst)
   const sortedRows = [...rows].sort((a, b) => {
