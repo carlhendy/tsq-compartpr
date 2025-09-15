@@ -284,6 +284,7 @@ export default function Page() {
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [visibleFields, setVisibleFields] = useState<number>(3);
+  const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq'>('signals');
   const resultsTableRef = useRef<HTMLDivElement>(null);
 
   const updateDomain = (i: number, v: string) => {
@@ -797,173 +798,206 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Explainer */}
-      <section className="mx-auto max-w-6xl px-6 pb-10 pt-8">
-        <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
-          <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
-            <h3 className="text-lg font-semibold text-black">How Google Might Interpret These Signals?</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-[800px] w-full text-left text-sm">
-              <thead className="text-sm">
-                <tr className="[&>th]:px-2 sm:[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
-                  <th className="w-[18%] text-left font-bold text-black">Signal</th>
-                  <th className="w-[28%] text-left font-bold text-black">What it means</th>
-                  <th className="w-[28%] text-left font-bold text-black">How it's measured</th>
-                  <th className="w-[26%] text-left font-bold text-black">Quick wins</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
-                    <td className="font-medium text-slate-900">{r.m}</td>
-                    <td className="text-slate-700">{r.w}</td>
-                    <td className="text-slate-600">{r.t}</td>
-                    <td className="text-slate-600">{r.q}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* TSQ Scoring Explanation */}
-      <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
-          <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
-            <h3 className="text-lg font-semibold text-black">How Are These Scores Calculated?</h3>
-          </div>
-          <div className="divide-y divide-slate-100">
-            <div className="px-6 py-8">
-            <p className="text-slate-700 mb-4 text-sm">
-              These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
-              The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
-              Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
-            </p>
-            
-            <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">25%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">20%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
-                  <span className="text-slate-600 font-mono text-sm">20%</span>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Website Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">10%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
-                  <span className="text-slate-600 font-mono text-sm">5%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Top Quality Store Badge</span>
-                  <span className="text-slate-600 font-mono text-sm">15%</span>
-                </div>
-              </div>
-            </div>
-
-            <h3 className="text-sm font-semibold text-slate-800 mb-3">Grade Values:</h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                <div className="font-semibold text-green-800 text-sm">Exceptional</div>
-                <div className="text-xs text-green-600">100 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                <div className="font-semibold text-green-800 text-sm">Great</div>
-                <div className="text-xs text-green-600">85 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <div className="font-semibold text-yellow-800 text-sm">Good</div>
-                <div className="text-xs text-yellow-600">70 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
-                <div className="font-semibold text-orange-800 text-sm">Fair</div>
-                <div className="text-xs text-orange-600">40 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
-                <div className="font-semibold text-red-800 text-sm">Poor</div>
-                <div className="text-xs text-red-600">20 points</div>
-              </div>
-            </div>
-
-            <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
-            <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
-              <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
-              <li><strong>Top Quality Store Badge:</strong> +15 points (major weighting)</li>
-              <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
-            </ul>
-
-            <p className="text-xs text-slate-600 italic">
-              Final scores are capped at 100 points and rounded to the nearest integer. 
-              Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
-            </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs + schema */}
+      {/* Tabbed Information Section */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
-          <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
-            <h3 className="text-lg font-semibold text-black">Frequently Asked Questions</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Left Side - Tab Buttons */}
+          <div className="lg:col-span-1">
+            <div className="space-y-3">
+              <button
+                onClick={() => setActiveTab('signals')}
+                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                  activeTab === 'signals'
+                    ? 'border-blue-500 bg-blue-50 text-blue-900'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <h3 className="font-semibold text-sm">How Google Might Interpret These Signals?</h3>
+              </button>
+              <button
+                onClick={() => setActiveTab('scoring')}
+                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                  activeTab === 'scoring'
+                    ? 'border-blue-500 bg-blue-50 text-blue-900'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <h3 className="font-semibold text-sm">How Are These Scores Calculated?</h3>
+              </button>
+              <button
+                onClick={() => setActiveTab('faq')}
+                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                  activeTab === 'faq'
+                    ? 'border-blue-500 bg-blue-50 text-blue-900'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <h3 className="font-semibold text-sm">Frequently Asked Questions</h3>
+              </button>
+            </div>
           </div>
-          <div className="divide-y divide-slate-100">
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                From Google’s public <span className="font-mono">storepages</span> surface for each domain and region. We don’t scrape private data or guess values.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">What does “Top Quality Store” mean?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">How often are results updated?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Why don’t I see all wallets or grades for my store?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—).
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Can I export the results?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                You can copy the table using the “Copy results” button and paste into a spreadsheet. CSV export is on the roadmap.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Why does a store have a rating but no review count?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
-                (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
-              </p>
+
+          {/* Right Side - Tab Content */}
+          <div className="lg:col-span-3">
+            <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
+              <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
+                <h3 className="text-lg font-semibold text-black">
+                  {activeTab === 'signals' && 'How Google Might Interpret These Signals?'}
+                  {activeTab === 'scoring' && 'How Are These Scores Calculated?'}
+                  {activeTab === 'faq' && 'Frequently Asked Questions'}
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                {activeTab === 'signals' && (
+                  <table className="min-w-[800px] w-full text-left text-sm">
+                    <thead className="text-sm">
+                      <tr className="[&>th]:px-2 sm:[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
+                        <th className="w-[18%] text-left font-bold text-black">Signal</th>
+                        <th className="w-[28%] text-left font-bold text-black">What it means</th>
+                        <th className="w-[28%] text-left font-bold text-black">How it's measured</th>
+                        <th className="w-[26%] text-left font-bold text-black">Quick wins</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {EXPLAINER.map((r, idx) => (
+                        <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
+                          <td className="font-medium text-slate-900">{r.m}</td>
+                          <td className="text-slate-700">{r.w}</td>
+                          <td className="text-slate-600">{r.t}</td>
+                          <td className="text-slate-600">{r.q}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+
+                {activeTab === 'scoring' && (
+                  <div className="px-6 py-8">
+                    <p className="text-slate-700 mb-4 text-sm">
+                      These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
+                      The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
+                      Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
+                    </p>
+                    
+                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
+                          <span className="text-slate-600 font-mono text-sm">25%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
+                          <span className="text-slate-600 font-mono text-sm">20%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
+                          <span className="text-slate-600 font-mono text-sm">20%</span>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Website Quality</span>
+                          <span className="text-slate-600 font-mono text-sm">10%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
+                          <span className="text-slate-600 font-mono text-sm">5%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Top Quality Store Badge</span>
+                          <span className="text-slate-600 font-mono text-sm">15%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Grade Values:</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+                      <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                        <div className="font-semibold text-green-800 text-sm">Exceptional</div>
+                        <div className="text-xs text-green-600">100 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                        <div className="font-semibold text-green-800 text-sm">Great</div>
+                        <div className="text-xs text-green-600">85 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div className="font-semibold text-yellow-800 text-sm">Good</div>
+                        <div className="text-xs text-yellow-600">70 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
+                        <div className="font-semibold text-orange-800 text-sm">Fair</div>
+                        <div className="text-xs text-orange-600">40 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
+                        <div className="font-semibold text-red-800 text-sm">Poor</div>
+                        <div className="text-xs text-red-600">20 points</div>
+                      </div>
+                    </div>
+
+                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
+                    <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
+                      <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
+                      <li><strong>Top Quality Store Badge:</strong> +15 points (major weighting)</li>
+                      <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
+                    </ul>
+
+                    <p className="text-xs text-slate-600 italic">
+                      Final scores are capped at 100 points and rounded to the nearest integer. 
+                      Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
+                    </p>
+                  </div>
+                )}
+
+                {activeTab === 'faq' && (
+                  <div className="divide-y divide-slate-100">
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900">What does "Top Quality Store" mean?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900">How often are results updated?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900">Why don't I see all wallets or grades for my store?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900">Can I export the results?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900">Why does a store have a rating but no review count?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
+                        (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -977,22 +1011,22 @@ export default function Page() {
                 {
                   "@type": "Question",
                   "name": "Where do these signals come from?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "From Google’s public storepages surface for each domain and region. We don’t scrape private data or guess values." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "From Google's public storepages surface for each domain and region. We don't scrape private data or guess values." }
                 },
                 {
                   "@type": "Question",
-                  "name": "What does “Top Quality Store” mean?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)." }
+                  "name": "What does \"Top Quality Store\" mean?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)." }
                 },
                 {
                   "@type": "Question",
                   "name": "How often are results updated?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time." }
                 },
                 {
                   "@type": "Question",
-                  "name": "Why don’t I see all wallets or grades for my store?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—)." }
+                  "name": "Why don't I see all wallets or grades for my store?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—)." }
                 },
                 {
                   "@type": "Question",
