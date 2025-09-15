@@ -672,7 +672,7 @@ export default function Page() {
                         <td className="text-center">
                           <div className="flex flex-col items-center gap-1">
                             {shipGrade && shipGrade !== '—' ? badge(shipGrade, qualityTone(shipGrade)) : null}
-                            {delivery && (
+                            {delivery && delivery !== '—' && (
                               <div className="text-xs text-slate-500 tabular-nums">
                                 {delivery}
                               </div>
@@ -682,7 +682,7 @@ export default function Page() {
                         <td className="text-center">
                           <div className="flex flex-col items-center gap-1">
                             {returnsGrade && returnsGrade !== '—' ? badge(returnsGrade, qualityTone(returnsGrade)) : null}
-                            {returnWindow && (
+                            {returnWindow && returnWindow !== '—' && (
                               <div className="text-xs text-slate-500 tabular-nums">
                                 {returnWindow}
                               </div>
