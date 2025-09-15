@@ -803,7 +803,7 @@ export default function Page() {
                 onClick={() => setActiveTab('signals')}
                 className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
                   activeTab === 'signals'
-                    ? 'border-blue-500 text-blue-900'
+                    ? 'border-gray-300 text-gray-700'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                 }`}
                 style={activeTab === 'signals' ? { backgroundColor: '#e3ff75' } : {}}
@@ -814,9 +814,10 @@ export default function Page() {
                 onClick={() => setActiveTab('scoring')}
                 className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
                   activeTab === 'scoring'
-                    ? 'border-blue-500 bg-blue-50 text-blue-900'
+                    ? 'border-gray-300 text-gray-700'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                 }`}
+                style={activeTab === 'scoring' ? { backgroundColor: '#e3ff75' } : {}}
               >
                 <h3 className="font-semibold text-sm">How Are These Scores Calculated?</h3>
               </button>
@@ -824,9 +825,10 @@ export default function Page() {
                 onClick={() => setActiveTab('faq')}
                 className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
                   activeTab === 'faq'
-                    ? 'border-blue-500 bg-blue-50 text-blue-900'
+                    ? 'border-gray-300 text-gray-700'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                 }`}
+                style={activeTab === 'faq' ? { backgroundColor: '#e3ff75' } : {}}
               >
                 <h3 className="font-semibold text-sm">Frequently Asked Questions</h3>
               </button>
