@@ -459,7 +459,7 @@ export default function Page() {
             
             {/* Right Column - Input Boxes */}
             <div className="w-full sm:max-w-lg mx-auto lg:mx-0">
-              <div className="bg-white p-6 border border-black">
+              <div className="bg-white p-6 border border-gray-300 rounded-lg shadow-sm">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
                 {domains.slice(0, visibleFields).map((d, i) => (
@@ -468,7 +468,7 @@ export default function Page() {
                       value={d}
                       onChange={(e) => updateDomain(i, e.target.value)}
                       placeholder="domain.com"
-                      className="w-full h-12 border border-black px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
+                      className="w-full h-12 border border-gray-300 px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
                     />
                     {visibleFields > 1 && (
                       <button
@@ -505,7 +505,7 @@ export default function Page() {
                   id="country-select"
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
-                  className="h-12 w-full border border-black bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer"
+                  className="h-12 w-full border border-gray-300 bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
                   aria-label="Country"
                 >
                 <option value="US">United States</option>
@@ -518,7 +518,7 @@ export default function Page() {
                 <option value="FR">France</option>
                 </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -543,10 +543,10 @@ export default function Page() {
       {/* Results */}
       {hasCompared && (
         <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12 mt-8">
-          <div className="border border-black bg-white">
+          <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-black bg-gray-100">
+                <thead className="text-sm text-black bg-blue-50">
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
                     <th className="w-[16%] text-left">Store</th>
                     <th className="w-[10%] text-center">Score<br/>(out of 100)</th>
@@ -560,7 +560,7 @@ export default function Page() {
                     <th className="w-[10%] text-center">Reviews</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
+                <tbody className="divide-y divide-slate-100 text-sm text-slate-800 bg-white">
                   {sortedRows.length === 0 && (
                     <tr>
                       <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
@@ -743,7 +743,7 @@ export default function Page() {
             <h2 className="text-lg font-semibold text-black text-center mb-6">Quick Start</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
-            <fieldset className="border border-black bg-white relative">
+            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
               <legend className="text-lg font-medium text-black px-2 mx-auto">United Kingdom</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
@@ -760,7 +760,7 @@ export default function Page() {
             </fieldset>
 
             {/* US Categories */}
-            <fieldset className="border border-black bg-white relative">
+            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
               <legend className="text-lg font-medium text-black px-2 mx-auto">United States</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
@@ -777,7 +777,7 @@ export default function Page() {
             </fieldset>
 
             {/* AU Categories */}
-            <fieldset className="border border-black bg-white relative">
+            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
               <legend className="text-lg font-medium text-black px-2 mx-auto">Australia</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
@@ -799,8 +799,8 @@ export default function Page() {
 
       {/* Explainer */}
       <section className="mx-auto max-w-6xl px-6 pb-10 pt-8">
-        <div className="border border-black bg-white">
-          <div className="bg-gray-100 px-4 py-3">
+        <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
+          <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
             <h3 className="text-lg font-semibold text-black">How Google Might Interpret These Signals?</h3>
           </div>
           <div className="overflow-x-auto">
@@ -830,8 +830,8 @@ export default function Page() {
 
       {/* TSQ Scoring Explanation */}
       <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="border border-black bg-white">
-          <div className="bg-gray-100 px-4 py-3">
+        <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
+          <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
             <h3 className="text-lg font-semibold text-black">How Are These Scores Calculated?</h3>
           </div>
           <div className="divide-y divide-slate-100">
@@ -917,8 +917,8 @@ export default function Page() {
 
       {/* FAQs + schema */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="border border-black bg-white">
-          <div className="bg-gray-100 px-4 py-3">
+        <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
+          <div className="bg-blue-50 px-4 py-3 rounded-t-lg">
             <h3 className="text-lg font-semibold text-black">Frequently Asked Questions</h3>
           </div>
           <div className="divide-y divide-slate-100">
