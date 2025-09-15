@@ -409,7 +409,7 @@ export default function Page() {
 
   const copyResults = async () => {
     try {
-      const headers = ['Medal','Store','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
+      const headers = ['Medal','Store','TSQ Score','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
       const lines: string[] = [headers.join('\t')];
       for (let i = 0; i < sortedRows.length; i++) {
         const row = sortedRows[i];
@@ -422,12 +422,14 @@ export default function Page() {
         const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
         const rating = getAny(s, ['store_rating','rating','storeRating']);
         const reviews = getAny(s, ['review_count','reviews','reviewCount']);
+        const tsqScore = row.signals ? computeTsqScore(row.signals) : 0;
         
         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
         
         const values = [
           medal,
           row.domain || '—',
+          row.error ? '—' : String(tsqScore),
           row.error ? 'Error' : (s?.tqs_badge === true ? 'Yes' : s?.tqs_badge === false ? 'No' : '—'),
           delivery ? `${shipGrade} (${delivery})` : shipGrade,
           returnWindow ? `${returnsGrade} (${returnWindow})` : returnsGrade,
@@ -555,25 +557,26 @@ export default function Page() {
         <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12 mt-8">
           <div className="border border-black bg-white">
             <div className="overflow-x-auto">
-              <table className="min-w-[1000px] w-full table-fixed text-left">
+              <table className="min-w-[1100px] w-full table-fixed text-left">
                 <thead className="text-sm text-black bg-gray-100">
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
-                    <th className="w-[6%] text-center"></th>
-                    <th className="w-[16%] text-left">Store</th>
-                    <th className="w-[10%] text-center">Top Quality Store</th>
-                    <th className="w-[10%] text-center">Shipping (quality)</th>
-                    <th className="w-[10%] text-center">Returns (quality)</th>
-                    <th className="w-[10%] text-center">Competitive pricing</th>
-                    <th className="w-[10%] text-center">Website quality</th>
-                    <th className="w-[10%] text-center">Wallets</th>
-                    <th className="w-[10%] text-center">Rating</th>
-                    <th className="w-[10%] text-center">Reviews</th>
+                    <th className="w-[5%] text-center"></th>
+                    <th className="w-[14%] text-left">Store</th>
+                    <th className="w-[8%] text-center">TSQ Score</th>
+                    <th className="w-[8%] text-center">Top Quality Store</th>
+                    <th className="w-[9%] text-center">Shipping (quality)</th>
+                    <th className="w-[9%] text-center">Returns (quality)</th>
+                    <th className="w-[9%] text-center">Competitive pricing</th>
+                    <th className="w-[9%] text-center">Website quality</th>
+                    <th className="w-[9%] text-center">Wallets</th>
+                    <th className="w-[9%] text-center">Rating</th>
+                    <th className="w-[9%] text-center">Reviews</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
                   {sortedRows.length === 0 && (
                     <tr>
-                      <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
+                      <td colSpan={11} className="px-4 py-10 text-center text-slate-500">
                         {loading ? 'Fetching signals…' : 'No results yet.'}
                       </td>
                     </tr>
@@ -592,6 +595,8 @@ export default function Page() {
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
 
                     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+                    
+                    const tsqScore = row.signals ? computeTsqScore(row.signals) : 0;
                     
                     return (
                       <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors [&>td]:border-r [&>td]:border-gray-300 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0">
@@ -660,6 +665,23 @@ export default function Page() {
                             </div>
                           </div>
                           </div>
+                        </td>
+                        <td className="text-center">
+                          {row.error ? (
+                            <span className="text-red-600 font-mono text-sm">—</span>
+                          ) : (
+                            <div className="flex flex-col items-center gap-1">
+                              <span className={`font-bold text-lg ${
+                                tsqScore >= 80 ? 'text-green-600' : 
+                                tsqScore >= 60 ? 'text-yellow-600' : 
+                                tsqScore >= 40 ? 'text-orange-600' : 
+                                'text-red-600'
+                              }`}>
+                                {tsqScore}
+                              </span>
+                              <span className="text-xs text-gray-500">/100</span>
+                            </div>
+                          )}
                         </td>
                         <td className="text-center">
                           {row.error
