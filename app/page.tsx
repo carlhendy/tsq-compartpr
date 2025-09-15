@@ -692,8 +692,24 @@ export default function Page() {
                         <td className="text-center">{badge(pricingGrade, qualityTone(pricingGrade))}</td>
                         <td className="text-center">{badge(websiteGrade, qualityTone(websiteGrade))}</td>
                         <td className="text-center">{renderWalletPills(wallets)}</td>
-                        <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
-                        <td className="text-center tabular-nums">{reviews}</td>
+                        <td className="text-center">
+                          {badge(rating, 
+                            rating && !isNaN(Number(rating)) ? 
+                              Number(rating) >= 4.5 ? 'green' :
+                              Number(rating) >= 4.0 ? 'yellow' :
+                              Number(rating) >= 3.0 ? 'yellow' :
+                              'red' : 'slate'
+                          )}
+                        </td>
+                        <td className="text-center">
+                          {badge(reviews, 
+                            reviews && !isNaN(Number(reviews)) ? 
+                              Number(reviews) >= 1000 ? 'green' :
+                              Number(reviews) >= 100 ? 'yellow' :
+                              Number(reviews) >= 10 ? 'yellow' :
+                              'red' : 'slate'
+                          )}
+                        </td>
                       </tr>
                     );
                   })}
