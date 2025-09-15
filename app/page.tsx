@@ -650,16 +650,14 @@ export default function Page() {
                         </td>
                         <td className="text-center">
                           {row.error ? (
-                            <span className="text-red-600 font-mono text-sm">—</span>
+                            badge('Error', 'red')
                           ) : (
-                            <span className={`font-bold text-lg ${
-                              tsqScore >= 80 ? 'text-green-600' : 
-                              tsqScore >= 60 ? 'text-yellow-600' : 
-                              tsqScore >= 40 ? 'text-orange-600' : 
-                              'text-red-600'
-                            }`}>
-                              {tsqScore}
-                            </span>
+                            badge(tsqScore, 
+                              tsqScore >= 80 ? 'green' : 
+                              tsqScore >= 60 ? 'yellow' : 
+                              tsqScore >= 40 ? 'yellow' : 
+                              'red'
+                            )
                           )}
                         </td>
                         <td className="text-center">
