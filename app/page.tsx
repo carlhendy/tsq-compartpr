@@ -483,6 +483,7 @@ export default function Page() {
                     )}
                   </div>
                 ))}
+                </div>
                 
                 {/* Add More Link */}
                 {domains.length < 5 && (
