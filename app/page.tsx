@@ -283,7 +283,6 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
-  const [visibleFields, setVisibleFields] = useState<number>(3);
   const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq'>('signals');
   const resultsTableRef = useRef<HTMLDivElement>(null);
 
@@ -296,15 +295,12 @@ export default function Page() {
   const removeDomain = (i: number) => {
     const next = domains.filter((_, index) => index !== i);
     setDomains(next);
-    // Set visible fields to the new array length, but keep minimum of 1
-    setVisibleFields(Math.max(1, next.length));
   };
 
   const addDomain = () => {
     if (domains.length < 5) {
       const newDomains = [...domains, ''];
       setDomains(newDomains);
-      setVisibleFields(newDomains.length);
     }
   };
 
@@ -463,7 +459,7 @@ export default function Page() {
               <div className="bg-white p-6 border border-gray-300 rounded-lg shadow-sm">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
-                {domains.slice(0, visibleFields).map((d, i) => (
+                {domains.map((d, i) => (
                   <div key={i} className="relative">
                     <input
                       value={d}
@@ -471,7 +467,7 @@ export default function Page() {
                       placeholder="domain.com"
                       className="w-full h-12 border border-gray-300 px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
                     />
-                    {visibleFields > 1 && (
+                    {domains.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeDomain(i)}
@@ -487,7 +483,7 @@ export default function Page() {
                 
                 {/* Add More Link */}
                 {domains.length < 5 && (
-                  <div className="text-right">
+                  <div className="text-right mb-4">
                     <button
                       type="button"
                       onClick={addDomain}
@@ -497,48 +493,46 @@ export default function Page() {
                     </button>
                   </div>
                 )}
-              </div>
 
-              {/* Country Selector */}
-              <div className="flex items-center gap-3 mb-3">
-                <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
-                <div className="relative flex-1">
-                <select
-                  id="country-select"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  className="h-12 w-full border border-gray-300 bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
-                  aria-label="Country"
-                >
-                <option value="US">United States</option>
-                <option value="GB">United Kingdom</option>
-                <option value="AU">Australia</option>
-                <option value="CA">Canada</option>
-                <option value="IE">Ireland</option>
-                <option value="NZ">New Zealand</option>
-                <option value="DE">Germany</option>
-                <option value="FR">France</option>
-                </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                {/* Country Selector */}
+                <div className="flex items-center gap-3 mb-4">
+                  <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
+                  <div className="relative flex-1">
+                    <select
+                      id="country-select"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      className="h-12 w-full border border-gray-300 bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
+                      aria-label="Country"
+                    >
+                      <option value="US">United States</option>
+                      <option value="GB">United Kingdom</option>
+                      <option value="AU">Australia</option>
+                      <option value="CA">Canada</option>
+                      <option value="IE">Ireland</option>
+                      <option value="NZ">New Zealand</option>
+                      <option value="DE">Germany</option>
+                      <option value="FR">France</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
+                {/* Compare Button */}
+                <button
+                  onClick={compare}
+                  disabled={loading}
+                  className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors rounded"
+                >
+                  {loading ? 'Comparing...' : 'Compare Stores'}
+                </button>
               </div>
-
-              {/* Compare Button - Own Row */}
-              <button
-                onClick={compare}
-                disabled={loading}
-                className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
-              >
-                {loading ? 'Comparing...' : 'Compare Stores'}
-              </button>
+            </div>
           </div>
-          </div>
-        </div>
         </div>
       </section>
 
