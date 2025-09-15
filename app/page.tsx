@@ -437,7 +437,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Two Column Layout */}
-      <section className="pt-4 sm:pt-8 pb-16 px-6" style={{ background: 'linear-gradient(to right, #0a4bf1, #1e40af, #3b82f6)' }}>
+      <section className="pt-4 sm:pt-8 pb-16 px-6" style={{ background: 'linear-gradient(to right, #0a4bf1 0%, #0a4bf1 60%, #3b82f6 80%, #60a5fa 100%)' }}>
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
@@ -1038,7 +1038,7 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black py-16 px-4 sm:px-6 text-center text-white" style={{ background: 'linear-gradient(to right, #0a4bf1, #1e40af, #3b82f6)' }}>
+      <footer className="border-t border-black py-16 px-4 sm:px-6 text-center text-white" style={{ background: 'linear-gradient(to right, #0a4bf1 0%, #0a4bf1 60%, #3b82f6 80%, #60a5fa 100%)' }}>
         <div className="mb-4 text-base">
           <div>
             Badly vibe coded by{' '}
