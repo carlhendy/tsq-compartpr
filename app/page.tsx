@@ -538,176 +538,244 @@ export default function Page() {
         <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12 mt-8">
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
             <div className="overflow-x-auto">
-              <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-black" style={{ backgroundColor: '#e3ff75' }}>
-                  <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
-                    <th className="w-[16%] text-left">Store</th>
-                    <th className="w-[10%] text-center">Score<br/>(out of 100)</th>
-                    <th className="w-[10%] text-center">Top Quality Store</th>
-                    <th className="w-[10%] text-center">Shipping (quality)</th>
-                    <th className="w-[10%] text-center">Returns (quality)</th>
-                    <th className="w-[10%] text-center">Competitive pricing</th>
-                    <th className="w-[10%] text-center">Website quality</th>
-                    <th className="w-[10%] text-center">Wallets</th>
-                    <th className="w-[10%] text-center">Rating</th>
-                    <th className="w-[10%] text-center">Reviews</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-slate-800 bg-white">
-                  {sortedRows.length === 0 && (
-                    <tr>
-                      <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
-                        {loading ? 'Fetching signals…' : 'No results yet.'}
-                      </td>
-                    </tr>
-                  )}
-                  {sortedRows.map((row, i) => {
-                    const s: Signals = row.signals || {};
-                    const tqs = s?.tqs_badge;
-                    const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
-                    const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
-                    const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
-                    const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
-                    const pricingGrade = getAny(s, ['section_grades.pricing','pricing_quality','pricingGrade']);
-                    const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
-                    const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
-                    const rating = getAny(s, ['store_rating','rating','storeRating']);
-                    const reviews = getAny(s, ['review_count','reviews','reviewCount']);
-                    
-                    const tsqScore = row.signals ? computeTsqScore(row.signals) : 0;
-                    
-                    return (
-                      <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors [&>td]:border-r [&>td]:border-gray-300 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0">
-                        <td className="text-left pl-2 pr-2">
-                          <div className="flex items-center gap-2">
-                            <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white">
-                            {s?.logo_url ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img 
-                                src={s.logo_url} 
-                                alt="" 
-                                className="h-full w-full object-cover" 
-                                onError={(e) => {
-                                  const img = e.target as HTMLImageElement;
-                                  // Try our robust favicon service as fallback
-                                  img.src = getResultsFaviconUrl(row.domain);
-                                }}
-                              />
-                            ) : (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img 
-                                src={getResultsFaviconUrl(row.domain)} 
-                                alt="" 
-                                className="h-full w-full object-cover"
-                                onError={(e) => {
-                                  const img = e.target as HTMLImageElement;
-                                  // Try alternative favicon services with different approaches
-                                  if (img.src.includes('duckduckgo.com')) {
-                                    // Try favicon.io service
-                                    img.src = `https://favicons.githubusercontent.com/${row.domain}`;
-                                  } else if (img.src.includes('favicons.githubusercontent.com')) {
-                                    // Try direct favicon from website
-                                    img.src = `https://${row.domain}/favicon.ico`;
-                                  } else if (img.src.includes('google.com/s2/favicons')) {
-                                    // Try DuckDuckGo with different domain format
-                                    if (row.domain === 'bhphotovideo.com') {
-                                      img.src = `https://icons.duckduckgo.com/ip3/www.${row.domain}.ico`;
-                                    } else {
-                                      img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
-                                    }
-                                  } else {
-                                    // Try one more Google service attempt with different parameters
-                                    img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64&t=2`;
-                                  }
-                                }}
-                              />
-                            )}
-                          </div>
-                          <div className="leading-5 min-w-0 flex-1">
-                            <div className="font-medium text-black text-xs flex items-center gap-1">
-                              <span className="truncate">{s?.store_name || row.domain}</span>
-                              <a
-                                href={validationUrl(row.domain, row.country)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center rounded bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition flex-shrink-0"
-                                title="Open source URL"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">
-                                  <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
-                                </svg>
-                              </a>
-                            </div>
-                          </div>
-                          </div>
-                        </td>
-                        <td className="text-center">
-                          {row.error ? (
-                            badge('Error', 'red')
-                          ) : (
-                            badge(tsqScore, 
-                              tsqScore >= 80 ? 'green' : 
-                              tsqScore >= 60 ? 'yellow' : 
-                              tsqScore >= 40 ? 'yellow' : 
-                              'red'
-                            )
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {row.error
-                            ? badge('Error', 'red')
-                            : tqs === true
-                              ? badge('Yes', 'green')
-                              : tqs === false
-                                ? badge('No', 'red')
-                                : badge('—', 'slate')}
-                        </td>
-                        <td className="text-center">
-                          <div className="flex flex-col items-center gap-1">
-                            {shipGrade && shipGrade !== '—' ? badge(shipGrade, qualityTone(shipGrade)) : null}
-                            {delivery && delivery !== '—' && (
-                              <div className="text-xs text-slate-500 tabular-nums">
-                                {delivery}
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td className="text-center">
-                          <div className="flex flex-col items-center gap-1">
-                            {returnsGrade && returnsGrade !== '—' ? badge(returnsGrade, qualityTone(returnsGrade)) : null}
-                            {returnWindow && returnWindow !== '—' && (
-                              <div className="text-xs text-slate-500 tabular-nums">
-                                {returnWindow}
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td className="text-center">{badge(pricingGrade, qualityTone(pricingGrade))}</td>
-                        <td className="text-center">{badge(websiteGrade, qualityTone(websiteGrade))}</td>
-                        <td className="text-center">{renderWalletPills(wallets)}</td>
-                        <td className="text-center">
-                          {badge(rating, 
-                            rating && !isNaN(Number(rating)) ? 
-                              Number(rating) >= 4.5 ? 'green' :
-                              Number(rating) >= 4.0 ? 'yellow' :
-                              Number(rating) >= 3.0 ? 'yellow' :
-                              'red' : 'slate'
-                          )}
-                        </td>
-                        <td className="text-center">
-                          {badge(reviews, 
-                            reviews && !isNaN(Number(reviews)) ? 
-                              Number(reviews) >= 1000 ? 'green' :
-                              Number(reviews) >= 100 ? 'yellow' :
-                              Number(reviews) >= 10 ? 'yellow' :
-                              'red' : 'slate'
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+               <table className="min-w-[1000px] w-full table-fixed text-left">
+                 <thead className="bg-gray-50 border-b-2 border-gray-200">
+                   <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-200 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0 [&>th]:h-16">
+                     <th className="w-[16%] text-left font-semibold text-gray-900 sticky left-0 bg-gray-50 z-10">Store</th>
+                     {sortedRows.map((row, i) => {
+                       const s: Signals = row.signals || {};
+                       return (
+                         <th key={i} className="w-[10%] text-center">
+                           <div className="flex flex-col items-center gap-1 p-1">
+                             <div className="h-8 w-8 flex-shrink-0 overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
+                               {s?.logo_url ? (
+                                 // eslint-disable-next-line @next/next/no-img-element
+                                 <img 
+                                   src={s.logo_url} 
+                                   alt="" 
+                                   className="h-full w-full object-cover" 
+                                   onError={(e) => {
+                                     const img = e.target as HTMLImageElement;
+                                     // Try our robust favicon service as fallback
+                                     img.src = getResultsFaviconUrl(row.domain);
+                                   }}
+                                 />
+                               ) : (
+                                 // eslint-disable-next-line @next/next/no-img-element
+                                 <img 
+                                   src={getResultsFaviconUrl(row.domain)} 
+                                   alt="" 
+                                   className="h-full w-full object-cover"
+                                   onError={(e) => {
+                                     const img = e.target as HTMLImageElement;
+                                     // Try alternative favicon services with different approaches
+                                     if (img.src.includes('duckduckgo.com')) {
+                                       // Try favicon.io service
+                                       img.src = `https://favicons.githubusercontent.com/${row.domain}`;
+                                     } else if (img.src.includes('favicons.githubusercontent.com')) {
+                                       // Try direct favicon from website
+                                       img.src = `https://${row.domain}/favicon.ico`;
+                                     } else if (img.src.includes('google.com/s2/favicons')) {
+                                       // Try DuckDuckGo with different domain format
+                                       if (row.domain === 'bhphotovideo.com') {
+                                         img.src = `https://icons.duckduckgo.com/ip3/www.${row.domain}.ico`;
+                                       } else {
+                                         img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
+                                       }
+                                     } else {
+                                       // Try one more Google service attempt with different parameters
+                                       img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64&t=2`;
+                                     }
+                                   }}
+                                 />
+                               )}
+                             </div>
+                             <div className="flex items-center gap-1">
+                               <div className="text-xs font-semibold text-gray-900 truncate max-w-[80px] text-center">
+                                 {s?.store_name || row.domain}
+                               </div>
+                               <a
+                                 href={validationUrl(row.domain, row.country)}
+                                 target="_blank"
+                                 rel="noopener noreferrer"
+                                 className="inline-flex items-center rounded bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all duration-200 flex-shrink-0 border border-gray-200"
+                                 title="Open source URL"
+                               >
+                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-2.5 w-2.5">
+                                   <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
+                                 </svg>
+                               </a>
+                             </div>
+                           </div>
+                         </th>
+                       );
+                     })}
+                   </tr>
+                 </thead>
+                 <tbody className="text-sm text-slate-800 bg-white">
+                   {/* TSQ Score Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Score (out of 100)</td>
+                     {sortedRows.map((row, i) => {
+                       const tsqScore = row.signals ? computeTsqScore(row.signals) : 0;
+                       return (
+                         <td key={i} className="text-center">
+                           {row.error ? (
+                             badge('Error', 'red')
+                           ) : (
+                             badge(tsqScore, 
+                               tsqScore >= 80 ? 'green' : 
+                               tsqScore >= 60 ? 'yellow' : 
+                               tsqScore >= 40 ? 'yellow' : 
+                               'red'
+                             )
+                           )}
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Top Quality Store Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Top Quality Store</td>
+                     {sortedRows.map((row, i) => {
+                       const tqs = row.signals?.tqs_badge;
+                       return (
+                         <td key={i} className="text-center">
+                           {row.error
+                             ? badge('Error', 'red')
+                             : tqs === true
+                               ? badge('Yes', 'green')
+                               : tqs === false
+                                 ? badge('No', 'red')
+                                 : badge('—', 'slate')}
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Shipping Quality Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Shipping (quality)</td>
+                     {sortedRows.map((row, i) => {
+                       const s = row.signals;
+                       const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
+                       const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
+                       return (
+                         <td key={i} className="text-center">
+                           <div className="flex flex-col items-center gap-1">
+                             {shipGrade && shipGrade !== '—' ? badge(shipGrade, qualityTone(shipGrade)) : null}
+                             {delivery && delivery !== '—' && (
+                               <div className="text-xs text-slate-500 tabular-nums">
+                                 {delivery}
+                               </div>
+                             )}
+                           </div>
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Returns Quality Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Returns (quality)</td>
+                     {sortedRows.map((row, i) => {
+                       const s = row.signals;
+                       const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
+                       const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
+                       return (
+                         <td key={i} className="text-center">
+                           <div className="flex flex-col items-center gap-1">
+                             {returnsGrade && returnsGrade !== '—' ? badge(returnsGrade, qualityTone(returnsGrade)) : null}
+                             {returnWindow && returnWindow !== '—' && (
+                               <div className="text-xs text-slate-500 tabular-nums">
+                                 {returnWindow}
+                               </div>
+                             )}
+                           </div>
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Competitive Pricing Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Competitive pricing</td>
+                     {sortedRows.map((row, i) => {
+                       const pricingGrade = getAny(row.signals, ['section_grades.pricing','pricing_quality','pricingGrade']);
+                       return (
+                         <td key={i} className="text-center">
+                           {badge(pricingGrade, qualityTone(pricingGrade))}
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Website Quality Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Website quality</td>
+                     {sortedRows.map((row, i) => {
+                       const websiteGrade = getAny(row.signals, ['section_grades.website','website_quality','websiteGrade']);
+                       return (
+                         <td key={i} className="text-center">
+                           {badge(websiteGrade, qualityTone(websiteGrade))}
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Payment Wallets Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Wallets</td>
+                     {sortedRows.map((row, i) => {
+                       const wallets = getAny(row.signals, ['e_wallets','wallets','payment_wallets']);
+                       return (
+                         <td key={i} className="text-center">
+                           {renderWalletPills(wallets)}
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Rating Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Rating</td>
+                     {sortedRows.map((row, i) => {
+                       const rating = getAny(row.signals, ['store_rating','rating','storeRating']);
+                       return (
+                         <td key={i} className="text-center">
+                           {badge(rating, 
+                             rating && !isNaN(Number(rating)) ? 
+                               Number(rating) >= 4.5 ? 'green' :
+                               Number(rating) >= 4.0 ? 'yellow' :
+                               Number(rating) >= 3.0 ? 'yellow' :
+                               'red' : 'slate'
+                           )}
+                         </td>
+                       );
+                     })}
+                   </tr>
+                   
+                   {/* Reviews Row */}
+                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td]:h-16">
+                     <td className="text-left font-semibold text-gray-900">Reviews</td>
+                     {sortedRows.map((row, i) => {
+                       const reviews = getAny(row.signals, ['review_count','reviews','reviewCount']);
+                       return (
+                         <td key={i} className="text-center">
+                           {badge(reviews, 
+                             reviews && !isNaN(Number(reviews)) ? 
+                               Number(reviews) >= 1000 ? 'green' :
+                               Number(reviews) >= 100 ? 'yellow' :
+                               Number(reviews) >= 10 ? 'yellow' :
+                               'red' : 'slate'
+                           )}
+                         </td>
+                       );
+                     })}
+                   </tr>
+                 </tbody>
+               </table>
             </div>
           </div>
 
@@ -840,7 +908,7 @@ export default function Page() {
                   <table className="min-w-[800px] w-full text-left text-base">
                     <tbody className="divide-y divide-slate-100">
                       {EXPLAINER.map((r, idx) => (
-                        <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
+                        <tr key={idx} className="[&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
                           <td className="font-medium text-slate-900 text-base">{r.m}</td>
                           <td className="text-slate-700 text-base">{r.w}</td>
                           <td className="text-slate-600 text-base">{r.t}</td>
