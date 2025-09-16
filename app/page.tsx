@@ -546,8 +546,8 @@ export default function Page() {
                        const s: Signals = row.signals || {};
                        return (
                          <th key={i} className="w-[10%] text-center">
-                           <div className="flex flex-col items-center gap-1 p-1">
-                             <div className="h-8 w-8 flex-shrink-0 overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
+                           <div className="flex flex-col items-center gap-2 p-1">
+                             <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
                                {s?.logo_url ? (
                                  // eslint-disable-next-line @next/next/no-img-element
                                  <img 
@@ -591,20 +591,18 @@ export default function Page() {
                                )}
                              </div>
                              <div className="flex items-center gap-1">
-                               <div className="text-xs font-semibold text-gray-900 truncate max-w-[80px] text-center">
-                                 {s?.store_name || row.domain}
-                               </div>
-                               <a
-                                 href={validationUrl(row.domain, row.country)}
-                                 target="_blank"
-                                 rel="noopener noreferrer"
-                                 className="inline-flex items-center rounded bg-white px-1 py-0.5 text-xs text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-all duration-200 flex-shrink-0 border border-gray-200"
-                                 title="Open source URL"
-                               >
-                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-2.5 w-2.5">
-                                   <path d="M12.5 2a.75.75 0 0 0 0 1.5h2.69l-5.72 5.72a.75.75 0 1 0 1.06 1.06l5.72-5.72V7.5a.75.75 0 0 0 1.5 0V2.75A.75.75 0 0 0 16.75 2h-4.25ZM4.25 4.5A2.25 2.25 0 0 0 2 6.75v8.5A2.25 2.25 0 0 0 4.25 17.5h8.5A2.25 2.25 0 0 0 15 15.25V11a.75.75 0 0 0-1.5 0v4.25a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5a.75.75 0 0 1 .75-.75H9a.75.75 0 0 0 0-1.5H4.25Z" />
-                                 </svg>
-                               </a>
+                     <a
+                       href={validationUrl(row.domain, row.country)}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="flex items-center gap-1 text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                       title="Open source URL"
+                     >
+                       <span className="truncate max-w-[120px] text-center">
+                         {s?.store_name || row.domain}
+                       </span>
+                       <span className="text-black">↗</span>
+                     </a>
                              </div>
                            </div>
                          </th>
