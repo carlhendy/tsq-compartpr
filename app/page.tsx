@@ -442,14 +442,14 @@ export default function Page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
             <div className="text-left">
-              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
-                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-10 sm:h-16 w-auto mx-1 sm:mx-2" /></div>
-                <div>Store Ratings</div>
+              <h1 className="text-white mb-6 leading-tight" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 800, fontSize: '3.5rem', lineHeight: '1.1' }}>
+                Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 sm:h-16 w-auto mx-2 sm:mx-3" /><br />
+                Store Ratings
               </h1>
-              <h2 className="text-lg sm:text-2xl font-medium text-white mb-6 max-w-md">
+              <h2 className="text-lg sm:text-2xl font-medium text-white mb-6 max-w-md" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600, fontSize: '1.25rem' }}>
                 Benchmark Ecommerce Stores by Google's Public Quality Signals
               </h2>
-              <p className="text-white text-sm max-w-md">
+              <p className="text-white text-sm max-w-md" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 400, fontSize: '0.875rem' }}>
                 Compare up to five store websites and pick a country. We'll show what Google lists on google.com/storepages.
               </p>
             </div>
@@ -736,11 +736,11 @@ export default function Page() {
       <section className="w-full">
         <div className="bg-gray-100 pt-6 pb-8 px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-lg font-semibold text-black text-center mb-6">Quick Start</h2>
+            <h2 className="text-lg font-semibold text-black text-center mb-6" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Quick Start</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
             <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto">United Kingdom</legend>
+              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United Kingdom</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
                   <button
@@ -757,7 +757,7 @@ export default function Page() {
 
             {/* US Categories */}
             <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto">United States</legend>
+              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United States</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
                   <button
@@ -774,7 +774,7 @@ export default function Page() {
 
             {/* AU Categories */}
             <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto">Australia</legend>
+              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Australia</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
                   <button
@@ -851,10 +851,10 @@ export default function Page() {
                     <tbody className="divide-y divide-slate-100">
                       {EXPLAINER.map((r, idx) => (
                         <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
-                          <td className="font-medium text-slate-900">{r.m}</td>
-                          <td className="text-slate-700">{r.w}</td>
-                          <td className="text-slate-600">{r.t}</td>
-                          <td className="text-slate-600">{r.q}</td>
+                          <td className="font-medium text-slate-900 text-sm">{r.m}</td>
+                          <td className="text-slate-700 text-sm">{r.w}</td>
+                          <td className="text-slate-600 text-sm">{r.t}</td>
+                          <td className="text-slate-600 text-sm">{r.q}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -862,7 +862,7 @@ export default function Page() {
                 )}
 
                 {activeTab === 'scoring' && (
-                  <div className="px-6 py-8">
+                  <div className="px-6 py-4">
                     <p className="text-slate-700 mb-4 text-sm">
                       These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
                       The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
@@ -943,43 +943,43 @@ export default function Page() {
                 {activeTab === 'faq' && (
                   <div className="divide-y divide-slate-100">
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
+                      <h3 className="font-medium text-slate-900 text-sm">Where do these signals come from?</h3>
                       <p className="mt-1 text-sm text-slate-600">
                         From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900">What does "Top Quality Store" mean?</h3>
+                      <h3 className="font-medium text-slate-900 text-sm">What does "Top Quality Store" mean?</h3>
                       <p className="mt-1 text-sm text-slate-600">
                         It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900">How often are results updated?</h3>
+                      <h3 className="font-medium text-slate-900 text-sm">How often are results updated?</h3>
                       <p className="mt-1 text-sm text-slate-600">
                         Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900">Why don't I see all wallets or grades for my store?</h3>
+                      <h3 className="font-medium text-slate-900 text-sm">Why don't I see all wallets or grades for my store?</h3>
                       <p className="mt-1 text-sm text-slate-600">
                         Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900">Can I export the results?</h3>
+                      <h3 className="font-medium text-slate-900 text-sm">Can I export the results?</h3>
                       <p className="mt-1 text-sm text-slate-600">
                         You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900">Why does a store have a rating but no review count?</h3>
+                      <h3 className="font-medium text-slate-900 text-sm">Why does a store have a rating but no review count?</h3>
                       <p className="mt-1 text-sm text-slate-600">
                         Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
+                      <h3 className="font-medium text-slate-900 text-sm">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
                       <p className="mt-1 text-sm text-slate-600">
                         We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
                         (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
