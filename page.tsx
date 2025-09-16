@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 
 // --- Wallet pills renderer (no dependencies) ---
@@ -125,7 +125,7 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
     'Home & Garden': ['diy.com', 'homebase.co.uk', 'wickes.co.uk', 'screwfix.com', 'toolstation.com']
   },
   'US': {
-    'Fashion': ['nordstrom.com', 'macys.com', 'gap.com', 'oldnavy.com', 'bananarepublic.com'],
+    'Fashion': ['nordstrom.com', 'macys.com', 'gap.com', 'urbanoutfitters.com', 'zara.com'],
     'Cosmetics': ['sephora.com', 'ulta.com', 'fentybeauty.com', 'beautylish.com', 'glossier.com'],
     'Sports & Fitness': ['dickssportinggoods.com', 'academy.com', 'rei.com', 'nike.com', 'adidas.com'],
     'Furniture': ['wayfair.com', 'westelm.com', 'crateandbarrel.com', 'potterybarn.com', 'ikea.com'],
@@ -135,8 +135,8 @@ const QUICK_START_CATEGORIES: Record<CountryKey, Record<CategoryKey, string[]>> 
   'AU': {
     'Fashion': ['theiconic.com.au', 'cottonon.com', 'countryroad.com.au', 'seedheritage.com', 'witchery.com.au'],
     'Cosmetics': ['priceline.com.au', 'chemistwarehouse.com.au', 'mecca.com.au', 'adorebeauty.com.au', 'sephora.com.au'],
-    'Sports & Fitness': ['rebelsport.com.au', 'amart.com.au', 'anaconda.com.au', 'nike.com.au', 'adidas.com.au'],
-    'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'amart.com.au', 'domayne.com.au'],
+    'Sports & Fitness': ['rebelsport.com.au', 'decathlon.com.au', 'anacondastores.com', 'intersport.com.au', 'adidas.com.au'],
+    'Furniture': ['freedom.com.au', 'fantasticfurniture.com.au', 'harveynorman.com.au', 'nickscali.com.au', 'domayne.com.au'],
     'Electronics': ['harveynorman.com.au', 'jbhifi.com.au', 'officeworks.com.au', 'bigw.com.au', 'target.com.au'],
     'Home & Garden': ['bunnings.com.au', 'homehardware.com.au', 'mitre10.com.au', 'totaltools.com.au', 'sydneytools.com.au']
   }
@@ -166,9 +166,9 @@ const levelScore = (grade?: string): number => {
 
 const computeTsqScore = (signals: Signals): number => {
   // Base scores from quality grades
-  const returnsScore = levelScore(signals.section_grades?.returns) * 30;
-  const shippingScore = levelScore(signals.section_grades?.shipping) * 25;
-  const pricingScore = levelScore(signals.section_grades?.pricing) * 25;
+  const returnsScore = levelScore(signals.section_grades?.returns) * 25;
+  const shippingScore = levelScore(signals.section_grades?.shipping) * 20;
+  const pricingScore = levelScore(signals.section_grades?.pricing) * 20;
   const websiteScore = levelScore(signals.section_grades?.website) * 10;
   
   // Wallets score (5% max, based on unique wallet count)
@@ -177,15 +177,6 @@ const computeTsqScore = (signals: Signals): number => {
     wallets.split(',').map(w => w.trim()).filter(Boolean)
   );
   const walletsScore = Math.min(uniqueWallets.size / 3, 1.0) * 5;
-  
-  // Trust score (5% max, normalized from 0-100)
-  let trustScore = 0;
-  if (signals.scamadviser_score) {
-    const trustValue = parseInt(String(signals.scamadviser_score), 10);
-    if (!isNaN(trustValue)) {
-      trustScore = (trustValue / 100) * 5;
-    }
-  }
   
   // Bonuses
   let bonuses = 0;
@@ -199,11 +190,11 @@ const computeTsqScore = (signals: Signals): number => {
     else if (maxDays >= 28) bonuses += 3;
   }
   
-  // Top Quality Store bonus
-  if (signals.tqs_badge === true) bonuses += 5;
+  // Top Quality Store bonus - MAJOR WEIGHT (15 points)
+  if (signals.tqs_badge === true) bonuses += 15;
   
   // Calculate final score
-  const totalScore = returnsScore + shippingScore + pricingScore + websiteScore + walletsScore + trustScore + bonuses;
+  const totalScore = returnsScore + shippingScore + pricingScore + websiteScore + walletsScore + bonuses;
   
   // Cap at 100, floor at 0, round to nearest integer
   return Math.round(Math.max(0, Math.min(100, totalScore)));
@@ -292,7 +283,8 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
-  const [visibleFields, setVisibleFields] = useState<number>(3);
+  const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq'>('signals');
+  const resultsTableRef = useRef<HTMLDivElement>(null);
 
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
@@ -303,15 +295,12 @@ export default function Page() {
   const removeDomain = (i: number) => {
     const next = domains.filter((_, index) => index !== i);
     setDomains(next);
-    // Set visible fields to the new array length, but keep minimum of 1
-    setVisibleFields(Math.max(1, next.length));
   };
 
   const addDomain = () => {
     if (domains.length < 5) {
       const newDomains = [...domains, ''];
       setDomains(newDomains);
-      setVisibleFields(newDomains.length);
     }
   };
 
@@ -325,6 +314,11 @@ export default function Page() {
     
     // Trigger comparison with the new values directly
     compareWithValues(brands, countryCode);
+    
+    // Scroll to results table if it exists
+    if (resultsTableRef.current) {
+      resultsTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const compareWithValues = async (domainList: string[], countryCode: string) => {
@@ -367,7 +361,7 @@ export default function Page() {
     const res = await Promise.all(promises);
     setRows(res);
     setLoading(false);
-  };
+  }
 
   // Sort rows by TSQ score (best to worst)
   const sortedRows = [...rows].sort((a, b) => {
@@ -403,7 +397,7 @@ export default function Page() {
 
   const copyResults = async () => {
     try {
-      const headers = ['Medal','Store','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
+      const headers = ['Store','Score','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
       const lines: string[] = [headers.join('\t')];
       for (let i = 0; i < sortedRows.length; i++) {
         const row = sortedRows[i];
@@ -416,12 +410,11 @@ export default function Page() {
         const websiteGrade = getAny(s, ['section_grades.website','website_quality','websiteGrade']);
         const rating = getAny(s, ['store_rating','rating','storeRating']);
         const reviews = getAny(s, ['review_count','reviews','reviewCount']);
-        
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+        const tsqScore = row.signals ? computeTsqScore(row.signals) : 0;
         
         const values = [
-          medal,
           row.domain || '—',
+          row.error ? '—' : String(tsqScore),
           row.error ? 'Error' : (s?.tqs_badge === true ? 'Yes' : s?.tqs_badge === false ? 'No' : '—'),
           delivery ? `${shipGrade} (${delivery})` : shipGrade,
           returnWindow ? `${returnsGrade} (${returnWindow})` : returnsGrade,
@@ -444,37 +437,34 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Two Column Layout */}
-      <section className="bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-6">
+      <section className="pt-4 sm:pt-8 pb-16 px-6" style={{ background: 'linear-gradient(to right, #0a4bf1 0%, #0a4bf1 60%, #3b82f6 80%, #60a5fa 100%)' }}>
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
             <div className="text-left">
-              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 leading-tight">
-                <div>Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-16 w-auto mx-2" /></div>
-                <div>Store Ratings</div>
+              <h1 className="text-white mb-6 leading-tight" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 800, fontSize: '3.5rem', lineHeight: '1.1' }}>
+                <span className="whitespace-nowrap">Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-14 sm:h-18 w-auto ml-1" style={{ filter: 'brightness(0) invert(1)' }} /></span><br />
+                Store Ratings
               </h1>
-              <h2 className="text-2xl font-medium text-white mb-6 max-w-md">
-                Benchmark Ecommerce Stores by Google's Public Quality Signals
+              <h2 className="text-base sm:text-xl font-medium text-white mb-6 max-w-md" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600, fontSize: '1.125rem', lineHeight: '1.4' }}>
+                Compare up to five ecommerce sites in your chosen country and see what Google lists on google.com/storepages.
               </h2>
-              <p className="text-white text-base max-w-md">
-                Compare up to five store websites and choose a country. We'll compare what Google shows on google.com/storepages.
-              </p>
             </div>
             
             {/* Right Column - Input Boxes */}
-            <div className="max-w-md mx-auto lg:mx-0">
-              <div className="bg-white p-6 border border-black">
+            <div className="w-full sm:max-w-lg mx-auto lg:mx-0">
+              <div className="bg-white p-6 border border-gray-300 rounded-lg shadow-sm">
                 {/* Domains - Vertical Stack */}
                 <div className="space-y-2 mb-4">
-                {domains.slice(0, visibleFields).map((d, i) => (
+                {domains.map((d, i) => (
                   <div key={i} className="relative">
                     <input
                       value={d}
                       onChange={(e) => updateDomain(i, e.target.value)}
                       placeholder="domain.com"
-                      className="w-full h-12 border border-black px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0"
+                      className="w-full h-12 border border-gray-300 px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
                     />
-                    {visibleFields > 1 && (
+                    {domains.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeDomain(i)}
@@ -486,10 +476,11 @@ export default function Page() {
                     )}
                   </div>
                 ))}
+                </div>
                 
                 {/* Add More Link */}
                 {domains.length < 5 && (
-                  <div className="text-right">
+                  <div className="text-right mb-4">
                     <button
                       type="button"
                       onClick={addDomain}
@@ -499,61 +490,59 @@ export default function Page() {
                     </button>
                   </div>
                 )}
-              </div>
 
-              {/* Country Selector */}
-              <div className="flex items-center gap-3 mb-3">
-                <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
-                <div className="relative flex-1">
-                <select
-                  id="country-select"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  className="h-12 w-full border border-black bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer"
-                  aria-label="Country"
-                >
-                <option value="US">United States</option>
-                <option value="GB">United Kingdom</option>
-                <option value="AU">Australia</option>
-                <option value="CA">Canada</option>
-                <option value="IE">Ireland</option>
-                <option value="NZ">New Zealand</option>
-                <option value="DE">Germany</option>
-                <option value="FR">France</option>
-                </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                {/* Country Selector */}
+                <div className="flex items-center gap-3 mb-4">
+                  <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
+                  <div className="relative flex-1">
+                    <select
+                      id="country-select"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      className="h-12 w-full border border-gray-300 bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
+                      aria-label="Country"
+                    >
+                      <option value="US">United States</option>
+                      <option value="GB">United Kingdom</option>
+                      <option value="AU">Australia</option>
+                      <option value="CA">Canada</option>
+                      <option value="IE">Ireland</option>
+                      <option value="NZ">New Zealand</option>
+                      <option value="DE">Germany</option>
+                      <option value="FR">France</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
+                {/* Compare Button */}
+                <button
+                  onClick={compare}
+                  disabled={loading}
+                  className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors rounded"
+                >
+                  {loading ? 'Comparing...' : 'Compare Stores'}
+                </button>
               </div>
-
-              {/* Compare Button - Own Row */}
-              <button
-                onClick={compare}
-                disabled={loading}
-                className="w-full h-12 px-6 text-white bg-black text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
-              >
-                {loading ? 'Comparing...' : 'Compare Stores'}
-              </button>
+            </div>
           </div>
-          </div>
-        </div>
         </div>
       </section>
 
       {/* Results */}
       {hasCompared && (
-        <section className="mx-auto max-w-6xl px-6 pb-12 mt-8">
-          <div className="border border-black bg-white">
+        <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12 mt-8">
+          <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
             <div className="overflow-x-auto">
               <table className="min-w-[1000px] w-full table-fixed text-left">
-                <thead className="text-sm text-black bg-gray-100">
+                <thead className="text-sm text-black" style={{ backgroundColor: '#e3ff75' }}>
                   <tr className="[&>th]:px-2 [&>th]:py-5 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-300 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0">
-                    <th className="w-[6%] text-center"></th>
                     <th className="w-[16%] text-left">Store</th>
+                    <th className="w-[10%] text-center">Score<br/>(out of 100)</th>
                     <th className="w-[10%] text-center">Top Quality Store</th>
                     <th className="w-[10%] text-center">Shipping (quality)</th>
                     <th className="w-[10%] text-center">Returns (quality)</th>
@@ -564,7 +553,7 @@ export default function Page() {
                     <th className="w-[10%] text-center">Reviews</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-sm text-slate-800">
+                <tbody className="divide-y divide-slate-100 text-sm text-slate-800 bg-white">
                   {sortedRows.length === 0 && (
                     <tr>
                       <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
@@ -584,14 +573,11 @@ export default function Page() {
                     const wallets = getAny(s, ['e_wallets','wallets','payment_wallets']);
                     const rating = getAny(s, ['store_rating','rating','storeRating']);
                     const reviews = getAny(s, ['review_count','reviews','reviewCount']);
-
-                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+                    
+                    const tsqScore = row.signals ? computeTsqScore(row.signals) : 0;
                     
                     return (
                       <tr key={i} className="[&>td]:px-2 [&>td]:py-5 [&>td]:align-middle hover:bg-gray-50 transition-colors [&>td]:border-r [&>td]:border-gray-300 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0">
-                        <td className="text-center text-4xl px-4" aria-label={i === 0 ? 'gold medal' : i === 1 ? 'silver medal' : i === 2 ? 'bronze medal' : 'no medal'}>
-                          {medal}
-                        </td>
                         <td className="text-left pl-2 pr-2">
                           <div className="flex items-center gap-2">
                             <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white">
@@ -639,7 +625,7 @@ export default function Page() {
                           </div>
                           <div className="leading-5 min-w-0 flex-1">
                             <div className="font-medium text-black text-xs flex items-center gap-1">
-                              <span className="truncate">{row.domain}</span>
+                              <span className="truncate">{s?.store_name || row.domain}</span>
                               <a
                                 href={validationUrl(row.domain, row.country)}
                                 target="_blank"
@@ -656,6 +642,18 @@ export default function Page() {
                           </div>
                         </td>
                         <td className="text-center">
+                          {row.error ? (
+                            badge('Error', 'red')
+                          ) : (
+                            badge(tsqScore, 
+                              tsqScore >= 80 ? 'green' : 
+                              tsqScore >= 60 ? 'yellow' : 
+                              tsqScore >= 40 ? 'yellow' : 
+                              'red'
+                            )
+                          )}
+                        </td>
+                        <td className="text-center">
                           {row.error
                             ? badge('Error', 'red')
                             : tqs === true
@@ -667,7 +665,7 @@ export default function Page() {
                         <td className="text-center">
                           <div className="flex flex-col items-center gap-1">
                             {shipGrade && shipGrade !== '—' ? badge(shipGrade, qualityTone(shipGrade)) : null}
-                            {delivery && (
+                            {delivery && delivery !== '—' && (
                               <div className="text-xs text-slate-500 tabular-nums">
                                 {delivery}
                               </div>
@@ -677,7 +675,7 @@ export default function Page() {
                         <td className="text-center">
                           <div className="flex flex-col items-center gap-1">
                             {returnsGrade && returnsGrade !== '—' ? badge(returnsGrade, qualityTone(returnsGrade)) : null}
-                            {returnWindow && (
+                            {returnWindow && returnWindow !== '—' && (
                               <div className="text-xs text-slate-500 tabular-nums">
                                 {returnWindow}
                               </div>
@@ -687,8 +685,24 @@ export default function Page() {
                         <td className="text-center">{badge(pricingGrade, qualityTone(pricingGrade))}</td>
                         <td className="text-center">{badge(websiteGrade, qualityTone(websiteGrade))}</td>
                         <td className="text-center">{renderWalletPills(wallets)}</td>
-                        <td className="text-center tabular-nums font-medium text-emerald-700">{rating}</td>
-                        <td className="text-center tabular-nums">{reviews}</td>
+                        <td className="text-center">
+                          {badge(rating, 
+                            rating && !isNaN(Number(rating)) ? 
+                              Number(rating) >= 4.5 ? 'green' :
+                              Number(rating) >= 4.0 ? 'yellow' :
+                              Number(rating) >= 3.0 ? 'yellow' :
+                              'red' : 'slate'
+                          )}
+                        </td>
+                        <td className="text-center">
+                          {badge(reviews, 
+                            reviews && !isNaN(Number(reviews)) ? 
+                              Number(reviews) >= 1000 ? 'green' :
+                              Number(reviews) >= 100 ? 'yellow' :
+                              Number(reviews) >= 10 ? 'yellow' :
+                              'red' : 'slate'
+                          )}
+                        </td>
                       </tr>
                     );
                   })}
@@ -719,10 +733,11 @@ export default function Page() {
       <section className="w-full">
         <div className="bg-gray-100 pt-6 pb-8 px-6">
           <div className="mx-auto max-w-6xl">
+            <h2 className="text-lg font-semibold text-black text-center mb-6" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Quick Start</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* UK Categories */}
-            <fieldset className="border border-black bg-white relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto">United Kingdom</legend>
+            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United Kingdom</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
                   <button
@@ -738,8 +753,8 @@ export default function Page() {
             </fieldset>
 
             {/* US Categories */}
-            <fieldset className="border border-black bg-white relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto">United States</legend>
+            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United States</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
                   <button
@@ -755,8 +770,8 @@ export default function Page() {
             </fieldset>
 
             {/* AU Categories */}
-            <fieldset className="border border-black bg-white relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto">Australia</legend>
+            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
+              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Australia</legend>
               <div className="p-4 space-y-2">
                 {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
                   <button
@@ -775,173 +790,204 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Explainer */}
-      <section className="mx-auto max-w-6xl px-6 pb-10 pt-8">
-        <fieldset className="border border-black bg-white">
-          <legend className="text-lg font-semibold text-black px-2">How Google Might Interpret These Signals?</legend>
-          <div className="divide-y divide-slate-100">
-            <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="text-sm">
-                <tr className="[&>th]:px-4 [&>th]:py-4 [&>th]:align-middle text-left [&>th]:bg-transparent [&>th]:h-16">
-                  <th className="w-[20%] text-left font-bold text-black">Signal</th>
-                  <th className="w-[26%] text-left font-bold text-black">What it means</th>
-                  <th className="w-[27%] text-left font-bold text-black">How it's measured</th>
-                  <th className="w-[27%] text-left font-bold text-black">Quick wins</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {EXPLAINER.map((r, idx) => (
-                  <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
-                    <td className="font-medium text-slate-900">{r.m}</td>
-                    <td className="text-slate-700">{r.w}</td>
-                    <td className="text-slate-600">{r.t}</td>
-                    <td className="text-slate-600">{r.q}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* Tabbed Information Section */}
+      <section className="mx-auto max-w-6xl px-6 pt-8 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Left Side - Tab Buttons */}
+          <div className="lg:col-span-1">
+            <div className="space-y-3">
+              <button
+                onClick={() => setActiveTab('signals')}
+                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                  activeTab === 'signals'
+                    ? 'border-gray-300 text-gray-700'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+                style={activeTab === 'signals' ? { backgroundColor: '#e3ff75' } : {}}
+              >
+                <h3 className="font-semibold text-sm">How Google Might Interpret These Signals?</h3>
+              </button>
+              <button
+                onClick={() => setActiveTab('scoring')}
+                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                  activeTab === 'scoring'
+                    ? 'border-gray-300 text-gray-700'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+                style={activeTab === 'scoring' ? { backgroundColor: '#e3ff75' } : {}}
+              >
+                <h3 className="font-semibold text-sm">How Are These Scores Calculated?</h3>
+              </button>
+              <button
+                onClick={() => setActiveTab('faq')}
+                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                  activeTab === 'faq'
+                    ? 'border-gray-300 text-gray-700'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+                style={activeTab === 'faq' ? { backgroundColor: '#e3ff75' } : {}}
+              >
+                <h3 className="font-semibold text-sm">Frequently Asked Questions</h3>
+              </button>
             </div>
           </div>
-        </fieldset>
-      </section>
 
-      {/* TSQ Scoring Explanation */}
-      <section className="mx-auto max-w-6xl px-6 pb-10">
-        <fieldset className="border border-black bg-white">
-          <legend className="text-lg font-semibold text-black px-2">How Are These Scores Calculated?</legend>
-          <div className="divide-y divide-slate-100">
-            <div className="px-6 py-8">
-            <p className="text-slate-700 mb-4 text-sm">
-              These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
-              The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
-              Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
-            </p>
-            
-            <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">30%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">25%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
-                  <span className="text-slate-600 font-mono text-sm">25%</span>
-                </div>
+          {/* Right Side - Tab Content */}
+          <div className="lg:col-span-3">
+            <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
+              <div className="px-4 py-3 rounded-t-lg" style={{ backgroundColor: '#e3ff75' }}>
+                <h3 className="text-lg font-semibold text-black">
+                  {activeTab === 'signals' && 'How Google Might Interpret These Signals?'}
+                  {activeTab === 'scoring' && 'How Are These Scores Calculated?'}
+                  {activeTab === 'faq' && 'Frequently Asked Questions'}
+                </h3>
               </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Website Quality</span>
-                  <span className="text-slate-600 font-mono text-sm">10%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
-                  <span className="text-slate-600 font-mono text-sm">5%</span>
-                </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                  <span className="font-medium text-slate-700 text-sm">Trust Score</span>
-                  <span className="text-slate-600 font-mono text-sm">5%</span>
-                </div>
-              </div>
-            </div>
+              <div className="overflow-x-auto">
+                {activeTab === 'signals' && (
+                  <table className="min-w-[800px] w-full text-left text-sm">
+                    <tbody className="divide-y divide-slate-100">
+                      {EXPLAINER.map((r, idx) => (
+                        <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
+                          <td className="font-medium text-slate-900 text-sm">{r.m}</td>
+                          <td className="text-slate-700 text-sm">{r.w}</td>
+                          <td className="text-slate-600 text-sm">{r.t}</td>
+                          <td className="text-slate-600 text-sm">{r.q}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
 
-            <h3 className="text-sm font-semibold text-slate-800 mb-3">Grade Values:</h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                <div className="font-semibold text-green-800 text-sm">Exceptional</div>
-                <div className="text-xs text-green-600">100 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                <div className="font-semibold text-green-800 text-sm">Great</div>
-                <div className="text-xs text-green-600">85 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <div className="font-semibold text-yellow-800 text-sm">Good</div>
-                <div className="text-xs text-yellow-600">70 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
-                <div className="font-semibold text-orange-800 text-sm">Fair</div>
-                <div className="text-xs text-orange-600">40 points</div>
-              </div>
-              <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
-                <div className="font-semibold text-red-800 text-sm">Poor</div>
-                <div className="text-xs text-red-600">20 points</div>
-              </div>
-            </div>
+                {activeTab === 'scoring' && (
+                  <div className="px-6 py-4">
+                    <p className="text-slate-700 mb-4 text-sm">
+                      These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
+                      The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
+                      Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
+                    </p>
+                    
+                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
+                          <span className="text-slate-600 font-mono text-sm">25%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
+                          <span className="text-slate-600 font-mono text-sm">20%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
+                          <span className="text-slate-600 font-mono text-sm">20%</span>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Website Quality</span>
+                          <span className="text-slate-600 font-mono text-sm">10%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
+                          <span className="text-slate-600 font-mono text-sm">5%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-sm">Top Quality Store Badge</span>
+                          <span className="text-slate-600 font-mono text-sm">15%</span>
+                        </div>
+                      </div>
+                    </div>
 
-            <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
-            <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
-              <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
-              <li><strong>Top Quality Store Badge:</strong> +5 points</li>
-              <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
-              <li><strong>Trust Score:</strong> Normalized from 0-100 (e.g., 85/100 = 85% of 5 points)</li>
-            </ul>
+                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Grade Values:</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+                      <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                        <div className="font-semibold text-green-800 text-sm">Exceptional</div>
+                        <div className="text-xs text-green-600">100 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
+                        <div className="font-semibold text-green-800 text-sm">Great</div>
+                        <div className="text-xs text-green-600">85 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div className="font-semibold text-yellow-800 text-sm">Good</div>
+                        <div className="text-xs text-yellow-600">70 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
+                        <div className="font-semibold text-orange-800 text-sm">Fair</div>
+                        <div className="text-xs text-orange-600">40 points</div>
+                      </div>
+                      <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
+                        <div className="font-semibold text-red-800 text-sm">Poor</div>
+                        <div className="text-xs text-red-600">20 points</div>
+                      </div>
+                    </div>
 
-            <p className="text-xs text-slate-600 italic">
-              Final scores are capped at 100 points and rounded to the nearest integer. 
-              Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
-            </p>
+                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
+                    <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
+                      <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
+                      <li><strong>Top Quality Store Badge:</strong> +15 points (major weighting)</li>
+                      <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
+                    </ul>
+
+                    <p className="text-xs text-slate-600 italic">
+                      Final scores are capped at 100 points and rounded to the nearest integer. 
+                      Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
+                    </p>
+                  </div>
+                )}
+
+                {activeTab === 'faq' && (
+                  <div className="divide-y divide-slate-100">
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-sm">Where do these signals come from?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-sm">What does "Top Quality Store" mean?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-sm">How often are results updated?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-sm">Why don't I see all wallets or grades for my store?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-sm">Can I export the results?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-sm">Why does a store have a rating but no review count?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-sm">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
+                      <p className="mt-1 text-sm text-slate-600">
+                        We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
+                        (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </fieldset>
-      </section>
-
-      {/* FAQs + schema */}
-      <section className="mx-auto max-w-6xl px-6 pb-16">
-        <fieldset className="border border-black bg-white">
-          <legend className="text-lg font-semibold text-black px-2">Frequently Asked Questions</legend>
-          <div className="divide-y divide-slate-100">
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Where do these signals come from?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                From Google’s public <span className="font-mono">storepages</span> surface for each domain and region. We don’t scrape private data or guess values.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">What does “Top Quality Store” mean?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">How often are results updated?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Why don’t I see all wallets or grades for my store?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—).
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Can I export the results?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                You can copy the table using the “Copy results” button and paste into a spreadsheet. CSV export is on the roadmap.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">Why does a store have a rating but no review count?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
-              </p>
-            </div>
-            <div className="px-5 py-4">
-              <h3 className="font-medium text-slate-900">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
-              <p className="mt-1 text-sm text-slate-600">
-                We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
-                (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
-              </p>
-            </div>
-          </div>
-        </fieldset>
+        </div>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -952,22 +998,22 @@ export default function Page() {
                 {
                   "@type": "Question",
                   "name": "Where do these signals come from?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "From Google’s public storepages surface for each domain and region. We don’t scrape private data or guess values." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "From Google's public storepages surface for each domain and region. We don't scrape private data or guess values." }
                 },
                 {
                   "@type": "Question",
-                  "name": "What does “Top Quality Store” mean?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "It’s Google’s badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)." }
+                  "name": "What does \"Top Quality Store\" mean?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)." }
                 },
                 {
                   "@type": "Question",
                   "name": "How often are results updated?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google’s public indicators may change at any time." }
+                  "acceptedAnswer": { "@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time." }
                 },
                 {
                   "@type": "Question",
-                  "name": "Why don’t I see all wallets or grades for my store?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn’t show it, we display a dash (—)." }
+                  "name": "Why don't I see all wallets or grades for my store?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—)." }
                 },
                 {
                   "@type": "Question",
@@ -991,17 +1037,19 @@ export default function Page() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black bg-gradient-to-r from-slate-800 via-slate-700 to-blue-600 py-16 px-4 sm:px-6 text-center text-white">
-        <p className="mb-4 text-base">
-          Vibe coded by{' '}
-          <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
-            Carl Hendy
-          </a>{' '}
-        founder of{' '}
-          <a href="https://audits.com" target="_blank" rel="noreferrer" className="bg-white text-black px-2 py-1 no-underline font-normal">
-            Audits.com
-          </a>.
-        </p>
+      <footer className="border-t border-black py-16 px-4 sm:px-6 text-center text-white" style={{ background: 'linear-gradient(to right, #0a4bf1 0%, #0a4bf1 60%, #3b82f6 80%, #60a5fa 100%)' }}>
+        <div className="mb-4 text-base">
+          <div>
+            Badly vibe coded by{' '}
+            <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="text-white underline hover:no-underline font-normal inline-block">
+              Carl Hendy
+            </a>
+            {' '}founder of{' '}
+            <a href="https://audits.com" target="_blank" rel="noreferrer" className="text-white underline hover:no-underline font-normal inline-block">
+              Audits.com
+            </a>.
+          </div>
+        </div>
         <p className="mx-auto max-w-3xl text-sm text-white">
           Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
           <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
