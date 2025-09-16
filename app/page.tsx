@@ -628,7 +628,7 @@ export default function Page() {
                           </div>
                           <div className="leading-5 min-w-0 flex-1">
                             <div className="font-medium text-black text-xs flex items-center gap-1">
-                              <span className="truncate">{row.domain}</span>
+                              <span className="truncate">{s?.store_name || row.domain}</span>
                               <a
                                 href={validationUrl(row.domain, row.country)}
                                 target="_blank"
