@@ -16,7 +16,7 @@ export default function RootLayout({children}:{children:React.ReactNode}){
       </head>
       <body style={{ fontFamily: 'Sofia Sans, sans-serif' }}>
         {/* Simple Header */}
-        <header className="px-6 py-6 border-b border-white" style={{ background: 'linear-gradient(to right, #0a4bf1 0%, #0a4bf1 60%, #3b82f6 80%, #60a5fa 100%)' }}>
+        <header className="px-6 py-6 border-b border-white" style={{ backgroundColor: '#0a4bf1' }}>
           <div className="max-w-6xl mx-auto flex items-center">
             <a href="https://audits.com" className="flex items-center">
               <img 
