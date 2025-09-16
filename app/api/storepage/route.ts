@@ -5,6 +5,18 @@ export const preferredRegion = ["iad1", "sfo1"];
 import { NextRequest } from "next/server";
 
 function esc(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function decodeHtmlEntities(str: string) {
+  return str
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, "/")
+    .replace(/&#x60;/g, "`")
+    .replace(/&#x3D;/g, "=");
+}
 function stripTags(html: string) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
@@ -124,7 +136,7 @@ function extractSignalsFromHtml(html: string, domain: string) {
   const storeNameMatch = htmlNear.match(/<h1[^>]*class=["'][^"']*Kl6mye-KVuj8d-V1ur5d[^"']*["'][^>]*>([^<]+)<\/h1>/i) || 
                        html.match(/<h1[^>]*class=["'][^"']*Kl6mye-KVuj8d-V1ur5d[^"']*["'][^>]*>([^<]+)<\/h1>/i);
   if (storeNameMatch) {
-    store_name = stripTags(storeNameMatch[1]).trim();
+    store_name = decodeHtmlEntities(stripTags(storeNameMatch[1])).trim();
   }
 
   // TQS
