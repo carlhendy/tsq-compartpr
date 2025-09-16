@@ -119,6 +119,14 @@ function extractSignalsFromHtml(html: string, domain: string) {
   let logoMatch = htmlNear.match(/<img[^>]*class=["'][^"']*Kl6mye-l4eHX[^"']*["'][^>]*src=["']([^"']+)["'][^>]*>/i) || html.match(/<img[^>]*class=["'][^"']*Kl6mye-l4eHX[^"']*["'][^>]*src=["']([^"']+)["'][^>]*>/i);
   let logo_url = logoMatch ? logoMatch[1] : `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
 
+  // Store name from h1 element
+  let store_name = "";
+  const storeNameMatch = htmlNear.match(/<h1[^>]*class=["'][^"']*Kl6mye-KVuj8d-V1ur5d[^"']*["'][^>]*>([^<]+)<\/h1>/i) || 
+                       html.match(/<h1[^>]*class=["'][^"']*Kl6mye-KVuj8d-V1ur5d[^"']*["'][^>]*>([^<]+)<\/h1>/i);
+  if (storeNameMatch) {
+    store_name = stripTags(storeNameMatch[1]).trim();
+  }
+
   // TQS
   const tqsMarkers: number[] = [];
   for (const re of [
@@ -184,7 +192,8 @@ function extractSignalsFromHtml(html: string, domain: string) {
     review_count: review_count || "",
     scamadviser_score: scamadviser_score || "",
     section_grades: ins.section_grades,
-    logo_url
+    logo_url,
+    store_name: store_name || domain
   };
 }
 
