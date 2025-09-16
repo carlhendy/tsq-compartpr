@@ -17,13 +17,16 @@ export default function RootLayout({children}:{children:React.ReactNode}){
       <body style={{ fontFamily: 'Sofia Sans, sans-serif' }}>
         {/* Simple Header */}
         <header className="px-6 py-6 border-b border-white" style={{ backgroundColor: '#0a4bf1' }}>
-          <div className="max-w-6xl mx-auto flex items-center">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
             <a href="https://audits.com" className="flex items-center">
               <img 
                 src="https://audits.com/wp-content/uploads/2024/04/logo_light.svg?t=1757915579" 
                 alt="Audits.com" 
                 className="h-10 w-auto"
               />
+            </a>
+            <a href="https://audits.com/about/" className="text-white font-semibold text-xl uppercase hover:text-gray-200 transition-colors">
+              About
             </a>
           </div>
         </header>
