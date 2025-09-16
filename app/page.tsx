@@ -805,7 +805,7 @@ export default function Page() {
                 }`}
                 style={activeTab === 'signals' ? { backgroundColor: '#e3ff75' } : {}}
               >
-                <h3 className="font-semibold text-sm">How Google Might Interpret These Signals?</h3>
+                <h3 className="font-semibold text-lg">How Google Might Interpret These Signals?</h3>
               </button>
               <button
                 onClick={() => setActiveTab('scoring')}
@@ -816,7 +816,7 @@ export default function Page() {
                 }`}
                 style={activeTab === 'scoring' ? { backgroundColor: '#e3ff75' } : {}}
               >
-                <h3 className="font-semibold text-sm">How Are These Scores Calculated?</h3>
+                <h3 className="font-semibold text-lg">How Are These Scores Calculated?</h3>
               </button>
               <button
                 onClick={() => setActiveTab('faq')}
@@ -827,7 +827,7 @@ export default function Page() {
                 }`}
                 style={activeTab === 'faq' ? { backgroundColor: '#e3ff75' } : {}}
               >
-                <h3 className="font-semibold text-sm">Frequently Asked Questions</h3>
+                <h3 className="font-semibold text-lg">Frequently Asked Questions</h3>
               </button>
             </div>
           </div>
