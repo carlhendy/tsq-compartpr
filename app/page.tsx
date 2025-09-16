@@ -798,10 +798,10 @@ export default function Page() {
             <div className="space-y-3">
               <button
                 onClick={() => setActiveTab('signals')}
-                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                className={`w-full h-20 p-4 text-left transition-colors flex items-center ${
                   activeTab === 'signals'
-                    ? 'border-gray-300 text-gray-700'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg'
+                    : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
                 }`}
                 style={activeTab === 'signals' ? { backgroundColor: '#e3ff75' } : {}}
               >
@@ -809,10 +809,10 @@ export default function Page() {
               </button>
               <button
                 onClick={() => setActiveTab('scoring')}
-                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                className={`w-full h-20 p-4 text-left transition-colors flex items-center ${
                   activeTab === 'scoring'
-                    ? 'border-gray-300 text-gray-700'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg'
+                    : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
                 }`}
                 style={activeTab === 'scoring' ? { backgroundColor: '#e3ff75' } : {}}
               >
@@ -820,10 +820,10 @@ export default function Page() {
               </button>
               <button
                 onClick={() => setActiveTab('faq')}
-                className={`w-full h-20 p-4 text-left rounded-lg border transition-colors flex items-center ${
+                className={`w-full h-20 p-4 text-left transition-colors flex items-center ${
                   activeTab === 'faq'
-                    ? 'border-gray-300 text-gray-700'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                    ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg'
+                    : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
                 }`}
                 style={activeTab === 'faq' ? { backgroundColor: '#e3ff75' } : {}}
               >
@@ -834,24 +834,17 @@ export default function Page() {
 
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-3">
-            <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
-              <div className="px-4 py-3 rounded-t-lg" style={{ backgroundColor: '#e3ff75' }}>
-                <h3 className="text-lg font-semibold text-black">
-                  {activeTab === 'signals' && 'How Google Might Interpret These Signals?'}
-                  {activeTab === 'scoring' && 'How Are These Scores Calculated?'}
-                  {activeTab === 'faq' && 'Frequently Asked Questions'}
-                </h3>
-              </div>
+            <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-6 min-h-[240px]">
               <div className="overflow-x-auto">
                 {activeTab === 'signals' && (
-                  <table className="min-w-[800px] w-full text-left text-sm">
+                  <table className="min-w-[800px] w-full text-left text-base">
                     <tbody className="divide-y divide-slate-100">
                       {EXPLAINER.map((r, idx) => (
                         <tr key={idx} className="odd:bg-slate-50/40 [&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
-                          <td className="font-medium text-slate-900 text-sm">{r.m}</td>
-                          <td className="text-slate-700 text-sm">{r.w}</td>
-                          <td className="text-slate-600 text-sm">{r.t}</td>
-                          <td className="text-slate-600 text-sm">{r.q}</td>
+                          <td className="font-medium text-slate-900 text-base">{r.m}</td>
+                          <td className="text-slate-700 text-base">{r.w}</td>
+                          <td className="text-slate-600 text-base">{r.t}</td>
+                          <td className="text-slate-600 text-base">{r.q}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -860,77 +853,77 @@ export default function Page() {
 
                 {activeTab === 'scoring' && (
                   <div className="px-6 py-4">
-                    <p className="text-slate-700 mb-4 text-sm">
+                    <p className="text-slate-700 mb-4 text-base">
                       These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
                       The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
                       Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
                     </p>
                     
-                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
+                    <h3 className="text-base font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                       <div className="space-y-3">
                         <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-sm">Returns Quality</span>
-                          <span className="text-slate-600 font-mono text-sm">25%</span>
+                          <span className="font-medium text-slate-700 text-base">Returns Quality</span>
+                          <span className="text-slate-600 font-mono text-base">25%</span>
                         </div>
                         <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-sm">Shipping Quality</span>
-                          <span className="text-slate-600 font-mono text-sm">20%</span>
+                          <span className="font-medium text-slate-700 text-base">Shipping Quality</span>
+                          <span className="text-slate-600 font-mono text-base">20%</span>
                         </div>
                         <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-sm">Competitive Pricing</span>
-                          <span className="text-slate-600 font-mono text-sm">20%</span>
+                          <span className="font-medium text-slate-700 text-base">Competitive Pricing</span>
+                          <span className="text-slate-600 font-mono text-base">20%</span>
                         </div>
                       </div>
                       <div className="space-y-3">
                         <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-sm">Website Quality</span>
-                          <span className="text-slate-600 font-mono text-sm">10%</span>
+                          <span className="font-medium text-slate-700 text-base">Website Quality</span>
+                          <span className="text-slate-600 font-mono text-base">10%</span>
                         </div>
                         <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-sm">Payment Wallets</span>
-                          <span className="text-slate-600 font-mono text-sm">5%</span>
+                          <span className="font-medium text-slate-700 text-base">Payment Wallets</span>
+                          <span className="text-slate-600 font-mono text-base">5%</span>
                         </div>
                         <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-sm">Top Quality Store Badge</span>
-                          <span className="text-slate-600 font-mono text-sm">15%</span>
+                          <span className="font-medium text-slate-700 text-base">Top Quality Store Badge</span>
+                          <span className="text-slate-600 font-mono text-base">15%</span>
                         </div>
                       </div>
                     </div>
 
-                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Grade Values:</h3>
+                    <h3 className="text-base font-semibold text-slate-800 mb-3">Grade Values:</h3>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
                       <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                        <div className="font-semibold text-green-800 text-sm">Exceptional</div>
-                        <div className="text-xs text-green-600">100 points</div>
+                        <div className="font-semibold text-green-800 text-base">Exceptional</div>
+                        <div className="text-sm text-green-600">100 points</div>
                       </div>
                       <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                        <div className="font-semibold text-green-800 text-sm">Great</div>
-                        <div className="text-xs text-green-600">85 points</div>
+                        <div className="font-semibold text-green-800 text-base">Great</div>
+                        <div className="text-sm text-green-600">85 points</div>
                       </div>
                       <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <div className="font-semibold text-yellow-800 text-sm">Good</div>
-                        <div className="text-xs text-yellow-600">70 points</div>
+                        <div className="font-semibold text-yellow-800 text-base">Good</div>
+                        <div className="text-sm text-yellow-600">70 points</div>
                       </div>
                       <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
-                        <div className="font-semibold text-orange-800 text-sm">Fair</div>
-                        <div className="text-xs text-orange-600">40 points</div>
+                        <div className="font-semibold text-orange-800 text-base">Fair</div>
+                        <div className="text-sm text-orange-600">40 points</div>
                       </div>
                       <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
-                        <div className="font-semibold text-red-800 text-sm">Poor</div>
-                        <div className="text-xs text-red-600">20 points</div>
+                        <div className="font-semibold text-red-800 text-base">Poor</div>
+                        <div className="text-sm text-red-600">20 points</div>
                       </div>
                     </div>
 
-                    <h3 className="text-sm font-semibold text-slate-800 mb-3">Bonuses:</h3>
-                    <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-sm">
+                    <h3 className="text-base font-semibold text-slate-800 mb-3">Bonuses:</h3>
+                    <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-base">
                       <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
                       <li><strong>Top Quality Store Badge:</strong> +15 points (major weighting)</li>
                       <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
                     </ul>
 
-                    <p className="text-xs text-slate-600 italic">
+                    <p className="text-base text-slate-600 italic">
                       Final scores are capped at 100 points and rounded to the nearest integer. 
                       Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
                     </p>
@@ -940,44 +933,44 @@ export default function Page() {
                 {activeTab === 'faq' && (
                   <div className="divide-y divide-slate-100">
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-sm">Where do these signals come from?</h3>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h3 className="font-medium text-slate-900 text-base">Where do these signals come from?</h3>
+                      <p className="mt-1 text-base text-slate-600">
                         From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-sm">What does "Top Quality Store" mean?</h3>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h3 className="font-medium text-slate-900 text-base">What does "Top Quality Store" mean?</h3>
+                      <p className="mt-1 text-base text-slate-600">
                         It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-sm">How often are results updated?</h3>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h3 className="font-medium text-slate-900 text-base">How often are results updated?</h3>
+                      <p className="mt-1 text-base text-slate-600">
                         Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-sm">Why don't I see all wallets or grades for my store?</h3>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h3 className="font-medium text-slate-900 text-base">Why don't I see all wallets or grades for my store?</h3>
+                      <p className="mt-1 text-base text-slate-600">
                         Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-sm">Can I export the results?</h3>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h3 className="font-medium text-slate-900 text-base">Can I export the results?</h3>
+                      <p className="mt-1 text-base text-slate-600">
                         You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-sm">Why does a store have a rating but no review count?</h3>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h3 className="font-medium text-slate-900 text-base">Why does a store have a rating but no review count?</h3>
+                      <p className="mt-1 text-base text-slate-600">
                         Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
                       </p>
                     </div>
                     <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-sm">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <h3 className="font-medium text-slate-900 text-base">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
+                      <p className="mt-1 text-base text-slate-600">
                         We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
                         (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
                       </p>
