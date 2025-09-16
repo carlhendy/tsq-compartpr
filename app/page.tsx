@@ -443,15 +443,12 @@ export default function Page() {
             {/* Left Column - Text and Headers */}
             <div className="text-left">
               <h1 className="text-white mb-6 leading-tight" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 800, fontSize: '3.5rem', lineHeight: '1.1' }}>
-                Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 sm:h-16 w-auto mx-2 sm:mx-3" /><br />
+                Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 sm:h-16 w-auto ml-1" style={{ filter: 'brightness(0) invert(1)' }} /><br />
                 Store Ratings
               </h1>
-              <h2 className="text-lg sm:text-2xl font-medium text-white mb-6 max-w-md" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600, fontSize: '1.25rem' }}>
-                Benchmark Ecommerce Stores by Google's Public Quality Signals
+              <h2 className="text-lg sm:text-2xl font-medium text-white mb-6 max-w-lg" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600, fontSize: '1.375rem' }}>
+                Compare up to five ecommerce sites in your chosen country and see what Google lists on google.com/storepages.
               </h2>
-              <p className="text-white text-sm max-w-md" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 400, fontSize: '0.875rem' }}>
-                Compare up to five store websites and pick a country. We'll show what Google lists on google.com/storepages.
-              </p>
             </div>
             
             {/* Right Column - Input Boxes */}
