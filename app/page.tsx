@@ -442,7 +442,7 @@ export default function Page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
             <div className="text-left">
-              <h1 className="text-white mb-6 leading-tight" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 800, fontSize: '2.5rem', lineHeight: '1.1' }}>
+              <h1 className="text-white mb-6 leading-tight text-4xl sm:text-6xl" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 800, lineHeight: '1.1' }}>
                 <span className="sm:whitespace-nowrap">Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 sm:h-16 w-auto ml-1" style={{ filter: 'brightness(0) invert(1)' }} /></span><br />
                 Store Ratings
               </h1>
