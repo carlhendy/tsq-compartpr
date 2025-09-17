@@ -52,24 +52,18 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const shippingRaw = afterHeader(segment, "Shipping");
   const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
   
-  // Extract shipping details - look for specific text patterns
+  // Extract shipping details - universal pattern that works for all stores
   let shippingAdditional = "";
-  if (segment.includes("Free 5-10 day delivery over $50")) {
-    shippingAdditional = "Free 5-10 day delivery over $50";
-  } else if (segment.includes("Free 3-5 day delivery")) {
-    shippingAdditional = "Free 3-5 day delivery";
-  } else if (segment.includes("Free delivery over $49")) {
-    shippingAdditional = "Free delivery over $49";
-  } else if (segment.includes("$4.95 2-4 day delivery")) {
-    shippingAdditional = "$4.95 2-4 day delivery";
+  const shippingMatch = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/div>/i);
+  if (shippingMatch && shippingMatch[1]) {
+    shippingAdditional = stripTags(shippingMatch[1]).trim();
   }
   
-  // Extract returns details - look for specific text patterns
+  // Extract returns details - universal pattern that works for all stores
   let returnsAdditional = "";
-  if (segment.includes("Free lifetime returns for most items")) {
-    returnsAdditional = "Free lifetime returns for most items";
-  } else if (segment.includes("30-day returns for most items")) {
-    returnsAdditional = "30-day returns for most items";
+  const returnsMatch = segment.match(/Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
+  if (returnsMatch && returnsMatch[1]) {
+    returnsAdditional = stripTags(returnsMatch[1]).trim();
   }
   let paymentsRaw = "";
   const payBlock = segment.match(
