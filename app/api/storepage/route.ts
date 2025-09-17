@@ -133,7 +133,16 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     website: gradeFor(segment, "Website\\s+quality")
   };
 
-  return { delivery_time, shipping_cost_free, return_window, return_cost_free, e_wallets, section_grades };
+  return { 
+    delivery_time, 
+    shipping_cost_free, 
+    shippingAdditional,
+    return_window, 
+    return_cost_free, 
+    returnsAdditional,
+    e_wallets, 
+    section_grades 
+  };
 }
 
 function extractSignalsFromHtml(html: string, domain: string) {
