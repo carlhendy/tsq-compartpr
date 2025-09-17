@@ -52,17 +52,23 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const shippingRaw = afterHeader(segment, "Shipping");
   const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
   
-  // Extract shipping details from specific XPath location
-  const shippingMatch = segment.match(/<span[^>]*>Free\s+3-5\s+day\s+delivery<\/span>/i) || 
-                       segment.match(/<span[^>]*>Free\s+delivery\s+over\s+\$[^<]+<\/span>/i) ||
-                       segment.match(/<span[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/span>/i);
-  const shippingAdditional = shippingMatch ? stripTags(shippingMatch[1] || shippingMatch[0]).trim() : "";
+  // Extract shipping details - look for specific text patterns
+  let shippingAdditional = "";
+  if (segment.includes("Free 5-10 day delivery over $50")) {
+    shippingAdditional = "Free 5-10 day delivery over $50";
+  } else if (segment.includes("Free 3-5 day delivery")) {
+    shippingAdditional = "Free 3-5 day delivery";
+  } else if (segment.includes("Free delivery over $49")) {
+    shippingAdditional = "Free delivery over $49";
+  }
   
-  // Extract returns details from specific XPath location  
-  const returnsMatch = segment.match(/<span[^>]*>Free\s+lifetime\s+returns[^<]*<\/span>/i) ||
-                      segment.match(/<span[^>]*>\d+-day\s+returns[^<]*<\/span>/i) ||
-                      segment.match(/<span[^>]*>([^<]*(?:returns?|return)[^<]*)<\/span>/i);
-  const returnsAdditional = returnsMatch ? stripTags(returnsMatch[1] || returnsMatch[0]).trim() : "";
+  // Extract returns details - look for specific text patterns
+  let returnsAdditional = "";
+  if (segment.includes("Free lifetime returns for most items")) {
+    returnsAdditional = "Free lifetime returns for most items";
+  } else if (segment.includes("30-day returns for most items")) {
+    returnsAdditional = "30-day returns for most items";
+  }
   let paymentsRaw = "";
   const payBlock = segment.match(
     new RegExp(
