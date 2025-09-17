@@ -203,14 +203,16 @@ const computeTsqScore = (signals: Signals): number => {
 const qualityTone = (grade?: string) => {
   if (!grade) return 'slate';
   const g = String(grade).toLowerCase();
-  if (g.startsWith('exception') || g.startsWith('great')) return 'green';
+  if (g.startsWith('exception')) return 'green-light';
+  if (g.startsWith('great')) return 'green';
   if (g.startsWith('good') || g.startsWith('fair')) return 'yellow';
   return 'red';
 };
 
-const badge = (label: string | number, tone: 'green'|'yellow'|'red'|'slate' = 'slate') => {
+const badge = (label: string | number, tone: 'green'|'green-light'|'yellow'|'red'|'slate' = 'slate') => {
   const toneMap: Record<string, string> = {
     green: 'bg-green-50 text-green-700 ring-green-600/20',
+    'green-light': 'bg-green-100 text-green-600 ring-green-500/20',
     yellow: 'bg-amber-50 text-amber-700 ring-amber-600/20',
     red: 'bg-rose-50 text-rose-700 ring-rose-600/20',
     slate: 'bg-slate-50 text-slate-700 ring-slate-600/20',
@@ -662,10 +664,10 @@ export default function Page() {
                        const shippingDetails = getAny(s, ['shipping_details','shippingDetails']);
                        return (
                          <td key={i} className="text-center">
-                           <div className="flex flex-col items-center gap-1">
+                           <div className="flex flex-col items-center justify-center gap-1 min-h-[60px]">
                              {shipGrade && shipGrade !== '—' ? badge(shipGrade, qualityTone(shipGrade)) : null}
                              {shippingDetails && shippingDetails !== '—' && (
-                               <div className="text-xs text-slate-600 font-medium">
+                               <div className="text-xs text-slate-600 font-medium text-center leading-tight">
                                  {shippingDetails}
                                </div>
                              )}
@@ -685,10 +687,10 @@ export default function Page() {
                        const returnDetails = getAny(s, ['return_details','returnDetails']);
                        return (
                          <td key={i} className="text-center">
-                           <div className="flex flex-col items-center gap-1">
+                           <div className="flex flex-col items-center justify-center gap-1 min-h-[60px]">
                              {returnsGrade && returnsGrade !== '—' ? badge(returnsGrade, qualityTone(returnsGrade)) : null}
                              {returnDetails && returnDetails !== '—' && (
-                               <div className="text-xs text-slate-600 font-medium">
+                               <div className="text-xs text-slate-600 font-medium text-center leading-tight">
                                  {returnDetails}
                                </div>
                              )}
