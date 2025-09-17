@@ -55,25 +55,37 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   // Extract shipping details - try multiple universal patterns
   let shippingAdditional = "";
   
-  // Pattern 1: Look in Store Insights section
-  const shippingMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/div>/i);
+  // Pattern 1: Look in Store Insights section for specific shipping details
+  const shippingMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
   if (shippingMatch1 && shippingMatch1[1]) {
-    shippingAdditional = stripTags(shippingMatch1[1]).trim();
-  }
-  
-  // Pattern 2: Look for any div containing shipping text after "Shipping" header
-  if (!shippingAdditional) {
-    const shippingMatch2 = segment.match(/Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/div>/i);
-    if (shippingMatch2 && shippingMatch2[1]) {
-      shippingAdditional = stripTags(shippingMatch2[1]).trim();
+    const text = stripTags(shippingMatch1[1]).trim();
+    // Filter out promotional text
+    if (!text.includes('Father') && !text.includes('honour') && !text.includes('campaign') && !text.includes('joke')) {
+      shippingAdditional = text;
     }
   }
   
-  // Pattern 3: Look for any span containing shipping text
+  // Pattern 2: Look for specific shipping patterns after "Shipping" header
   if (!shippingAdditional) {
-    const shippingMatch3 = segment.match(/<span[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/span>/i);
+    const shippingMatch2 = segment.match(/Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
+    if (shippingMatch2 && shippingMatch2[1]) {
+      const text = stripTags(shippingMatch2[1]).trim();
+      // Filter out promotional text
+      if (!text.includes('Father') && !text.includes('honour') && !text.includes('campaign') && !text.includes('joke')) {
+        shippingAdditional = text;
+      }
+    }
+  }
+  
+  // Pattern 3: Look for specific shipping patterns in spans
+  if (!shippingAdditional) {
+    const shippingMatch3 = segment.match(/<span[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/span>/i);
     if (shippingMatch3 && shippingMatch3[1]) {
-      shippingAdditional = stripTags(shippingMatch3[1]).trim();
+      const text = stripTags(shippingMatch3[1]).trim();
+      // Filter out promotional text
+      if (!text.includes('Father') && !text.includes('honour') && !text.includes('campaign') && !text.includes('joke')) {
+        shippingAdditional = text;
+      }
     }
   }
   
