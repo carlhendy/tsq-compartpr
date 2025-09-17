@@ -220,7 +220,7 @@ function extractSignalsFromHtml(html: string, domain: string) {
     scamadviser_score = scamadviserMatch[1];
   }
 
-  return {
+  const result = {
     tqs_badge,
     delivery_time: ins.delivery_time || "",
     shipping_cost_free: ins.shipping_cost_free || false,
@@ -236,6 +236,9 @@ function extractSignalsFromHtml(html: string, domain: string) {
     logo_url,
     store_name: store_name || domain
   };
+  
+  
+  return result;
 }
 
 export async function GET(req: NextRequest) {
