@@ -56,11 +56,11 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   let shippingAdditional = "";
   const shippingPatterns = [
     // Pattern 1: Look for shipping details after "Shipping" header
-    /<(?:div|span)[^>]*class=["'][^"']*hnGZye[^"']*["'][^>]*>\\s*Shipping\\s*<\\/(?:div|span)>[\\s\\S]{0,500}?<div[^>]*class=["'][^"']*KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>/i,
+    new RegExp(`<(?:div|span)[^>]*class=["'][^"']*hnGZye[^"']*["'][^>]*>\\s*Shipping\\s*</(?:div|span)>[\\s\\S]{0,500}?<div[^>]*class=["'][^"']*KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)</div>`, "i"),
     // Pattern 2: Look for "Free delivery over $X" pattern
-    /(Free\\s+delivery\\s+over\\s+\\$\\d+)/i,
+    /(Free\s+delivery\s+over\s+\$\d+)/i,
     // Pattern 3: Look for shipping details in Store Insights
-    /Store\\s+insights[\\s\\S]{0,1000}?Shipping[\\s\\S]{0,200}?([^<]+(?:delivery|shipping)[^<]+)/i
+    /Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,200}?([^<]+(?:delivery|shipping)[^<]+)/i
   ];
   
   for (const pattern of shippingPatterns) {
@@ -75,11 +75,11 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   let returnsAdditional = "";
   const returnsPatterns = [
     // Pattern 1: Look for returns details after "Returns" header
-    /<(?:div|span)[^>]*class=["'][^"']*hnGZye[^"']*["'][^>]*>\\s*(?:Returns?|Return\\s+policy|Returns\\s+policy)\\s*<\\/(?:div|span)>[\\s\\S]{0,500}?<div[^>]*class=["'][^"']*KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>/i,
+    new RegExp(`<(?:div|span)[^>]*class=["'][^"']*hnGZye[^"']*["'][^>]*>\\s*(?:Returns?|Return\\s+policy|Returns\\s+policy)\\s*</(?:div|span)>[\\s\\S]{0,500}?<div[^>]*class=["'][^"']*KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)</div>`, "i"),
     // Pattern 2: Look for "X-day returns" pattern
-    /(\\d+-day\\s+returns?\\s+for\\s+most\\s+items?)/i,
+    /(\d+-day\s+returns?\s+for\s+most\s+items?)/i,
     // Pattern 3: Look for returns details in Store Insights
-    /Store\\s+insights[\\s\\S]{0,1000}?Returns[\\s\\S]{0,200}?([^<]+(?:returns?|return)[^<]+)/i
+    /Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,200}?([^<]+(?:returns?|return)[^<]+)/i
   ];
   
   for (const pattern of returnsPatterns) {
