@@ -60,6 +60,8 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     shippingAdditional = "Free 3-5 day delivery";
   } else if (segment.includes("Free delivery over $49")) {
     shippingAdditional = "Free delivery over $49";
+  } else if (segment.includes("$4.95 2-4 day delivery")) {
+    shippingAdditional = "$4.95 2-4 day delivery";
   }
   
   // Extract returns details - look for specific text patterns
