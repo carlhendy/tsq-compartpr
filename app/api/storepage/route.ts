@@ -52,18 +52,54 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const shippingRaw = afterHeader(segment, "Shipping");
   const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
   
-  // Extract shipping details - universal pattern that works for all stores
+  // Extract shipping details - try multiple universal patterns
   let shippingAdditional = "";
-  const shippingMatch = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/div>/i);
-  if (shippingMatch && shippingMatch[1]) {
-    shippingAdditional = stripTags(shippingMatch[1]).trim();
+  
+  // Pattern 1: Look in Store Insights section
+  const shippingMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/div>/i);
+  if (shippingMatch1 && shippingMatch1[1]) {
+    shippingAdditional = stripTags(shippingMatch1[1]).trim();
   }
   
-  // Extract returns details - universal pattern that works for all stores
+  // Pattern 2: Look for any div containing shipping text after "Shipping" header
+  if (!shippingAdditional) {
+    const shippingMatch2 = segment.match(/Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/div>/i);
+    if (shippingMatch2 && shippingMatch2[1]) {
+      shippingAdditional = stripTags(shippingMatch2[1]).trim();
+    }
+  }
+  
+  // Pattern 3: Look for any span containing shipping text
+  if (!shippingAdditional) {
+    const shippingMatch3 = segment.match(/<span[^>]*>([^<]*(?:delivery|shipping)[^<]*)<\/span>/i);
+    if (shippingMatch3 && shippingMatch3[1]) {
+      shippingAdditional = stripTags(shippingMatch3[1]).trim();
+    }
+  }
+  
+  // Extract returns details - try multiple universal patterns
   let returnsAdditional = "";
-  const returnsMatch = segment.match(/Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
-  if (returnsMatch && returnsMatch[1]) {
-    returnsAdditional = stripTags(returnsMatch[1]).trim();
+  
+  // Pattern 1: Look in Store Insights section
+  const returnsMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
+  if (returnsMatch1 && returnsMatch1[1]) {
+    returnsAdditional = stripTags(returnsMatch1[1]).trim();
+  }
+  
+  // Pattern 2: Look for any div containing returns text after "Returns" header
+  if (!returnsAdditional) {
+    const returnsMatch2 = segment.match(/Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
+    if (returnsMatch2 && returnsMatch2[1]) {
+      returnsAdditional = stripTags(returnsMatch2[1]).trim();
+    }
+  }
+  
+  // Pattern 3: Look for any span containing returns text
+  if (!returnsAdditional) {
+    const returnsMatch3 = segment.match(/<span[^>]*>([^<]*(?:returns?|return)[^<]*)<\/span>/i);
+    if (returnsMatch3 && returnsMatch3[1]) {
+      returnsAdditional = stripTags(returnsMatch3[1]).trim();
+    }
   }
   let paymentsRaw = "";
   const payBlock = segment.match(
