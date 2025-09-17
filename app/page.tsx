@@ -601,7 +601,7 @@ export default function Page() {
                        <span className="truncate max-w-[120px] text-center">
                          {s?.store_name || row.domain}
                        </span>
-                       <span className="text-black">↗</span>
+                       <span className="text-black text-xs">↗</span>
                      </a>
                              </div>
                            </div>
