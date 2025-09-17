@@ -659,6 +659,7 @@ export default function Page() {
                        const s = row.signals;
                        const shipGrade = getAny(s, ['section_grades.shipping','shipping_quality','shippingGrade']);
                        const delivery = getAny(s, ['delivery_time','deliveryTime','delivery_estimate']);
+                       const shippingDetails = getAny(s, ['shipping_details','shippingDetails']);
                        return (
                          <td key={i} className="text-center">
                            <div className="flex flex-col items-center gap-1">
@@ -666,6 +667,11 @@ export default function Page() {
                              {delivery && delivery !== '—' && (
                                <div className="text-xs text-slate-500 tabular-nums">
                                  {delivery}
+                               </div>
+                             )}
+                             {shippingDetails && shippingDetails !== '—' && (
+                               <div className="text-xs text-slate-600 font-medium">
+                                 {shippingDetails}
                                </div>
                              )}
                            </div>
@@ -681,6 +687,7 @@ export default function Page() {
                        const s = row.signals;
                        const returnsGrade = getAny(s, ['section_grades.returns','returns_quality','returnsGrade']);
                        const returnWindow = getAny(s, ['return_window','returnWindow','returns_window']);
+                       const returnDetails = getAny(s, ['return_details','returnDetails']);
                        return (
                          <td key={i} className="text-center">
                            <div className="flex flex-col items-center gap-1">
@@ -688,6 +695,11 @@ export default function Page() {
                              {returnWindow && returnWindow !== '—' && (
                                <div className="text-xs text-slate-500 tabular-nums">
                                  {returnWindow}
+                               </div>
+                             )}
+                             {returnDetails && returnDetails !== '—' && (
+                               <div className="text-xs text-slate-600 font-medium">
+                                 {returnDetails}
                                </div>
                              )}
                            </div>
