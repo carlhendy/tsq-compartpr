@@ -664,11 +664,6 @@ export default function Page() {
                          <td key={i} className="text-center">
                            <div className="flex flex-col items-center gap-1">
                              {shipGrade && shipGrade !== '—' ? badge(shipGrade, qualityTone(shipGrade)) : null}
-                             {delivery && delivery !== '—' && (
-                               <div className="text-xs text-slate-500 tabular-nums">
-                                 {delivery}
-                               </div>
-                             )}
                              {shippingDetails && shippingDetails !== '—' && (
                                <div className="text-xs text-slate-600 font-medium">
                                  {shippingDetails}
@@ -692,11 +687,6 @@ export default function Page() {
                          <td key={i} className="text-center">
                            <div className="flex flex-col items-center gap-1">
                              {returnsGrade && returnsGrade !== '—' ? badge(returnsGrade, qualityTone(returnsGrade)) : null}
-                             {returnWindow && returnWindow !== '—' && (
-                               <div className="text-xs text-slate-500 tabular-nums">
-                                 {returnWindow}
-                               </div>
-                             )}
                              {returnDetails && returnDetails !== '—' && (
                                <div className="text-xs text-slate-600 font-medium">
                                  {returnDetails}
