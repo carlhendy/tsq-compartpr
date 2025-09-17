@@ -51,6 +51,24 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
 
   const shippingRaw = afterHeader(segment, "Shipping");
   const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
+  
+  // Extract additional shipping details from KtbsVc-ij8cu-fmcmS class
+  const shippingDetails = segment.match(
+    new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*Shipping\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<div[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>`,
+      "i"
+    )
+  );
+  const shippingAdditional = shippingDetails ? stripTags(shippingDetails[1]) : "";
+  
+  // Extract additional returns details from KtbsVc-ij8cu-fmcmS class
+  const returnsDetails = segment.match(
+    new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Returns?|Return\\s+policy|Returns\\s+policy)\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<div[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>`,
+      "i"
+    )
+  );
+  const returnsAdditional = returnsDetails ? stripTags(returnsDetails[1]) : "";
   let paymentsRaw = "";
   const payBlock = segment.match(
     new RegExp(
@@ -197,8 +215,10 @@ function extractSignalsFromHtml(html: string, domain: string) {
     tqs_badge,
     delivery_time: ins.delivery_time || "",
     shipping_cost_free: ins.shipping_cost_free || false,
+    shipping_details: ins.shippingAdditional || "",
     return_window: ins.return_window || "",
     return_cost_free: ins.return_cost_free || false,
+    return_details: ins.returnsAdditional || "",
     e_wallets: ins.e_wallets || "",
     store_rating: store_rating || "",
     review_count: review_count || "",
