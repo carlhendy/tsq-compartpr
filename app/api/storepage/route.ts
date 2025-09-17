@@ -52,23 +52,43 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const shippingRaw = afterHeader(segment, "Shipping");
   const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
   
-  // Extract additional shipping details from KtbsVc-ij8cu-fmcmS class
-  const shippingDetails = segment.match(
-    new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*Shipping\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<div[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>`,
-      "i"
-    )
-  );
-  const shippingAdditional = shippingDetails ? stripTags(shippingDetails[1]) : "";
+  // Extract additional shipping details - try multiple patterns
+  let shippingAdditional = "";
+  const shippingPatterns = [
+    // Pattern 1: Look for shipping details after "Shipping" header
+    /<(?:div|span)[^>]*class=["'][^"']*hnGZye[^"']*["'][^>]*>\\s*Shipping\\s*<\\/(?:div|span)>[\\s\\S]{0,500}?<div[^>]*class=["'][^"']*KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>/i,
+    // Pattern 2: Look for "Free delivery over $X" pattern
+    /(Free\\s+delivery\\s+over\\s+\\$\\d+)/i,
+    // Pattern 3: Look for shipping details in Store Insights
+    /Store\\s+insights[\\s\\S]{0,1000}?Shipping[\\s\\S]{0,200}?([^<]+(?:delivery|shipping)[^<]+)/i
+  ];
   
-  // Extract additional returns details from KtbsVc-ij8cu-fmcmS class
-  const returnsDetails = segment.match(
-    new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Returns?|Return\\s+policy|Returns\\s+policy)\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<div[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>`,
-      "i"
-    )
-  );
-  const returnsAdditional = returnsDetails ? stripTags(returnsDetails[1]) : "";
+  for (const pattern of shippingPatterns) {
+    const match = segment.match(pattern);
+    if (match && match[1]) {
+      shippingAdditional = stripTags(match[1]).trim();
+      break;
+    }
+  }
+  
+  // Extract additional returns details - try multiple patterns
+  let returnsAdditional = "";
+  const returnsPatterns = [
+    // Pattern 1: Look for returns details after "Returns" header
+    /<(?:div|span)[^>]*class=["'][^"']*hnGZye[^"']*["'][^>]*>\\s*(?:Returns?|Return\\s+policy|Returns\\s+policy)\\s*<\\/(?:div|span)>[\\s\\S]{0,500}?<div[^>]*class=["'][^"']*KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>/i,
+    // Pattern 2: Look for "X-day returns" pattern
+    /(\\d+-day\\s+returns?\\s+for\\s+most\\s+items?)/i,
+    // Pattern 3: Look for returns details in Store Insights
+    /Store\\s+insights[\\s\\S]{0,1000}?Returns[\\s\\S]{0,200}?([^<]+(?:returns?|return)[^<]+)/i
+  ];
+  
+  for (const pattern of returnsPatterns) {
+    const match = segment.match(pattern);
+    if (match && match[1]) {
+      returnsAdditional = stripTags(match[1]).trim();
+      break;
+    }
+  }
   let paymentsRaw = "";
   const payBlock = segment.match(
     new RegExp(
