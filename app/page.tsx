@@ -83,23 +83,19 @@ const DEFAULTS = ['asos.com','boohoo.com','next.co.uk','riverisland.com','newloo
 type CategoryKey = 'Fashion' | 'Cosmetics' | 'Sports & Fitness' | 'Furniture' | 'Electronics' | 'Home & Garden';
 type CountryKey = 'UK' | 'US' | 'AU';
 
-// Helper function to get favicon URL using a proxy service
+// Helper function to get high-quality square logos
 const getFaviconUrl = (domain: string) => {
-  // Use Google's favicon service which is reliable and cached
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+  // Special case: use toolstation.nl logo for toolstation.com
+  if (domain === 'toolstation.com') {
+    return `https://logo.clearbit.com/toolstation.nl`;
+  }
+  // Use Clearbit Logo API for high-quality square logos
+  return `https://logo.clearbit.com/${domain}`;
 };
 
-// Special handling for domains that might have favicon issues
+// Special handling for domains that might have logo issues
 const getFaviconUrlWithFallback = (domain: string) => {
-  // For specific domains that might have issues, try multiple approaches
-  if (domain === 'chemistwarehouse.com.au') {
-    // Try with www prefix first
-    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
-  }
-  if (domain === 'bhphotovideo.com') {
-    // Try with www prefix for B&H
-    return `https://www.google.com/s2/favicons?domain=www.${domain}&sz=32&t=1`;
-  }
+  // Try Clearbit first, then fallback to Google favicons
   return getFaviconUrl(domain);
 };
 
@@ -232,30 +228,24 @@ const validationUrl = (domain: string, country: string) => {
 // Component to show brand favicons for a category
 const CategoryFavicons = ({ brands }: { brands: string[] }) => {
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div className="flex items-center gap-5 flex-wrap justify-center">
       {brands.map((brand, index) => (
-        <div key={brand} className="h-6 w-6 rounded-sm overflow-hidden bg-white">
+        <div key={brand} className="h-24 w-24 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center">
           <img
             src={getFaviconUrlWithFallback(brand)}
-            alt=""
-            className="h-full w-full object-cover"
+            alt={brand}
+            className="h-full w-full object-contain"
+            onLoad={() => console.log(`Logo loaded for ${brand}`)}
             onError={(e) => {
               const img = e.target as HTMLImageElement;
-              // Try alternative favicon services as fallback
-              if (img.src.includes('google.com/s2/favicons')) {
-                // For Chemist Warehouse, try different domain formats
-                if (brand === 'chemistwarehouse.com.au') {
-                  img.src = `https://www.google.com/s2/favicons?domain=${brand}&sz=32&t=2`;
-                } else {
-                  // Try DuckDuckGo favicon service for other domains
-                  img.src = `https://icons.duckduckgo.com/ip3/${brand}.ico`;
-                }
-              } else if (img.src.includes('duckduckgo.com') || (brand === 'chemistwarehouse.com.au' && img.src.includes('google.com/s2/favicons'))) {
-                // Try favicon.io service
-                img.src = `https://favicons.githubusercontent.com/${brand}`;
-              } else if (brand === 'chemistwarehouse.com.au') {
-                // Special case for Chemist Warehouse - try direct favicon
-                img.src = `https://${brand}/favicon.ico`;
+              console.log(`Logo failed for ${brand}, trying fallback`);
+              // Fallback chain: Clearbit -> Google Favicons -> DuckDuckGo -> Generic
+              if (img.src.includes('logo.clearbit.com')) {
+                // Try Google favicons as fallback
+                img.src = `https://www.google.com/s2/favicons?domain=${brand}&sz=64`;
+              } else if (img.src.includes('google.com/s2/favicons')) {
+                // Try DuckDuckGo as fallback
+                img.src = `https://icons.duckduckgo.com/ip3/${brand}.ico`;
               } else {
                 // Final fallback to generic icon
                 img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMTAgNUwxNSAxMEwxMCAxNUw1IDEwTDEwIDVaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';
@@ -286,6 +276,7 @@ export default function Page() {
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq'>('signals');
+  const [selectedCountry, setSelectedCountry] = useState<CountryKey>('UK');
   const resultsTableRef = useRef<HTMLDivElement>(null);
 
   const updateDomain = (i: number, v: string) => {
@@ -444,8 +435,8 @@ export default function Page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text and Headers */}
             <div className="text-left">
-              <h1 className="text-white mb-6 leading-tight text-4xl sm:text-6xl" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 800, lineHeight: '1.1' }}>
-                <span className="sm:whitespace-nowrap">Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-12 sm:h-16 w-auto ml-1" style={{ filter: 'brightness(0) invert(1)' }} /></span><br />
+              <h1 className="text-white mb-6 leading-tight text-5xl sm:text-7xl" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 800, lineHeight: '1.1' }}>
+                <span className="sm:whitespace-nowrap">Compare <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="inline-block h-16 sm:h-20 w-auto ml-2" style={{ filter: 'brightness(0) invert(1)' }} /></span><br />
                 Store Ratings
               </h1>
               <h2 className="text-base sm:text-xl font-medium text-white mb-6 max-w-md" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600, fontSize: '1.125rem', lineHeight: '1.4' }}>
@@ -801,60 +792,78 @@ export default function Page() {
 
       {/* Quick Start Section */}
       <section className="w-full">
-        <div className="bg-gray-100 pt-6 pb-8 px-6">
+        <div className="bg-gray-100 pt-8 pb-12 px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-lg font-semibold text-black text-center mb-6" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Quick Start</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* UK Categories */}
-            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United Kingdom</legend>
-              <div className="p-4 space-y-2">
-                {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
-                  <button
-                    key={`UK-${category}`}
-                    onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
-                  >
-                    <span>{category}</span>
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
-                  </button>
-                ))}
+            
+            {/* Horizontal Layout */}
+            <div className="flex items-center justify-center gap-6">
+              {/* Left Column - Examples */}
+              <div className="flex items-center">
+                <span className="text-black font-medium">Try These Examples:</span>
               </div>
-            </fieldset>
 
-            {/* US Categories */}
-            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United States</legend>
-              <div className="p-4 space-y-2">
-                {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
-                  <button
-                    key={`US-${category}`}
-                    onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
-                  >
-                    <span>{category}</span>
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
-                  </button>
-                ))}
+              {/* Middle Column - Flags (Vertical) */}
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => setSelectedCountry('UK')}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full border ${
+                    selectedCountry === 'UK' 
+                      ? 'bg-white text-black border-gray-300' 
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-transparent'
+                  }`}
+                >
+                  <span className="text-2xl">🇬🇧</span>
+                  <span className="font-medium">UK</span>
+                </button>
+                <button
+                  onClick={() => setSelectedCountry('US')}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full border ${
+                    selectedCountry === 'US' 
+                      ? 'bg-white text-black border-gray-300' 
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-transparent'
+                  }`}
+                >
+                  <span className="text-2xl">🇺🇸</span>
+                  <span className="font-medium">USA</span>
+                </button>
+                <button
+                  onClick={() => setSelectedCountry('AU')}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full border ${
+                    selectedCountry === 'AU' 
+                      ? 'bg-white text-black border-gray-300' 
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border-transparent'
+                  }`}
+                >
+                  <span className="text-2xl">🇦🇺</span>
+                  <span className="font-medium">AU</span>
+                </button>
               </div>
-            </fieldset>
 
-            {/* AU Categories */}
-            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Australia</legend>
-              <div className="p-4 space-y-2">
-                {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
-                  <button
-                    key={`AU-${category}`}
-                    onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
-                  >
-                    <span>{category}</span>
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
-                  </button>
-                ))}
+              {/* Logos Column - Ensure single row */}
+              <div className="flex items-center flex-shrink-0">
+                <CategoryFavicons 
+                  brands={
+                    selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
+                    selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                    QUICK_START_CATEGORIES.AU['Electronics']
+                  } 
+                />
               </div>
-            </fieldset>
+
+              {/* Right Column - Compare Button */}
+              <div className="flex items-center flex-shrink-0">
+                <button
+                  onClick={() => handleQuickStart(
+                    selectedCountry, 
+                    selectedCountry === 'UK' ? 'Home & Garden' :
+                    selectedCountry === 'US' ? 'Fashion' : 'Electronics'
+                  )}
+                  className="h-12 px-6 text-white bg-black text-sm font-medium hover:bg-gray-800 transition-colors rounded whitespace-nowrap"
+                  style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600 }}
+                >
+                  → Compare
+                </button>
+              </div>
             </div>
           </div>
         </div>
