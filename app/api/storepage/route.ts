@@ -67,6 +67,16 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     return ""; // If nothing found, return empty
   }
 
+  // Fallback regex function for when XPath doesn't work
+  function afterHeader(seg: string, headerPattern: string) {
+    const re = new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<(?:(?:div)|(?:span))[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|span)>`,
+      "i"
+    );
+    const m = seg.match(re);
+    return m ? stripTags(m[1]) : "";
+  }
+
 
   // Convert XPath to CSS selector (simplified version)
   function convertXPathToCSS(xpath: string): string {
@@ -111,10 +121,23 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     '//span[contains(text(), "Payment")]/following-sibling::span[1]'
   ];
 
-  // Extract using ONLY XPath - no regex fallbacks
-  const shippingRaw = extractWithXPath(segment, shippingXPaths);
-  const returnsRaw = extractWithXPath(segment, returnsXPaths);
-  const paymentsRaw = extractWithXPath(segment, paymentsXPaths);
+  // Extract using XPath first, then fallback to regex if needed
+  const shippingRaw = extractWithXPath(segment, shippingXPaths) || afterHeader(segment, "Shipping");
+  const returnsRaw = extractWithXPath(segment, returnsXPaths) || afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
+  
+  // For payments, use the original regex approach that was working
+  let paymentsRaw = "";
+  const payBlock = segment.match(
+    new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Payment\\s+options|Payment\\s+methods)\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<span[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`,
+      "i"
+    )
+  );
+  if (payBlock) {
+    const expanded = payBlock[1].match(/<span[^>]*class=["']NBMhyb["'][^>]*>([\s\S]*?)<\/span>/i);
+    const primary  = payBlock[1].match(/<span[^>]*jsname=["']u5tB8["'][^>]*>([\s\S]*?)<\/span>/i);
+    paymentsRaw = stripTags((expanded && expanded[1]) || (primary && primary[1]) || payBlock[1]);
+  }
   
 
   // Extract shipping details using ONLY XPath - no regex fallbacks
