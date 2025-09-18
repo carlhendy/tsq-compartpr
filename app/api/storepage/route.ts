@@ -43,7 +43,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const segment = scopeHint ? html.slice(scopeHint.start, scopeHint.end) : html;
 
   // New XPath-based extraction using cheerio
-  function extractWithXPath(html: string, xpathSelectors: string[], fieldType: string): string {
+  function extractWithXPath(html: string, xpathSelectors: string[]): string {
     const $ = cheerio.load(html);
     
     for (const selector of xpathSelectors) {
@@ -55,10 +55,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
         if (element.length > 0) {
           const text = element.text().trim();
           if (text) {
-            // Only return text that looks like legitimate shipping/returns/payments info
-            if (isLegitimateFieldContent(text, fieldType)) {
-              return text;
-            }
+            return text; // Just return whatever we find
           }
         }
       } catch (e) {
@@ -70,62 +67,6 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     return ""; // If nothing found, return empty
   }
 
-  // Check if content is legitimate for the specific field type
-  function isLegitimateFieldContent(text: string, fieldType: string): boolean {
-    const lowerText = text.toLowerCase();
-    
-    if (fieldType === 'shipping') {
-      // Only accept text that contains shipping-related patterns
-      const shippingPatterns = [
-        /\d+\s*day/i,                    // "1 day", "2 days", "0-2 days"
-        /\d+\s*hour/i,                   // "24 hour", "48 hours"
-        /£\d+/i,                         // "£5", "£10"
-        /\$\d+/i,                        // "$5", "$10"
-        /free\s+delivery/i,              // "free delivery"
-        /standard\s+delivery/i,          // "standard delivery"
-        /express\s+delivery/i,           // "express delivery"
-        /next\s+day/i,                   // "next day"
-        /same\s+day/i,                   // "same day"
-        /\d+\s*week/i,                   // "1 week", "2 weeks"
-        /delivery/i,                     // "delivery"
-        /shipping/i                      // "shipping"
-      ];
-      
-      return shippingPatterns.some(pattern => pattern.test(text));
-    }
-    
-    if (fieldType === 'returns') {
-      // Only accept text that contains returns-related patterns
-      const returnsPatterns = [
-        /\d+\s*day\s*return/i,           // "30 day return"
-        /return\s+window/i,              // "return window"
-        /return\s+policy/i,              // "return policy"
-        /return\s+experience/i,          // "return experience"
-        /no\s+return/i,                  // "no return"
-        /returns?/i                      // "returns", "return"
-      ];
-      
-      return returnsPatterns.some(pattern => pattern.test(text));
-    }
-    
-    if (fieldType === 'payments') {
-      // Only accept text that contains payment-related patterns
-      const paymentPatterns = [
-        /apple\s+pay/i,                  // "Apple Pay"
-        /google\s+pay/i,                 // "Google Pay"
-        /paypal/i,                       // "PayPal"
-        /afterpay/i,                     // "Afterpay"
-        /klarna/i,                       // "Klarna"
-        /credit\s+card/i,                // "credit card"
-        /debit\s+card/i,                 // "debit card"
-        /payment/i                       // "payment"
-      ];
-      
-      return paymentPatterns.some(pattern => pattern.test(text));
-    }
-    
-    return false;
-  }
 
   // Convert XPath to CSS selector (simplified version)
   function convertXPathToCSS(xpath: string): string {
@@ -145,14 +86,16 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       .trim();
   }
 
-  // XPath selectors for shipping information - ONLY target specific shipping elements
+  // XPath selectors for shipping information
   const shippingXPaths = [
     '//*[@id="yDmH0d"]/c-wiz/div/div[2]/c-wiz/section[3]/c-wiz/div[3]/div/span[1]/div[2]',
     '//div[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
-    '//span[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]'
+    '//span[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
+    '//div[contains(text(), "Shipping")]/following-sibling::div[1]',
+    '//span[contains(text(), "Shipping")]/following-sibling::span[1]'
   ];
 
-  // XPath selectors for returns information - ONLY use XPath, no regex fallbacks
+  // XPath selectors for returns information
   const returnsXPaths = [
     '//div[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
     '//span[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
@@ -160,7 +103,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     '//span[contains(text(), "Return")]/following-sibling::span[1]'
   ];
 
-  // XPath selectors for payments information - ONLY use XPath, no regex fallbacks
+  // XPath selectors for payments information
   const paymentsXPaths = [
     '//div[contains(@class, "hnGZye") and contains(text(), "Payment")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
     '//span[contains(@class, "hnGZye") and contains(text(), "Payment")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
@@ -169,9 +112,9 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   ];
 
   // Extract using ONLY XPath - no regex fallbacks
-  const shippingRaw = extractWithXPath(segment, shippingXPaths, 'shipping');
-  const returnsRaw = extractWithXPath(segment, returnsXPaths, 'returns');
-  const paymentsRaw = extractWithXPath(segment, paymentsXPaths, 'payments');
+  const shippingRaw = extractWithXPath(segment, shippingXPaths);
+  const returnsRaw = extractWithXPath(segment, returnsXPaths);
+  const paymentsRaw = extractWithXPath(segment, paymentsXPaths);
   
 
   // Extract shipping details using ONLY XPath - no regex fallbacks
