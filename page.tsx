@@ -284,6 +284,7 @@ export default function Page() {
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq'>('signals');
+  const [selectedCountry, setSelectedCountry] = useState<CountryKey>('UK');
   const resultsTableRef = useRef<HTMLDivElement>(null);
 
   const updateDomain = (i: number, v: string) => {
@@ -731,60 +732,89 @@ export default function Page() {
 
       {/* Quick Start Section */}
       <section className="w-full">
-        <div className="bg-gray-100 pt-6 pb-8 px-6">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="text-lg font-semibold text-black text-center mb-6" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Quick Start</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* UK Categories */}
-            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United Kingdom</legend>
-              <div className="p-4 space-y-2">
-                {Object.keys(QUICK_START_CATEGORIES.UK).map((category) => (
-                  <button
-                    key={`UK-${category}`}
-                    onClick={() => handleQuickStart('UK', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
-                  >
-                    <span>{category}</span>
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.UK[category as CategoryKey]} />
-                  </button>
-                ))}
+        <div className="bg-gray-100 pt-8 pb-12 px-6">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="text-2xl font-semibold text-black text-center mb-8" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Quick Start</h2>
+            
+            {/* Country Flag Tabs */}
+            <div className="flex justify-center mb-8">
+              <div className="flex bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <button
+                  onClick={() => setSelectedCountry('UK')}
+                  className={`flex items-center gap-3 px-6 py-4 transition-colors ${
+                    selectedCountry === 'UK' 
+                      ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="text-2xl">🇬🇧</span>
+                  <span className="font-medium">UK</span>
+                </button>
+                <button
+                  onClick={() => setSelectedCountry('US')}
+                  className={`flex items-center gap-3 px-6 py-4 transition-colors ${
+                    selectedCountry === 'US' 
+                      ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="text-2xl">🇺🇸</span>
+                  <span className="font-medium">USA</span>
+                </button>
+                <button
+                  onClick={() => setSelectedCountry('AU')}
+                  className={`flex items-center gap-3 px-6 py-4 transition-colors ${
+                    selectedCountry === 'AU' 
+                      ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="text-2xl">🇦🇺</span>
+                  <span className="font-medium">AU</span>
+                </button>
               </div>
-            </fieldset>
+            </div>
 
-            {/* US Categories */}
-            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>United States</legend>
-              <div className="p-4 space-y-2">
-                {Object.keys(QUICK_START_CATEGORIES.US).map((category) => (
+            {/* Selected Country Example */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="p-8">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600 }}>
+                    {selectedCountry === 'UK' && 'Home & Garden'}
+                    {selectedCountry === 'US' && 'Fashion'}
+                    {selectedCountry === 'AU' && 'Electronics'}
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {selectedCountry === 'UK' && 'Compare UK home improvement and garden retailers'}
+                    {selectedCountry === 'US' && 'Compare US fashion and clothing retailers'}
+                    {selectedCountry === 'AU' && 'Compare Australian electronics and tech retailers'}
+                  </p>
+                </div>
+                
+                <div className="flex justify-center mb-6">
+                  <CategoryFavicons 
+                    brands={
+                      selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
+                      selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                      QUICK_START_CATEGORIES.AU['Electronics']
+                    } 
+                  />
+                </div>
+                
+                <div className="text-center">
                   <button
-                    key={`US-${category}`}
-                    onClick={() => handleQuickStart('US', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
+                    onClick={() => handleQuickStart(
+                      selectedCountry, 
+                      selectedCountry === 'UK' ? 'Home & Garden' :
+                      selectedCountry === 'US' ? 'Fashion' : 'Electronics'
+                    )}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-md hover:shadow-lg"
+                    style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600 }}
                   >
-                    <span>{category}</span>
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.US[category as CategoryKey]} />
+                    Compare {selectedCountry === 'UK' ? 'Home & Garden' : selectedCountry === 'US' ? 'Fashion' : 'Electronics'} Stores
                   </button>
-                ))}
+                </div>
               </div>
-            </fieldset>
-
-            {/* AU Categories */}
-            <fieldset className="border border-gray-300 bg-white rounded-lg shadow-sm relative">
-              <legend className="text-lg font-medium text-black px-2 mx-auto" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 700 }}>Australia</legend>
-              <div className="p-4 space-y-2">
-                {Object.keys(QUICK_START_CATEGORIES.AU).map((category) => (
-                  <button
-                    key={`AU-${category}`}
-                    onClick={() => handleQuickStart('AU', category as CategoryKey)}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-white text-base font-medium text-black hover:bg-gray-100 transition-colors"
-                  >
-                    <span>{category}</span>
-                    <CategoryFavicons brands={QUICK_START_CATEGORIES.AU[category as CategoryKey]} />
-                  </button>
-                ))}
-              </div>
-            </fieldset>
             </div>
           </div>
         </div>
