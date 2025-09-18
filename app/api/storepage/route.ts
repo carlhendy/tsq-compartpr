@@ -4,6 +4,8 @@ export const preferredRegion = ["iad1", "sfo1"];
 
 import { NextRequest } from "next/server";
 
+import * as cheerio from 'cheerio';
+
 function esc(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 function decodeHtmlEntities(str: string) {
   return str
@@ -40,6 +42,70 @@ function win(s: string, i: number, radius: number) { const a = Math.max(0, i - r
 function extractStructuredInsights(html: string, scopeHint?: { start: number; end: number }) {
   const segment = scopeHint ? html.slice(scopeHint.start, scopeHint.end) : html;
 
+  // New XPath-based extraction using cheerio
+  function extractWithXPath(html: string, xpathSelectors: string[]): string {
+    const $ = cheerio.load(html);
+    
+    for (const selector of xpathSelectors) {
+      try {
+        // Convert XPath-like selectors to CSS selectors for cheerio
+        const cssSelector = convertXPathToCSS(selector);
+        const element = $(cssSelector);
+        
+        if (element.length > 0) {
+          const text = element.text().trim();
+          if (text && !isPromotionalContent(text)) {
+            return text;
+          }
+        }
+      } catch (e) {
+        // If selector fails, try next one
+        continue;
+      }
+    }
+    
+    return "";
+  }
+
+  // Convert XPath to CSS selector (simplified version)
+  function convertXPathToCSS(xpath: string): string {
+    // Handle the specific XPath pattern you provided
+    if (xpath.includes('//*[@id="yDmH0d"]')) {
+      return '#yDmH0d c-wiz div div:nth-child(2) c-wiz section:nth-child(3) c-wiz div:nth-child(3) div span:nth-child(1) div:nth-child(2)';
+    }
+    
+    // Convert common XPath patterns to CSS
+    return xpath
+      .replace(/\/\//g, ' ')  // // becomes space
+      .replace(/\[@id="([^"]+)"\]/g, '#$1')  // [@id="x"] becomes #x
+      .replace(/\[@class="([^"]+)"\]/g, '.$1')  // [@class="x"] becomes .x
+      .replace(/\[(\d+)\]/g, ':nth-child($1)')  // [1] becomes :nth-child(1)
+      .replace(/\//g, ' > ')  // / becomes >
+      .replace(/\s+/g, ' ')   // normalize spaces
+      .trim();
+  }
+
+  // XPath selectors for shipping information
+  const shippingXPaths = [
+    '//*[@id="yDmH0d"]/c-wiz/div/div[2]/c-wiz/section[3]/c-wiz/div[3]/div/span[1]/div[2]',
+    '//div[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
+    '//span[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
+    '//div[contains(text(), "Shipping")]/following-sibling::div[1]',
+    '//span[contains(text(), "Shipping")]/following-sibling::span[1]'
+  ];
+
+  // XPath selectors for returns information  
+  const returnsXPaths = [
+    '//div[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
+    '//span[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
+    '//div[contains(text(), "Return")]/following-sibling::div[1]',
+    '//span[contains(text(), "Return")]/following-sibling::span[1]'
+  ];
+
+  const shippingRaw = extractWithXPath(segment, shippingXPaths);
+  const returnsRaw = extractWithXPath(segment, returnsXPaths);
+
+  // Fallback to regex if XPath doesn't find anything
   function afterHeader(seg: string, headerPattern: string) {
     const re = new RegExp(
       `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<(?:(?:div)|(?:span))[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|span)>`,
@@ -49,8 +115,9 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     return m ? stripTags(m[1]) : "";
   }
 
-  const shippingRaw = afterHeader(segment, "Shipping");
-  const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
+  // Use XPath results or fallback to regex
+  const shippingRawFallback = shippingRaw || afterHeader(segment, "Shipping");
+  const returnsRawFallback = returnsRaw || afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
   
   // Helper function to filter out promotional content
   function isPromotionalContent(text: string): boolean {
@@ -152,76 +219,82 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     return false;
   }
 
-  // Extract shipping details - try multiple universal patterns
-  let shippingAdditional = "";
+  // Extract shipping details using XPath first, then fallback to regex patterns
+  let shippingAdditional = shippingRawFallback;
   
-  // Pattern 1: Look in Store Insights section for specific shipping details
-  const shippingMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
-  if (shippingMatch1 && shippingMatch1[1]) {
-    const text = stripTags(shippingMatch1[1]).trim();
-    // Filter out promotional text using comprehensive filter
-    if (!isPromotionalContent(text)) {
-      shippingAdditional = text;
-    }
-  }
-  
-  // Pattern 2: Look for specific shipping patterns after "Shipping" header
+  // If XPath didn't find anything, try regex patterns as fallback
   if (!shippingAdditional) {
-    const shippingMatch2 = segment.match(/Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
-    if (shippingMatch2 && shippingMatch2[1]) {
-      const text = stripTags(shippingMatch2[1]).trim();
+    // Pattern 1: Look in Store Insights section for specific shipping details
+    const shippingMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
+    if (shippingMatch1 && shippingMatch1[1]) {
+      const text = stripTags(shippingMatch1[1]).trim();
       // Filter out promotional text using comprehensive filter
       if (!isPromotionalContent(text)) {
         shippingAdditional = text;
       }
     }
-  }
-  
-  // Pattern 3: Look for specific shipping patterns in spans
-  if (!shippingAdditional) {
-    const shippingMatch3 = segment.match(/<span[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/span>/i);
-    if (shippingMatch3 && shippingMatch3[1]) {
-      const text = stripTags(shippingMatch3[1]).trim();
-      // Filter out promotional text using comprehensive filter
-      if (!isPromotionalContent(text)) {
-        shippingAdditional = text;
+    
+    // Pattern 2: Look for specific shipping patterns after "Shipping" header
+    if (!shippingAdditional) {
+      const shippingMatch2 = segment.match(/Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
+      if (shippingMatch2 && shippingMatch2[1]) {
+        const text = stripTags(shippingMatch2[1]).trim();
+        // Filter out promotional text using comprehensive filter
+        if (!isPromotionalContent(text)) {
+          shippingAdditional = text;
+        }
+      }
+    }
+    
+    // Pattern 3: Look for specific shipping patterns in spans
+    if (!shippingAdditional) {
+      const shippingMatch3 = segment.match(/<span[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/span>/i);
+      if (shippingMatch3 && shippingMatch3[1]) {
+        const text = stripTags(shippingMatch3[1]).trim();
+        // Filter out promotional text using comprehensive filter
+        if (!isPromotionalContent(text)) {
+          shippingAdditional = text;
+        }
       }
     }
   }
   
-  // Extract returns details - try multiple universal patterns
-  let returnsAdditional = "";
+  // Extract returns details using XPath first, then fallback to regex patterns
+  let returnsAdditional = returnsRawFallback;
   
-  // Pattern 1: Look in Store Insights section
-  const returnsMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
-  if (returnsMatch1 && returnsMatch1[1]) {
-    const text = stripTags(returnsMatch1[1]).trim();
-    // Filter out promotional text using comprehensive filter
-    if (!isPromotionalContent(text)) {
-      returnsAdditional = text;
-    }
-  }
-  
-  // Pattern 2: Look for any div containing returns text after "Returns" header
+  // If XPath didn't find anything, try regex patterns as fallback
   if (!returnsAdditional) {
-    const returnsMatch2 = segment.match(/Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
-    if (returnsMatch2 && returnsMatch2[1]) {
-      const text = stripTags(returnsMatch2[1]).trim();
+    // Pattern 1: Look in Store Insights section
+    const returnsMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
+    if (returnsMatch1 && returnsMatch1[1]) {
+      const text = stripTags(returnsMatch1[1]).trim();
       // Filter out promotional text using comprehensive filter
       if (!isPromotionalContent(text)) {
         returnsAdditional = text;
       }
     }
-  }
-  
-  // Pattern 3: Look for any span containing returns text
-  if (!returnsAdditional) {
-    const returnsMatch3 = segment.match(/<span[^>]*>([^<]*(?:returns?|return)[^<]*)<\/span>/i);
-    if (returnsMatch3 && returnsMatch3[1]) {
-      const text = stripTags(returnsMatch3[1]).trim();
-      // Filter out promotional text using comprehensive filter
-      if (!isPromotionalContent(text)) {
-        returnsAdditional = text;
+    
+    // Pattern 2: Look for any div containing returns text after "Returns" header
+    if (!returnsAdditional) {
+      const returnsMatch2 = segment.match(/Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
+      if (returnsMatch2 && returnsMatch2[1]) {
+        const text = stripTags(returnsMatch2[1]).trim();
+        // Filter out promotional text using comprehensive filter
+        if (!isPromotionalContent(text)) {
+          returnsAdditional = text;
+        }
+      }
+    }
+    
+    // Pattern 3: Look for any span containing returns text
+    if (!returnsAdditional) {
+      const returnsMatch3 = segment.match(/<span[^>]*>([^<]*(?:returns?|return)[^<]*)<\/span>/i);
+      if (returnsMatch3 && returnsMatch3[1]) {
+        const text = stripTags(returnsMatch3[1]).trim();
+        // Filter out promotional text using comprehensive filter
+        if (!isPromotionalContent(text)) {
+          returnsAdditional = text;
+        }
       }
     }
   }
