@@ -449,7 +449,7 @@ export default function Page() {
                 Store Ratings
               </h1>
               <h2 className="text-base sm:text-xl font-medium text-white mb-6 max-w-md" style={{ fontFamily: 'Sofia Sans, sans-serif', fontWeight: 600, fontSize: '1.125rem', lineHeight: '1.4' }}>
-                Compare up to five ecommerce sites in your chosen country and see what Google lists on google.com/storepages.
+                Compare up to 5 ecommerce sites in your chosen country and see what Google lists on google.com/storepages.
               </h2>
             </div>
             
