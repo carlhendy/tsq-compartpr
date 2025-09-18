@@ -85,7 +85,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       .trim();
   }
 
-  // XPath selectors for shipping information
+  // XPath selectors for shipping information - ONLY use XPath, no regex fallbacks
   const shippingXPaths = [
     '//*[@id="yDmH0d"]/c-wiz/div/div[2]/c-wiz/section[3]/c-wiz/div[3]/div/span[1]/div[2]',
     '//div[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
@@ -94,7 +94,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     '//span[contains(text(), "Shipping")]/following-sibling::span[1]'
   ];
 
-  // XPath selectors for returns information  
+  // XPath selectors for returns information - ONLY use XPath, no regex fallbacks
   const returnsXPaths = [
     '//div[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
     '//span[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
@@ -102,22 +102,18 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     '//span[contains(text(), "Return")]/following-sibling::span[1]'
   ];
 
+  // XPath selectors for payments information - ONLY use XPath, no regex fallbacks
+  const paymentsXPaths = [
+    '//div[contains(@class, "hnGZye") and contains(text(), "Payment")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
+    '//span[contains(@class, "hnGZye") and contains(text(), "Payment")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
+    '//div[contains(text(), "Payment")]/following-sibling::div[1]',
+    '//span[contains(text(), "Payment")]/following-sibling::span[1]'
+  ];
+
+  // Extract using ONLY XPath - no regex fallbacks
   const shippingRaw = extractWithXPath(segment, shippingXPaths);
   const returnsRaw = extractWithXPath(segment, returnsXPaths);
-
-  // Fallback to regex if XPath doesn't find anything
-  function afterHeader(seg: string, headerPattern: string) {
-    const re = new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<(?:(?:div)|(?:span))[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/(?:div|span)>`,
-      "i"
-    );
-    const m = seg.match(re);
-    return m ? stripTags(m[1]) : "";
-  }
-
-  // Use XPath results or fallback to regex
-  const shippingRawFallback = shippingRaw || afterHeader(segment, "Shipping");
-  const returnsRawFallback = returnsRaw || afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
+  const paymentsRaw = extractWithXPath(segment, paymentsXPaths);
   
   // Helper function to filter out promotional content
   function isPromotionalContent(text: string): boolean {
@@ -219,139 +215,73 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     return false;
   }
 
-  // Extract shipping details using XPath first, then fallback to regex patterns
-  let shippingAdditional = shippingRawFallback;
+  // Extract shipping details using ONLY XPath - no regex fallbacks
+  let shippingAdditional = shippingRaw;
   
-  // If XPath didn't find anything, try regex patterns as fallback
-  if (!shippingAdditional) {
-    // Pattern 1: Look in Store Insights section for specific shipping details
-    const shippingMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
-    if (shippingMatch1 && shippingMatch1[1]) {
-      const text = stripTags(shippingMatch1[1]).trim();
-      // Filter out promotional text using comprehensive filter
-      if (!isPromotionalContent(text)) {
-        shippingAdditional = text;
-      }
-    }
-    
-    // Pattern 2: Look for specific shipping patterns after "Shipping" header
-    if (!shippingAdditional) {
-      const shippingMatch2 = segment.match(/Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
-      if (shippingMatch2 && shippingMatch2[1]) {
-        const text = stripTags(shippingMatch2[1]).trim();
-        // Filter out promotional text using comprehensive filter
-        if (!isPromotionalContent(text)) {
-          shippingAdditional = text;
-        }
-      }
-    }
-    
-    // Pattern 3: Look for specific shipping patterns in spans
-    if (!shippingAdditional) {
-      const shippingMatch3 = segment.match(/<span[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/span>/i);
-      if (shippingMatch3 && shippingMatch3[1]) {
-        const text = stripTags(shippingMatch3[1]).trim();
-        // Filter out promotional text using comprehensive filter
-        if (!isPromotionalContent(text)) {
-          shippingAdditional = text;
-        }
-      }
-    }
-  }
+  // Extract returns details using ONLY XPath - no regex fallbacks
+  let returnsAdditional = returnsRaw;
   
-  // Extract returns details using XPath first, then fallback to regex patterns
-  let returnsAdditional = returnsRawFallback;
-  
-  // If XPath didn't find anything, try regex patterns as fallback
-  if (!returnsAdditional) {
-    // Pattern 1: Look in Store Insights section
-    const returnsMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
-    if (returnsMatch1 && returnsMatch1[1]) {
-      const text = stripTags(returnsMatch1[1]).trim();
-      // Filter out promotional text using comprehensive filter
-      if (!isPromotionalContent(text)) {
-        returnsAdditional = text;
-      }
-    }
-    
-    // Pattern 2: Look for any div containing returns text after "Returns" header
-    if (!returnsAdditional) {
-      const returnsMatch2 = segment.match(/Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
-      if (returnsMatch2 && returnsMatch2[1]) {
-        const text = stripTags(returnsMatch2[1]).trim();
-        // Filter out promotional text using comprehensive filter
-        if (!isPromotionalContent(text)) {
-          returnsAdditional = text;
-        }
-      }
-    }
-    
-    // Pattern 3: Look for any span containing returns text
-    if (!returnsAdditional) {
-      const returnsMatch3 = segment.match(/<span[^>]*>([^<]*(?:returns?|return)[^<]*)<\/span>/i);
-      if (returnsMatch3 && returnsMatch3[1]) {
-        const text = stripTags(returnsMatch3[1]).trim();
-        // Filter out promotional text using comprehensive filter
-        if (!isPromotionalContent(text)) {
-          returnsAdditional = text;
-        }
-      }
-    }
-  }
-  let paymentsRaw = "";
-  const payBlock = segment.match(
-    new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:Payment\\s+options|Payment\\s+methods)\\s*<\\/(?:div|span)>[\\s\\S]{0,280}?<span[^>]*class=["']KtbsVc-ij8cu-fmcmS[^"']*["'][^>]*>([\\s\\S]*?)<\\/span>`,
-      "i"
-    )
-  );
-  if (payBlock) {
-    const expanded = payBlock[1].match(/<span[^>]*class=["']NBMhyb["'][^>]*>([\s\S]*?)<\/span>/i);
-    const primary  = payBlock[1].match(/<span[^>]*jsname=["']u5tB8["'][^>]*>([\s\S]*?)<\/span>/i);
-    paymentsRaw = stripTags((expanded && expanded[1]) || (primary && primary[1]) || payBlock[1]);
-  }
+  // Extract payments details using ONLY XPath - no regex fallbacks
+  // paymentsRaw is already extracted above using XPath
 
+  // XPath-based grade extraction - no regex
   function gradeFor(seg: string, headerPattern: string): string {
-    const re = new RegExp(
-      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,420}?<span[^>]*class=["']rMOWke-uDEFge\\s+hnGZye[^"']*["'][^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\\/span>`,
-      "i"
-    );
-    const m = seg.match(re);
-    return m ? stripTags(m[1]) : "";
+    const $ = cheerio.load(seg);
+    
+    // Convert header pattern to XPath-like selectors
+    const gradeSelectors = [
+      `div.hnGZye:contains("${headerPattern}") + div span.rMOWke-uDEFge.hnGZye`,
+      `span.hnGZye:contains("${headerPattern}") + span span.rMOWke-uDEFge.hnGZye`,
+      `div:contains("${headerPattern}") + div span:contains("Exceptional"), div:contains("${headerPattern}") + div span:contains("Great"), div:contains("${headerPattern}") + div span:contains("Good"), div:contains("${headerPattern}") + div span:contains("Fair"), div:contains("${headerPattern}") + div span:contains("Poor")`
+    ];
+    
+    for (const selector of gradeSelectors) {
+      const element = $(selector);
+      if (element.length > 0) {
+        const text = element.text().trim();
+        if (text && /^(Exceptional|Great|Good|Fair|Poor)$/i.test(text)) {
+          return text;
+        }
+      }
+    }
+    
+    return "";
   }
 
-  // Delivery time
-  let delivery_time = pick(
-    [shippingRaw, returnsRaw, paymentsRaw].join(" "),
-    [
-      /(?:£|\$|€)\s*\d+(?:\.\d{2})?[^a-zA-Z]{0,6}(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i,
-      /(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)\s*(?:delivery|ship|shipping)\b/i,
-      /deliver[s]?\s+in\s+(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i
-    ],
-    1
-  );
-  if (!delivery_time && /\bfree\s+delivery\b/i.test(shippingRaw)) {
-    delivery_time = "Free delivery";
+  // Extract delivery time using ONLY XPath results - no regex fallbacks
+  let delivery_time = "";
+  if (shippingRaw) {
+    // Only look in shipping-specific data, don't search elsewhere
+    const timeMatch = shippingRaw.match(/(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i);
+    if (timeMatch) {
+      delivery_time = timeMatch[1];
+    } else if (/\bfree\s+delivery\b/i.test(shippingRaw)) {
+      delivery_time = "Free delivery";
+    }
   }
 
-  const shipping_cost_free =
-    /\bfree\s+(delivery|shipping)\b/i.test(shippingRaw) ||
-    /\b(?:delivery|shipping)\s*(?:cost|price)?[:\s-]*\s*free\b/i.test(shippingRaw);
+  // Extract shipping cost info using ONLY XPath results
+  const shipping_cost_free = shippingRaw ? 
+    (/\bfree\s+(delivery|shipping)\b/i.test(shippingRaw) ||
+     /\b(?:delivery|shipping)\s*(?:cost|price)?[:\s-]*\s*free\b/i.test(shippingRaw)) : false;
 
-  const return_window = pick(
-    returnsRaw,
-    [
-      /(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)\s*returns?\b/i,
-      /returns?\s*(?:within|in)?\s*(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i,
-      /return\s*(?:window|period|policy)[:\s-]*\s*(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)/i
-    ],
-    1
-  );
-  const return_cost_free =
-    /\bfree\s+returns?\b/i.test(returnsRaw) ||
-    /\breturn\s*(?:shipping|cost)[:\s-]*\s*free\b/i.test(returnsRaw);
+  // Extract return window using ONLY XPath results
+  let return_window = "";
+  if (returnsRaw) {
+    const returnMatch = returnsRaw.match(/(\d+\s*(?:–|-|to)?\s*\d*\s*-?\s*day[s]?)\s*returns?\b/i);
+    if (returnMatch) {
+      return_window = returnMatch[1];
+    }
+  }
+  
+  // Extract return cost info using ONLY XPath results
+  const return_cost_free = returnsRaw ?
+    (/\bfree\s+returns?\b/i.test(returnsRaw) ||
+     /\breturn\s*(?:shipping|cost)[:\s-]*\s*free\b/i.test(returnsRaw)) : false;
 
-  const wallets = Array.from(new Set(Array.from((paymentsRaw || "").matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)\b/gi)).map(m => m[1])));
+  // Extract e-wallets using ONLY XPath results
+  const wallets = paymentsRaw ? 
+    Array.from(new Set(Array.from(paymentsRaw.matchAll(/\b(Apple Pay|Google Pay|Shop Pay|PayPal|Afterpay|Klarna)\b/gi)).map(m => m[1]))) : [];
   const e_wallets = wallets.join(", ");
 
   const section_grades = {
