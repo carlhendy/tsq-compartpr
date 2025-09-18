@@ -52,6 +52,51 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const shippingRaw = afterHeader(segment, "Shipping");
   const returnsRaw  = afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
   
+  // Helper function to filter out promotional content
+  function isPromotionalContent(text: string): boolean {
+    const promotionalKeywords = [
+      'event', 'campaign', 'promotion', 'sale', 'discount', 'offer', 'deal',
+      'milwaukee', 'power up', 'bonus', 'free', 'worth', 'hurry', 'ends',
+      'shop now', 'shop the range', 'totaltools', 'bunnings', 'warehouse',
+      'pressure washer', 'ozito', 'backyard clean up', 'spring', 'outdoor',
+      'bluetooth', 'speaker', 'pruning shears', 'packout', 'jobsite',
+      'australia', 'biggest', 'dealer', 'welovetools', 'totallysorted',
+      'father', 'honour', 'joke', 'celebration', 'special', 'limited time',
+      'now on', 'score instant', 'grab the', 'get a free', 'on now at'
+    ];
+    
+    const lowerText = text.toLowerCase();
+    
+    // Check for promotional keywords
+    for (const keyword of promotionalKeywords) {
+      if (lowerText.includes(keyword)) {
+        return true;
+      }
+    }
+    
+    // Check for excessive length (likely promotional content)
+    if (text.length > 200) {
+      return true;
+    }
+    
+    // Check for multiple exclamation marks (promotional style)
+    if ((text.match(/!/g) || []).length > 2) {
+      return true;
+    }
+    
+    // Check for hashtags (social media promotional content)
+    if (text.includes('#')) {
+      return true;
+    }
+    
+    // Check for URLs (promotional links)
+    if (text.includes('http') || text.includes('www.')) {
+      return true;
+    }
+    
+    return false;
+  }
+
   // Extract shipping details - try multiple universal patterns
   let shippingAdditional = "";
   
@@ -59,8 +104,8 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const shippingMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
   if (shippingMatch1 && shippingMatch1[1]) {
     const text = stripTags(shippingMatch1[1]).trim();
-    // Filter out promotional text
-    if (!text.includes('Father') && !text.includes('honour') && !text.includes('campaign') && !text.includes('joke')) {
+    // Filter out promotional text using comprehensive filter
+    if (!isPromotionalContent(text)) {
       shippingAdditional = text;
     }
   }
@@ -70,8 +115,8 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     const shippingMatch2 = segment.match(/Shipping[\s\S]{0,500}?<div[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/div>/i);
     if (shippingMatch2 && shippingMatch2[1]) {
       const text = stripTags(shippingMatch2[1]).trim();
-      // Filter out promotional text
-      if (!text.includes('Father') && !text.includes('honour') && !text.includes('campaign') && !text.includes('joke')) {
+      // Filter out promotional text using comprehensive filter
+      if (!isPromotionalContent(text)) {
         shippingAdditional = text;
       }
     }
@@ -82,8 +127,8 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     const shippingMatch3 = segment.match(/<span[^>]*>([^<]*(?:\$\d+|\d+\s*day|free\s+delivery|standard\s+delivery|express\s+delivery)[^<]*)<\/span>/i);
     if (shippingMatch3 && shippingMatch3[1]) {
       const text = stripTags(shippingMatch3[1]).trim();
-      // Filter out promotional text
-      if (!text.includes('Father') && !text.includes('honour') && !text.includes('campaign') && !text.includes('joke')) {
+      // Filter out promotional text using comprehensive filter
+      if (!isPromotionalContent(text)) {
         shippingAdditional = text;
       }
     }
@@ -95,14 +140,22 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   // Pattern 1: Look in Store Insights section
   const returnsMatch1 = segment.match(/Store\s+insights[\s\S]{0,1000}?Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
   if (returnsMatch1 && returnsMatch1[1]) {
-    returnsAdditional = stripTags(returnsMatch1[1]).trim();
+    const text = stripTags(returnsMatch1[1]).trim();
+    // Filter out promotional text using comprehensive filter
+    if (!isPromotionalContent(text)) {
+      returnsAdditional = text;
+    }
   }
   
   // Pattern 2: Look for any div containing returns text after "Returns" header
   if (!returnsAdditional) {
     const returnsMatch2 = segment.match(/Returns[\s\S]{0,500}?<div[^>]*>([^<]*(?:returns?|return)[^<]*)<\/div>/i);
     if (returnsMatch2 && returnsMatch2[1]) {
-      returnsAdditional = stripTags(returnsMatch2[1]).trim();
+      const text = stripTags(returnsMatch2[1]).trim();
+      // Filter out promotional text using comprehensive filter
+      if (!isPromotionalContent(text)) {
+        returnsAdditional = text;
+      }
     }
   }
   
@@ -110,7 +163,11 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   if (!returnsAdditional) {
     const returnsMatch3 = segment.match(/<span[^>]*>([^<]*(?:returns?|return)[^<]*)<\/span>/i);
     if (returnsMatch3 && returnsMatch3[1]) {
-      returnsAdditional = stripTags(returnsMatch3[1]).trim();
+      const text = stripTags(returnsMatch3[1]).trim();
+      // Filter out promotional text using comprehensive filter
+      if (!isPromotionalContent(text)) {
+        returnsAdditional = text;
+      }
     }
   }
   let paymentsRaw = "";
