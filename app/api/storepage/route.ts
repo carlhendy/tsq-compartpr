@@ -96,21 +96,17 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       .trim();
   }
 
-  // XPath selectors for shipping information
+  // XPath selectors for shipping information - be very specific
   const shippingXPaths = [
     '//*[@id="yDmH0d"]/c-wiz/div/div[2]/c-wiz/section[3]/c-wiz/div[3]/div/span[1]/div[2]',
     '//div[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
-    '//span[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
-    '//div[contains(text(), "Shipping")]/following-sibling::div[1]',
-    '//span[contains(text(), "Shipping")]/following-sibling::span[1]'
+    '//span[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]'
   ];
 
-  // XPath selectors for returns information
+  // XPath selectors for returns information - be very specific
   const returnsXPaths = [
     '//div[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
-    '//span[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
-    '//div[contains(text(), "Return")]/following-sibling::div[1]',
-    '//span[contains(text(), "Return")]/following-sibling::span[1]'
+    '//span[contains(@class, "hnGZye") and contains(text(), "Returns")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]'
   ];
 
   // XPath selectors for payments information
@@ -122,8 +118,18 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   ];
 
   // Extract using XPath first, then fallback to regex if needed
-  const shippingRaw = extractWithXPath(segment, shippingXPaths) || afterHeader(segment, "Shipping");
-  const returnsRaw = extractWithXPath(segment, returnsXPaths) || afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
+  let shippingRaw = extractWithXPath(segment, shippingXPaths) || afterHeader(segment, "Shipping");
+  let returnsRaw = extractWithXPath(segment, returnsXPaths) || afterHeader(segment, "Returns?|Return\\s+policy|Returns\\s+policy");
+  
+  // Filter out cross-contamination - shipping shouldn't contain returns info
+  if (shippingRaw && /return/i.test(shippingRaw) && !/shipping|delivery/i.test(shippingRaw)) {
+    shippingRaw = "";
+  }
+  
+  // Filter out cross-contamination - returns shouldn't contain shipping info
+  if (returnsRaw && /shipping|delivery/i.test(returnsRaw) && !/return/i.test(returnsRaw)) {
+    returnsRaw = "";
+  }
   
   // For payments, use the original regex approach that was working
   let paymentsRaw = "";
@@ -149,28 +155,14 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   // Extract payments details using ONLY XPath - no regex fallbacks
   // paymentsRaw is already extracted above using XPath
 
-  // XPath-based grade extraction - no regex
+  // Original regex-based grade extraction
   function gradeFor(seg: string, headerPattern: string): string {
-    const $ = cheerio.load(seg);
-    
-    // Convert header pattern to XPath-like selectors
-    const gradeSelectors = [
-      `div.hnGZye:contains("${headerPattern}") + div span.rMOWke-uDEFge.hnGZye`,
-      `span.hnGZye:contains("${headerPattern}") + span span.rMOWke-uDEFge.hnGZye`,
-      `div:contains("${headerPattern}") + div span:contains("Exceptional"), div:contains("${headerPattern}") + div span:contains("Great"), div:contains("${headerPattern}") + div span:contains("Good"), div:contains("${headerPattern}") + div span:contains("Fair"), div:contains("${headerPattern}") + div span:contains("Poor")`
-    ];
-    
-    for (const selector of gradeSelectors) {
-      const element = $(selector);
-      if (element.length > 0) {
-        const text = element.text().trim();
-        if (text && /^(Exceptional|Great|Good|Fair|Poor)$/i.test(text)) {
-          return text;
-        }
-      }
-    }
-    
-    return "";
+    const re = new RegExp(
+      `<(?:div|span)[^>]*class=["']hnGZye["'][^>]*>\\s*(?:${headerPattern})\\s*<\\/(?:div|span)>[\\s\\S]{0,420}?<span[^>]*class=["']rMOWke-uDEFge\\s+hnGZye[^"']*["'][^>]*>\\s*(Exceptional|Great|Good|Fair|Poor)\\s*<\\/span>`,
+      "i"
+    );
+    const m = seg.match(re);
+    return m ? stripTags(m[1]) : "";
   }
 
   // Extract delivery time using ONLY XPath results - no regex fallbacks
