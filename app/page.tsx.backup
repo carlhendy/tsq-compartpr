@@ -439,92 +439,94 @@ export default function Page() {
               World's Most Advanced*<br />
               Google Store Ratings Tool
             </h1>
-            <p className="text-sm text-gray-600 mb-8" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            <p className="text-sm text-gray-600 mb-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
               (*And only)
             </p>
           </div>
           
           {/* Quick Start Section */}
           <div className="mb-8">
-            <div className="pt-0 pb-12 px-6">
+            <div className="pt-8 pb-12 px-6">
               <div className="mx-auto max-w-6xl">
                 
-                {/* Description text above flags */}
-                <div className="mb-8 text-center">
-                  <h2 className="text-2xl sm:text-3xl text-black max-w-2xl mx-auto tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.4' }}>
-                    Compare up to five ecommerce sites in your country and see their Google store ratings.
-                  </h2>
-                </div>
-
-                {/* Examples and Flags Row */}
-                <div className="flex items-center justify-center gap-6 mb-6">
-                  {/* Examples Text */}
-                  <div className="flex items-center">
+                {/* Horizontal Layout */}
+                <div className="flex items-center justify-center gap-6">
+                  {/* Left Column - Examples */}
+                  <div className="flex items-center w-[140px]">
                     <span className="text-black font-semibold tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Examples:</span>
                   </div>
 
-                  {/* Flags Row */}
-                  <div className="flex items-center gap-3">
+                  {/* Middle Column - Flags (Vertical) */}
+                  <div className="space-y-3">
                     <button
                       onClick={() => setSelectedCountry('UK')}
-                      className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                      className={`w-full h-20 p-4 text-left transition-colors flex items-center gap-3 ${
                         selectedCountry === 'UK'
                           ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg bg-white'
                           : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
                       }`}
                     >
-                      <span className="text-lg">🇬🇧</span>
-                      <span className="font-semibold text-sm">UK</span>
+                      <span className="text-2xl">🇬🇧</span>
+                      <span className="font-semibold text-lg">UK</span>
                     </button>
                     <button
                       onClick={() => setSelectedCountry('US')}
-                      className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                      className={`w-full h-20 p-4 text-left transition-colors flex items-center gap-3 ${
                         selectedCountry === 'US'
                           ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg bg-white'
                           : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
                       }`}
                     >
-                      <span className="text-lg">🇺🇸</span>
-                      <span className="font-semibold text-sm">USA</span>
+                      <span className="text-2xl">🇺🇸</span>
+                      <span className="font-semibold text-lg">USA</span>
                     </button>
                     <button
                       onClick={() => setSelectedCountry('AU')}
-                      className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                      className={`w-full h-20 p-4 text-left transition-colors flex items-center gap-3 ${
                         selectedCountry === 'AU'
                           ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg bg-white'
                           : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
                       }`}
                     >
-                      <span className="text-lg">🇦🇺</span>
-                      <span className="font-semibold text-sm">AU</span>
+                      <span className="text-2xl">🇦🇺</span>
+                      <span className="font-semibold text-lg">AU</span>
+                    </button>
+                  </div>
+
+                  {/* Logos Column - Ensure single row */}
+                  <div className="flex items-center flex-shrink-0">
+                    <CategoryFavicons 
+                      brands={
+                        selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
+                        selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                        QUICK_START_CATEGORIES.AU['Electronics']
+                      } 
+                    />
+                  </div>
+
+                  {/* Right Column - Compare Button */}
+                  <div className="flex items-center flex-shrink-0">
+                    <button
+                      onClick={() => handleQuickStart(
+                        selectedCountry, 
+                        selectedCountry === 'UK' ? 'Home & Garden' :
+                        selectedCountry === 'US' ? 'Fashion' : 'Electronics'
+                      )}
+                      className="h-12 px-6 text-white bg-black text-sm font-semibold hover:bg-gray-800 transition-all duration-200 rounded-md whitespace-nowrap tracking-wide"
+                      style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+                    >
+                      → Compare
                     </button>
                   </div>
                 </div>
-
-                {/* Logos Row */}
-                <div className="flex items-center justify-center mb-6">
-                  <CategoryFavicons 
-                    brands={
-                      selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
-                      selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
-                      QUICK_START_CATEGORIES.AU['Electronics']
-                    } 
-                  />
-                </div>
-
-                {/* Compare Button Row */}
-                <div className="flex items-center justify-center">
-                  <button
-                    onClick={() => handleQuickStart(
-                      selectedCountry, 
-                      selectedCountry === 'UK' ? 'Home & Garden' :
-                      selectedCountry === 'US' ? 'Fashion' : 'Electronics'
-                    )}
-                    className="h-12 px-6 text-white bg-black text-sm font-semibold hover:bg-gray-800 transition-all duration-200 rounded-md whitespace-nowrap tracking-wide"
-                    style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-                  >
-                    → Compare
-                  </button>
+                
+                {/* Description text below logos */}
+                <div className="mt-8 text-center">
+                  <h2 className="text-lg text-black max-w-4xl mx-auto tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.5' }}>
+                    <span className="bg-black text-white px-2 py-1 rounded-sm">
+                      Compare up to five ecommerce sites in your country and see their Google store ratings.
+                    </span>
+                  </h2>
                 </div>
               </div>
             </div>

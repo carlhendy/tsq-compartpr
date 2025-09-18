@@ -12,21 +12,19 @@ export default function RootLayout({children}:{children:React.ReactNode}){
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body style={{ fontFamily: 'Sofia Sans, sans-serif' }}>
+      <body style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
         {/* Simple Header */}
-        <header className="px-6 py-6 border-b border-white" style={{ backgroundColor: '#0a4bf1' }}>
+        <header className="px-6 py-6 border-b border-gray-600 bg-black">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <a href="https://audits.com" className="flex items-center">
-              <img 
-                src="https://audits.com/wp-content/uploads/2024/04/logo_light.svg?t=1757915579" 
-                alt="Audits.com" 
-                className="h-10 w-auto"
-              />
+            <a href="https://storeratings.co" className="flex items-center">
+              <span className="text-white text-2xl tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                storeratings.co
+              </span>
             </a>
-            <a href="https://audits.com/about/" className="text-white font-semibold text-xl uppercase hover:text-gray-200 transition-colors">
-              About
+            <a href="https://storeratings.co/about/" className="text-white text-2xl hover:text-gray-300 transition-colors tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              about
             </a>
           </div>
         </header>
