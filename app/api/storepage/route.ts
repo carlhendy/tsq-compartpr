@@ -43,7 +43,7 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   const segment = scopeHint ? html.slice(scopeHint.start, scopeHint.end) : html;
 
   // New XPath-based extraction using cheerio
-  function extractWithXPath(html: string, xpathSelectors: string[]): string {
+  function extractWithXPath(html: string, xpathSelectors: string[], fieldType: string): string {
     const $ = cheerio.load(html);
     
     for (const selector of xpathSelectors) {
@@ -54,8 +54,11 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
         
         if (element.length > 0) {
           const text = element.text().trim();
-          if (text && !isPromotionalContent(text)) {
-            return text;
+          if (text) {
+            // Only return text that looks like legitimate shipping/returns/payments info
+            if (isLegitimateFieldContent(text, fieldType)) {
+              return text;
+            }
           }
         }
       } catch (e) {
@@ -64,7 +67,64 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       }
     }
     
-    return "";
+    return ""; // If nothing found, return empty
+  }
+
+  // Check if content is legitimate for the specific field type
+  function isLegitimateFieldContent(text: string, fieldType: string): boolean {
+    const lowerText = text.toLowerCase();
+    
+    if (fieldType === 'shipping') {
+      // Only accept text that contains shipping-related patterns
+      const shippingPatterns = [
+        /\d+\s*day/i,                    // "1 day", "2 days", "0-2 days"
+        /\d+\s*hour/i,                   // "24 hour", "48 hours"
+        /£\d+/i,                         // "£5", "£10"
+        /\$\d+/i,                        // "$5", "$10"
+        /free\s+delivery/i,              // "free delivery"
+        /standard\s+delivery/i,          // "standard delivery"
+        /express\s+delivery/i,           // "express delivery"
+        /next\s+day/i,                   // "next day"
+        /same\s+day/i,                   // "same day"
+        /\d+\s*week/i,                   // "1 week", "2 weeks"
+        /delivery/i,                     // "delivery"
+        /shipping/i                      // "shipping"
+      ];
+      
+      return shippingPatterns.some(pattern => pattern.test(text));
+    }
+    
+    if (fieldType === 'returns') {
+      // Only accept text that contains returns-related patterns
+      const returnsPatterns = [
+        /\d+\s*day\s*return/i,           // "30 day return"
+        /return\s+window/i,              // "return window"
+        /return\s+policy/i,              // "return policy"
+        /return\s+experience/i,          // "return experience"
+        /no\s+return/i,                  // "no return"
+        /returns?/i                      // "returns", "return"
+      ];
+      
+      return returnsPatterns.some(pattern => pattern.test(text));
+    }
+    
+    if (fieldType === 'payments') {
+      // Only accept text that contains payment-related patterns
+      const paymentPatterns = [
+        /apple\s+pay/i,                  // "Apple Pay"
+        /google\s+pay/i,                 // "Google Pay"
+        /paypal/i,                       // "PayPal"
+        /afterpay/i,                     // "Afterpay"
+        /klarna/i,                       // "Klarna"
+        /credit\s+card/i,                // "credit card"
+        /debit\s+card/i,                 // "debit card"
+        /payment/i                       // "payment"
+      ];
+      
+      return paymentPatterns.some(pattern => pattern.test(text));
+    }
+    
+    return false;
   }
 
   // Convert XPath to CSS selector (simplified version)
@@ -85,13 +145,11 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
       .trim();
   }
 
-  // XPath selectors for shipping information - ONLY use XPath, no regex fallbacks
+  // XPath selectors for shipping information - ONLY target specific shipping elements
   const shippingXPaths = [
     '//*[@id="yDmH0d"]/c-wiz/div/div[2]/c-wiz/section[3]/c-wiz/div[3]/div/span[1]/div[2]',
     '//div[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::div[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
-    '//span[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]',
-    '//div[contains(text(), "Shipping")]/following-sibling::div[1]',
-    '//span[contains(text(), "Shipping")]/following-sibling::span[1]'
+    '//span[contains(@class, "hnGZye") and contains(text(), "Shipping")]/following-sibling::span[contains(@class, "KtbsVc-ij8cu-fmcmS")]'
   ];
 
   // XPath selectors for returns information - ONLY use XPath, no regex fallbacks
@@ -111,109 +169,10 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   ];
 
   // Extract using ONLY XPath - no regex fallbacks
-  const shippingRaw = extractWithXPath(segment, shippingXPaths);
-  const returnsRaw = extractWithXPath(segment, returnsXPaths);
-  const paymentsRaw = extractWithXPath(segment, paymentsXPaths);
+  const shippingRaw = extractWithXPath(segment, shippingXPaths, 'shipping');
+  const returnsRaw = extractWithXPath(segment, returnsXPaths, 'returns');
+  const paymentsRaw = extractWithXPath(segment, paymentsXPaths, 'payments');
   
-  // Helper function to filter out promotional content
-  function isPromotionalContent(text: string): boolean {
-    const lowerText = text.toLowerCase();
-    
-    // First, check if this looks like legitimate shipping/returns info
-    const legitimatePatterns = [
-      /\d+\s*day/i,                    // "1 day", "2 days", "0-2 days"
-      /\d+\s*hour/i,                   // "24 hour", "48 hours"
-      /£\d+/i,                         // "£5", "£10"
-      /\$\d+/i,                        // "$5", "$10"
-      /free\s+delivery/i,              // "free delivery"
-      /standard\s+delivery/i,          // "standard delivery"
-      /express\s+delivery/i,           // "express delivery"
-      /next\s+day/i,                   // "next day"
-      /same\s+day/i,                   // "same day"
-      /\d+\s*week/i,                   // "1 week", "2 weeks"
-      /return\s+window/i,              // "return window"
-      /\d+\s*day\s*return/i,           // "30 day return"
-      /no\s+return/i,                  // "no return"
-      /return\s+policy/i,              // "return policy"
-      /return\s+experience/i           // "return experience"
-    ];
-    
-    // If it matches legitimate patterns, it's probably not promotional
-    for (const pattern of legitimatePatterns) {
-      if (pattern.test(text)) {
-        return false;
-      }
-    }
-    
-    // Now check for clear promotional indicators
-    const promotionalPhrases = [
-      'the milwaukee outdoor power up event',
-      'milwaukee outdoor power up event is now on',
-      'score instant bonuses worth hundreds',
-      'grab the milwaukee m12 pruning shears',
-      'get a free m12 packout compatible',
-      'bluetooth jobsite speaker worth',
-      'on now at total tools',
-      'australia\'s biggest milwaukee dealer',
-      'hurry, ends saturday',
-      'shop the range now',
-      'backyard clean up with ozito',
-      'pressure washer',
-      'shop now',
-      'shop the range',
-      'limited time',
-      'now on',
-      'score instant',
-      'grab the',
-      'get a free',
-      'on now at',
-      'welovetools',
-      'totallysorted'
-    ];
-    
-    // Check for specific promotional phrases (not just keywords)
-    for (const phrase of promotionalPhrases) {
-      if (lowerText.includes(phrase)) {
-        return true;
-      }
-    }
-    
-    // Check for excessive length (likely promotional content)
-    if (text.length > 300) {
-      return true;
-    }
-    
-    // Check for multiple exclamation marks (promotional style)
-    if ((text.match(/!/g) || []).length > 3) {
-      return true;
-    }
-    
-    // Check for hashtags (social media promotional content)
-    if (text.includes('#')) {
-      return true;
-    }
-    
-    // Check for URLs (promotional links)
-    if (text.includes('http') || text.includes('www.')) {
-      return true;
-    }
-    
-    // Check for excessive promotional language
-    const promotionalWords = ['event', 'campaign', 'promotion', 'sale', 'discount', 'offer', 'deal', 'bonus', 'hurry', 'ends', 'celebration', 'special'];
-    let promotionalWordCount = 0;
-    for (const word of promotionalWords) {
-      if (lowerText.includes(word)) {
-        promotionalWordCount++;
-      }
-    }
-    
-    // If it has multiple promotional words, it's likely promotional
-    if (promotionalWordCount >= 2) {
-      return true;
-    }
-    
-    return false;
-  }
 
   // Extract shipping details using ONLY XPath - no regex fallbacks
   let shippingAdditional = shippingRaw;
