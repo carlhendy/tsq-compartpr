@@ -54,33 +54,74 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
   
   // Helper function to filter out promotional content
   function isPromotionalContent(text: string): boolean {
-    const promotionalKeywords = [
-      'event', 'campaign', 'promotion', 'sale', 'discount', 'offer', 'deal',
-      'milwaukee', 'power up', 'bonus', 'free', 'worth', 'hurry', 'ends',
-      'shop now', 'shop the range', 'totaltools', 'bunnings', 'warehouse',
-      'pressure washer', 'ozito', 'backyard clean up', 'spring', 'outdoor',
-      'bluetooth', 'speaker', 'pruning shears', 'packout', 'jobsite',
-      'australia', 'biggest', 'dealer', 'welovetools', 'totallysorted',
-      'father', 'honour', 'joke', 'celebration', 'special', 'limited time',
-      'now on', 'score instant', 'grab the', 'get a free', 'on now at'
-    ];
-    
     const lowerText = text.toLowerCase();
     
-    // Check for promotional keywords
-    for (const keyword of promotionalKeywords) {
-      if (lowerText.includes(keyword)) {
+    // First, check if this looks like legitimate shipping/returns info
+    const legitimatePatterns = [
+      /\d+\s*day/i,                    // "1 day", "2 days", "0-2 days"
+      /\d+\s*hour/i,                   // "24 hour", "48 hours"
+      /£\d+/i,                         // "£5", "£10"
+      /\$\d+/i,                        // "$5", "$10"
+      /free\s+delivery/i,              // "free delivery"
+      /standard\s+delivery/i,          // "standard delivery"
+      /express\s+delivery/i,           // "express delivery"
+      /next\s+day/i,                   // "next day"
+      /same\s+day/i,                   // "same day"
+      /\d+\s*week/i,                   // "1 week", "2 weeks"
+      /return\s+window/i,              // "return window"
+      /\d+\s*day\s*return/i,           // "30 day return"
+      /no\s+return/i,                  // "no return"
+      /return\s+policy/i,              // "return policy"
+      /return\s+experience/i           // "return experience"
+    ];
+    
+    // If it matches legitimate patterns, it's probably not promotional
+    for (const pattern of legitimatePatterns) {
+      if (pattern.test(text)) {
+        return false;
+      }
+    }
+    
+    // Now check for clear promotional indicators
+    const promotionalPhrases = [
+      'the milwaukee outdoor power up event',
+      'milwaukee outdoor power up event is now on',
+      'score instant bonuses worth hundreds',
+      'grab the milwaukee m12 pruning shears',
+      'get a free m12 packout compatible',
+      'bluetooth jobsite speaker worth',
+      'on now at total tools',
+      'australia\'s biggest milwaukee dealer',
+      'hurry, ends saturday',
+      'shop the range now',
+      'backyard clean up with ozito',
+      'pressure washer',
+      'shop now',
+      'shop the range',
+      'limited time',
+      'now on',
+      'score instant',
+      'grab the',
+      'get a free',
+      'on now at',
+      'welovetools',
+      'totallysorted'
+    ];
+    
+    // Check for specific promotional phrases (not just keywords)
+    for (const phrase of promotionalPhrases) {
+      if (lowerText.includes(phrase)) {
         return true;
       }
     }
     
     // Check for excessive length (likely promotional content)
-    if (text.length > 200) {
+    if (text.length > 300) {
       return true;
     }
     
     // Check for multiple exclamation marks (promotional style)
-    if ((text.match(/!/g) || []).length > 2) {
+    if ((text.match(/!/g) || []).length > 3) {
       return true;
     }
     
@@ -91,6 +132,20 @@ function extractStructuredInsights(html: string, scopeHint?: { start: number; en
     
     // Check for URLs (promotional links)
     if (text.includes('http') || text.includes('www.')) {
+      return true;
+    }
+    
+    // Check for excessive promotional language
+    const promotionalWords = ['event', 'campaign', 'promotion', 'sale', 'discount', 'offer', 'deal', 'bonus', 'hurry', 'ends', 'celebration', 'special'];
+    let promotionalWordCount = 0;
+    for (const word of promotionalWords) {
+      if (lowerText.includes(word)) {
+        promotionalWordCount++;
+      }
+    }
+    
+    // If it has multiple promotional words, it's likely promotional
+    if (promotionalWordCount >= 2) {
       return true;
     }
     
