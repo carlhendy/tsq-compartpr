@@ -232,11 +232,11 @@ const CategoryFavicons = ({ brands, country, onBrandClick }: {
   onBrandClick: (brand: string, country: CountryKey) => void 
 }) => {
   return (
-    <div className="flex items-center gap-3 sm:gap-5 flex-wrap justify-center">
+    <div className="flex items-center gap-2 sm:gap-3 md:gap-5 flex-wrap justify-center">
       {brands.map((brand, index) => (
         <div 
           key={brand} 
-          className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
+          className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
           onClick={() => onBrandClick(brand, country)}
           title={`Click to analyze ${brand}`}
         >
