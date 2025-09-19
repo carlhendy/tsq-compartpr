@@ -543,44 +543,38 @@ export default function Page() {
           </div>
           
           {/* Why Care About Google Store Ratings Section - Full Width White Background */}
-          <div className="w-full bg-white border-t border-b border-gray-200 py-6 mb-0 -mx-6">
+          <div className="w-full bg-white border-t border-b border-gray-200 py-4 sm:py-6 mb-0 -mx-6">
             {/* Header */}
-            <div className="text-center mb-4">
-              <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+            <div className="text-center mb-3 sm:mb-4 px-4">
+              <h1 className="text-xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
                 Why Care About Google Store Ratings?
               </h1>
             </div>
           
           {/* Stats Section */}
           <div className="mb-0">
-            <div className="max-w-4xl mx-auto px-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
                 {/* Text Column */}
-                <div className="flex justify-center md:justify-start">
-                  <div style={{
-                    textAlign: 'center',
-                    padding: '2rem',
-                    background: '#fff',
-                    maxWidth: '500px',
-                    margin: '2rem auto'
-                  }}>
-                    <div className="text-2xl sm:text-4xl font-bold mb-4 whitespace-nowrap">8% Increase in Sales</div>
-                    <p className="text-lg sm:text-xl mb-4" style={{ margin: '0.5rem 0' }}>
+                <div className="flex justify-center md:justify-start order-2 md:order-1">
+                  <div className="text-center px-2 sm:px-4 py-4 sm:py-6 bg-white max-w-sm sm:max-w-md mx-auto md:mx-0">
+                    <div className="text-xl sm:text-2xl md:text-4xl font-bold mb-3 sm:mb-4">8% Increase in Sales</div>
+                    <p className="text-base sm:text-lg md:text-xl mb-3 sm:mb-4 leading-relaxed">
                       Businesses using the Top Quality Store widget saw this lift.
                     </p>
-                    <div className="text-base sm:text-lg flex items-center justify-center" style={{ color: '#666' }}>
-                      <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="h-4 sm:h-5 mr-2" />
+                    <div className="text-sm sm:text-base md:text-lg flex items-center justify-center" style={{ color: '#666' }}>
+                      <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="h-3 sm:h-4 md:h-5 mr-2" />
                       September 2025
                     </div>
                   </div>
                 </div>
                 
                 {/* Image Column */}
-                <div className="flex justify-center md:justify-end">
+                <div className="flex justify-center md:justify-end order-1 md:order-2">
                   <img 
                     src="/top-quality-store-widget-embedded.gif" 
                     alt="Widget Preview" 
-                    className="max-w-full h-auto rounded-lg shadow-sm"
+                    className="w-full max-w-sm sm:max-w-md md:max-w-lg h-auto rounded-lg shadow-sm"
                   />
                 </div>
               </div>
