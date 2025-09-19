@@ -232,11 +232,11 @@ const CategoryFavicons = ({ brands, country, onBrandClick }: {
   onBrandClick: (brand: string, country: CountryKey) => void 
 }) => {
   return (
-    <div className="flex items-center gap-5 flex-wrap justify-center">
+    <div className="flex items-center gap-3 sm:gap-5 flex-wrap justify-center">
       {brands.map((brand, index) => (
         <div 
           key={brand} 
-          className="h-24 w-24 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
+          className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
           onClick={() => onBrandClick(brand, country)}
           title={`Click to analyze ${brand}`}
         >
@@ -487,48 +487,48 @@ export default function Page() {
               <div className="mx-auto max-w-6xl">
                 
                 {/* Examples, Flags, and Logos Container */}
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-1 max-w-2xl mx-auto">
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-1 max-w-2xl mx-auto">
                   {/* Examples and Flags Row */}
-                  <div className="flex items-center justify-center gap-6 mb-6">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-6">
                     {/* Examples Text */}
                     <div className="flex items-center">
-                      <span className="text-black font-semibold tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Click on any of the examples:</span>
+                      <span className="text-black font-semibold tracking-wide text-sm sm:text-base" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Click on any of the examples:</span>
                     </div>
 
                     {/* Flags Row */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                       <button
                         onClick={() => setSelectedCountry('UK')}
-                        className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                        className={`h-10 sm:h-12 px-2 sm:px-3 text-left transition-colors flex items-center gap-1 sm:gap-2 ${
                           selectedCountry === 'UK'
                             ? 'border-b-2 border-b-black text-black'
                             : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
                         }`}
                       >
-                        <span className="text-lg">🇬🇧</span>
-                        <span className="font-semibold text-sm">UK</span>
+                        <span className="text-base sm:text-lg">🇬🇧</span>
+                        <span className="font-semibold text-xs sm:text-sm">UK</span>
                       </button>
                       <button
                         onClick={() => setSelectedCountry('US')}
-                        className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                        className={`h-10 sm:h-12 px-2 sm:px-3 text-left transition-colors flex items-center gap-1 sm:gap-2 ${
                           selectedCountry === 'US'
                             ? 'border-b-2 border-b-black text-black'
                             : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
                         }`}
                       >
-                        <span className="text-lg">🇺🇸</span>
-                        <span className="font-semibold text-sm">USA</span>
+                        <span className="text-base sm:text-lg">🇺🇸</span>
+                        <span className="font-semibold text-xs sm:text-sm">USA</span>
                       </button>
                       <button
                         onClick={() => setSelectedCountry('AU')}
-                        className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                        className={`h-10 sm:h-12 px-2 sm:px-3 text-left transition-colors flex items-center gap-1 sm:gap-2 ${
                           selectedCountry === 'AU'
                             ? 'border-b-2 border-b-black text-black'
                             : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
                         }`}
                       >
-                        <span className="text-lg">🇦🇺</span>
-                        <span className="font-semibold text-sm">AU</span>
+                        <span className="text-base sm:text-lg">🇦🇺</span>
+                        <span className="font-semibold text-xs sm:text-sm">AU</span>
                       </button>
                     </div>
                   </div>
@@ -610,16 +610,17 @@ export default function Page() {
           
           {/* Centered Input Boxes */}
           <div className="w-full max-w-lg mx-auto">
-            <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-sm">
+            <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
               {/* Domains - Vertical Stack */}
-              <div className="space-y-2 mb-4">
+              <div className="space-y-3 mb-4">
                 {domains.map((d, i) => (
                   <div key={i} className="relative">
                     <input
+                      type="text"
                       value={d}
                       onChange={(e) => updateDomain(i, e.target.value)}
                       placeholder="domain.com"
-                      className="w-full h-12 border border-gray-300 px-3 pr-10 text-sm outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
+                      className="w-full h-12 sm:h-14 border border-gray-300 px-3 pr-10 text-sm sm:text-base outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
                     />
                     {domains.length > 1 && (
                       <button
@@ -650,13 +651,13 @@ export default function Page() {
 
                 {/* Country Selector */}
                 <div className="flex items-center gap-3 mb-4">
-                  <label className="text-xs text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
+                  <label className="text-xs sm:text-sm text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
                   <div className="relative flex-1">
                     <select
                       id="country-select"
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
-                      className="h-12 w-full border border-gray-300 bg-white px-3 pr-6 text-sm text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
+                      className="h-12 sm:h-14 w-full border border-gray-300 bg-white px-3 pr-6 text-sm sm:text-base text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
                       aria-label="Country"
                     >
                       <option value="US">United States</option>
@@ -680,7 +681,7 @@ export default function Page() {
                 <button
                   onClick={compare}
                   disabled={loading}
-                  className="w-full h-12 px-6 text-white bg-black text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-all duration-200 rounded-md tracking-wide"
+                  className="w-full h-12 sm:h-14 px-6 text-white bg-black text-sm sm:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-all duration-200 rounded-md tracking-wide"
                   style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
                 >
                   {loading ? 'Comparing...' : 'Compare Stores'}
@@ -937,10 +938,10 @@ export default function Page() {
           </div>
 
           {/* Copy and Start Again buttons under table, centered */}
-          <div className="pt-4 flex justify-center gap-3">
+          <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
             <button
               onClick={copyResults}
-              className="inline-flex items-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px"
+              className="inline-flex items-center justify-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px w-full sm:w-auto"
               aria-label="Copy table results"
               title="Copy table results"
             >
@@ -949,7 +950,7 @@ export default function Page() {
             </button>
             <button
               onClick={handleStartAgain}
-              className="inline-flex items-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px"
+              className="inline-flex items-center justify-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px w-full sm:w-auto"
               aria-label="Start again"
               title="Start again"
             >
@@ -962,8 +963,8 @@ export default function Page() {
 
 
       {/* Tabbed Information Section */}
-      <section className="mx-auto max-w-6xl px-6 pt-8 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Left Side - Tab Buttons */}
           <div className="lg:col-span-1">
             <div className="space-y-3">
@@ -1005,7 +1006,7 @@ export default function Page() {
 
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-3">
-            <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-6 min-h-[240px]">
+            <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-4 sm:p-6 min-h-[240px]">
               <div className="overflow-x-auto">
                 {activeTab === 'signals' && (
                   <table className="min-w-[800px] w-full text-left text-base">
