@@ -23,9 +23,9 @@ export default function RootLayout({children}:{children:React.ReactNode}){
                 storeratings.co
               </span>
             </a>
-            <a href="https://storeratings.co/about/" className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-              about
-            </a>
+          <a href="https://audits.com/about/" className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            about
+          </a>
           </div>
         </header>
         {children}

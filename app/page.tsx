@@ -533,6 +533,48 @@ export default function Page() {
 
           </div>
           
+          {/* Why Care About Google Store Ratings header */}
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+              Why Care About Google Store Ratings?
+            </h1>
+          </div>
+          
+          {/* Stats Section */}
+          <div className="mb-8">
+            <div className="max-w-4xl mx-auto px-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                {/* Text Column */}
+                <div className="flex justify-center md:justify-start">
+                  <div style={{
+                    textAlign: 'center',
+                    padding: '1.5rem',
+                    border: '1px solid #ddd',
+                    borderRadius: '12px',
+                    background: '#fff',
+                    maxWidth: '400px',
+                    margin: '2rem auto'
+                  }}>
+                    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>8% Increase in Sales</div>
+                    <p style={{ margin: '0.5rem 0' }}>
+                      Businesses using the Top Quality Store widget saw this lift.
+                    </p>
+                    <div style={{ fontSize: '0.85rem', color: '#666' }}>Google, September 25</div>
+                  </div>
+                </div>
+                
+                {/* Image Column */}
+                <div className="flex justify-center md:justify-end">
+                  <img 
+                    src="/top-quality-store-widget-embedded.gif" 
+                    alt="Widget Preview" 
+                    className="max-w-full h-auto rounded-lg shadow-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          
           {/* Now Create Your Own section */}
           <div className="mb-6 text-center">
             <div className="flex items-start justify-center gap-4 mb-4">
