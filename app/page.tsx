@@ -288,6 +288,25 @@ export default function Page() {
   const [selectedCountry, setSelectedCountry] = useState<CountryKey>('UK');
   const resultsTableRef = useRef<HTMLDivElement>(null);
 
+  const handleStartAgain = () => {
+    setDomains(['asos.com', 'boohoo.com', 'next.co.uk']);
+    setCountry('GB');
+    setRows([]);
+    setLoading(false);
+    setHasCompared(false);
+    setCopied(false);
+    setSelectedCountry('UK');
+    setActiveTab('signals');
+    
+    // Scroll to the "Now Create Your Own" section
+    setTimeout(() => {
+      const element = document.getElementById('now-create-your-own');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
 
   const updateDomain = (i: number, v: string) => {
     const next = [...domains];
@@ -576,7 +595,7 @@ export default function Page() {
           </div>
           
           {/* Now Create Your Own section */}
-          <div className="mb-6 text-center">
+          <div id="now-create-your-own" className="mb-6 text-center">
             <div className="flex items-start justify-center gap-4 mb-4">
               <span className="text-2xl mt-2" style={{transform: 'scaleX(-1)'}}>⤵</span>
               <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
@@ -917,19 +936,25 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Copy button under table, centered */}
-          <div className="pt-4 flex justify-center">
+          {/* Copy and Start Again buttons under table, centered */}
+          <div className="pt-4 flex justify-center gap-3">
             <button
               onClick={copyResults}
               className="inline-flex items-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px"
               aria-label="Copy table results"
               title="Copy table results"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6 2.75A1.75 1.75 0 0 1 7.75 1h6.5C15.216 1 16 1.784 16 2.75v6.5A1.75 1.75 0 0 1 14.25 11h-6.5A1.75 1.75 0 0 1 12 9.25v-6.5Z" />
-                <path d="M3.75 5A1.75 1.75 0 0 0 2 6.75v8.5C2 16.216 2.784 17 3.75 17h8.5A1.75 1.75 0 0 0 14 15.25V14H7.75A1.75 1.75 0 0 1 6 12.25V6H3.75Z" />
-              </svg>
+              <span className="text-lg">⧉</span>
               {copied ? 'Copied!' : 'Copy Results'}
+            </button>
+            <button
+              onClick={handleStartAgain}
+              className="inline-flex items-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px"
+              aria-label="Start again"
+              title="Start again"
+            >
+              <span className="text-lg">↻</span>
+              Start Again
             </button>
           </div>
         </section>
