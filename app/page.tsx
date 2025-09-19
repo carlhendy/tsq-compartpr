@@ -286,7 +286,17 @@ export default function Page() {
   const [copied, setCopied] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq'>('signals');
   const [selectedCountry, setSelectedCountry] = useState<CountryKey>('UK');
+  const [showAboutSlider, setShowAboutSlider] = useState<boolean>(false);
   const resultsTableRef = useRef<HTMLDivElement>(null);
+  const aboutButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Move about button to header and set up event listeners
+  useEffect(() => {
+    const placeholder = document.getElementById('about-button-placeholder');
+    if (placeholder && aboutButtonRef.current) {
+      placeholder.appendChild(aboutButtonRef.current);
+    }
+  }, []);
 
   const handleStartAgain = () => {
     setDomains(['asos.com', 'boohoo.com', 'next.co.uk']);
@@ -466,6 +476,17 @@ export default function Page() {
   };
 
   return (
+    <>
+      {/* About Button - will be moved to header */}
+      <button 
+        ref={aboutButtonRef}
+        onClick={() => setShowAboutSlider(true)}
+        className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors tracking-wide" 
+        style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+      >
+        about
+      </button>
+
     <main className="min-h-screen bg-gray-100">
       {/* Hero - Centered Layout */}
       <section className="pt-12 sm:pt-16 pb-16 px-6 bg-gray-100">
@@ -1201,6 +1222,70 @@ export default function Page() {
         />
       </section>
 
+      {/* About Slider */}
+      {showAboutSlider && (
+        <>
+          {/* Overlay */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setShowAboutSlider(false)}
+          />
+          
+          {/* Slider */}
+          <div className="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+            <div className="p-6 h-full overflow-y-auto">
+              {/* Close Button */}
+              <div className="flex justify-end mb-6">
+                <button
+                  onClick={() => setShowAboutSlider(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              
+              {/* Content */}
+              <div className="text-center">
+                {/* Image */}
+                <div className="mb-6">
+                  <img
+                    src="/carl-social.jpeg"
+                    alt="Carl Hendy"
+                    className="w-32 h-32 rounded-full mx-auto object-cover"
+                  />
+                </div>
+                
+                {/* Text Content */}
+                <div className="space-y-4">
+                  <h2 className="text-2xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    Carl Hendy
+                  </h2>
+                  
+                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    A vibe coding project of Carl Hendy, founder of <a href="https://audits.com" className="text-black font-semibold hover:underline">audits.com</a> who specialises in ecommerce SEO audits for brands as John Lewis, Ralph Lauren, Marks and Spencer and Groupon.
+                  </p>
+                  
+                  {/* LinkedIn Link */}
+                  <div className="pt-4">
+                    <a
+                      href="https://www.linkedin.com/in/carlhendy/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clipRule="evenodd" />
+                      </svg>
+                      Connect on LinkedIn
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Footer */}
       <footer className="border-t border-black py-16 px-4 sm:px-6 text-center text-black bg-white">
         <div className="mb-4 text-base">
@@ -1221,6 +1306,7 @@ export default function Page() {
         </p>
       </footer>
     </main>
+    </>
   );
 }
 
