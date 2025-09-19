@@ -493,7 +493,7 @@ export default function Page() {
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
-            <h1 className="text-black mb-3 leading-tight text-4xl sm:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
+            <h1 className="text-black mb-3 leading-tight text-3xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
               World's Most Advanced<br />
               Google Store Ratings Tool
             </h1>
@@ -503,8 +503,8 @@ export default function Page() {
           </div>
           
           {/* Quick Start Section */}
-          <div className="mb-8">
-            <div className="pt-0 pb-12 px-6">
+          <div className="mb-4 sm:mb-8">
+            <div className="pt-0 pb-6 sm:pb-12 px-6">
               <div className="mx-auto max-w-6xl">
                 
                 {/* Examples, Flags, and Logos Container */}
@@ -574,14 +574,14 @@ export default function Page() {
           </div>
           
           {/* Why Care About Google Store Ratings header */}
-          <div className="mb-3 text-center">
+          <div className="mb-2 sm:mb-3 text-center">
             <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
               Why Care About Google Store Ratings?
             </h1>
           </div>
           
           {/* Stats Section */}
-          <div className="mb-8">
+          <div className="mb-4 sm:mb-8">
             <div className="max-w-4xl mx-auto px-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 {/* Text Column */}
