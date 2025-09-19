@@ -226,11 +226,20 @@ const validationUrl = (domain: string, country: string) => {
 };
 
 // Component to show brand favicons for a category
-const CategoryFavicons = ({ brands }: { brands: string[] }) => {
+const CategoryFavicons = ({ brands, country, onBrandClick }: { 
+  brands: string[], 
+  country: CountryKey, 
+  onBrandClick: (brand: string, country: CountryKey) => void 
+}) => {
   return (
     <div className="flex items-center gap-5 flex-wrap justify-center">
       {brands.map((brand, index) => (
-        <div key={brand} className="h-24 w-24 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center">
+        <div 
+          key={brand} 
+          className="h-24 w-24 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
+          onClick={() => onBrandClick(brand, country)}
+          title={`Click to analyze ${brand}`}
+        >
           <img
             src={getFaviconUrlWithFallback(brand)}
             alt={brand}
@@ -313,6 +322,15 @@ export default function Page() {
     if (resultsTableRef.current) {
       resultsTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  };
+
+  const handleBrandClick = (brand: string, country: CountryKey) => {
+    // Get the category for this country
+    const category = country === 'UK' ? 'Home & Garden' :
+                    country === 'US' ? 'Fashion' : 'Electronics';
+    
+    // Run the full category report (same as clicking the Compare button)
+    handleQuickStart(country, category);
   };
 
   const compareWithValues = async (domainList: string[], countryCode: string) => {
@@ -431,16 +449,16 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero - Centered Layout */}
-      <section className="pt-4 sm:pt-8 pb-16 px-6 bg-white">
+      <section className="pt-12 sm:pt-16 pb-16 px-6 bg-white">
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
-            <h1 className="text-black mb-6 leading-tight text-4xl sm:text-6xl tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1' }}>
-              World's Most Advanced*<br />
+            <h1 className="text-black mb-3 leading-tight text-4xl sm:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
+              World's Most Advanced<br />
               Google Store Ratings Tool
             </h1>
             <p className="text-sm text-gray-600 mb-8" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-              (*And only)
+              (And only)
             </p>
           </div>
           
@@ -449,91 +467,89 @@ export default function Page() {
             <div className="pt-0 pb-12 px-6">
               <div className="mx-auto max-w-6xl">
                 
-                {/* Description text above flags */}
-                <div className="mb-8 text-center">
-                  <h2 className="text-2xl sm:text-3xl text-black max-w-2xl mx-auto tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.4' }}>
-                    Compare up to five ecommerce sites in your country and see their Google store ratings.
-                  </h2>
-                </div>
+                {/* Examples, Flags, and Logos Container */}
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6 max-w-2xl mx-auto">
+                  {/* Examples and Flags Row */}
+                  <div className="flex items-center justify-center gap-6 mb-6">
+                    {/* Examples Text */}
+                    <div className="flex items-center">
+                      <span className="text-black font-semibold tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Click on any of the examples:</span>
+                    </div>
 
-                {/* Examples and Flags Row */}
-                <div className="flex items-center justify-center gap-6 mb-6">
-                  {/* Examples Text */}
-                  <div className="flex items-center">
-                    <span className="text-black font-semibold tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Examples:</span>
+                    {/* Flags Row */}
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setSelectedCountry('UK')}
+                        className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                          selectedCountry === 'UK'
+                            ? 'border-b-2 border-b-black text-black'
+                            : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
+                        }`}
+                      >
+                        <span className="text-lg">🇬🇧</span>
+                        <span className="font-semibold text-sm">UK</span>
+                      </button>
+                      <button
+                        onClick={() => setSelectedCountry('US')}
+                        className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                          selectedCountry === 'US'
+                            ? 'border-b-2 border-b-black text-black'
+                            : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
+                        }`}
+                      >
+                        <span className="text-lg">🇺🇸</span>
+                        <span className="font-semibold text-sm">USA</span>
+                      </button>
+                      <button
+                        onClick={() => setSelectedCountry('AU')}
+                        className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
+                          selectedCountry === 'AU'
+                            ? 'border-b-2 border-b-black text-black'
+                            : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
+                        }`}
+                      >
+                        <span className="text-lg">🇦🇺</span>
+                        <span className="font-semibold text-sm">AU</span>
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Flags Row */}
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => setSelectedCountry('UK')}
-                      className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
-                        selectedCountry === 'UK'
-                          ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg bg-white'
-                          : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
-                      }`}
-                    >
-                      <span className="text-lg">🇬🇧</span>
-                      <span className="font-semibold text-sm">UK</span>
-                    </button>
-                    <button
-                      onClick={() => setSelectedCountry('US')}
-                      className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
-                        selectedCountry === 'US'
-                          ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg bg-white'
-                          : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
-                      }`}
-                    >
-                      <span className="text-lg">🇺🇸</span>
-                      <span className="font-semibold text-sm">USA</span>
-                    </button>
-                    <button
-                      onClick={() => setSelectedCountry('AU')}
-                      className={`h-12 px-3 text-left transition-colors flex items-center gap-2 ${
-                        selectedCountry === 'AU'
-                          ? 'border-l-4 border-l-black border-t border-b border-r border-gray-300 text-gray-700 rounded-lg bg-white'
-                          : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-lg'
-                      }`}
-                    >
-                      <span className="text-lg">🇦🇺</span>
-                      <span className="font-semibold text-sm">AU</span>
-                    </button>
+                  {/* Logos Row */}
+                  <div className="flex items-center justify-center">
+                    <CategoryFavicons 
+                      brands={
+                        selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
+                        selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                        QUICK_START_CATEGORIES.AU['Electronics']
+                      }
+                      country={selectedCountry}
+                      onBrandClick={handleBrandClick}
+                    />
                   </div>
                 </div>
 
-                {/* Logos Row */}
-                <div className="flex items-center justify-center mb-6">
-                  <CategoryFavicons 
-                    brands={
-                      selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
-                      selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
-                      QUICK_START_CATEGORIES.AU['Electronics']
-                    } 
-                  />
-                </div>
-
-                {/* Compare Button Row */}
-                <div className="flex items-center justify-center">
-                  <button
-                    onClick={() => handleQuickStart(
-                      selectedCountry, 
-                      selectedCountry === 'UK' ? 'Home & Garden' :
-                      selectedCountry === 'US' ? 'Fashion' : 'Electronics'
-                    )}
-                    className="h-12 px-6 text-white bg-black text-sm font-semibold hover:bg-gray-800 transition-all duration-200 rounded-md whitespace-nowrap tracking-wide"
-                    style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-                  >
-                    → Compare
-                  </button>
-                </div>
               </div>
             </div>
 
           </div>
           
+          {/* Now Create Your Own section */}
+          <div className="mb-6 text-center">
+            <div className="flex items-start justify-center gap-4 mb-4">
+              <span className="text-2xl mt-2" style={{transform: 'scaleX(-1)'}}>⤵</span>
+              <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+                Now Create Your Own
+              </h1>
+              <span className="text-2xl mt-2">⤵</span>
+            </div>
+            <h2 className="text-lg sm:text-xl text-black max-w-lg mx-auto tracking-wide font-bold" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.4', fontWeight: '700' }}>
+              Compare up to five ecommerce sites in your country and see their Google store ratings.
+            </h2>
+          </div>
+          
           {/* Centered Input Boxes */}
           <div className="w-full max-w-lg mx-auto">
-            <div className="bg-white p-6 border border-gray-300 rounded-lg shadow-sm">
+            <div className="bg-white p-4 border border-gray-300 rounded-lg shadow-sm">
               {/* Domains - Vertical Stack */}
               <div className="space-y-2 mb-4">
                 {domains.map((d, i) => (
@@ -886,10 +902,10 @@ export default function Page() {
             <div className="space-y-3">
               <button
                 onClick={() => setActiveTab('signals')}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full ${
+                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
                   activeTab === 'signals' 
-                    ? 'bg-white text-black border-l-4 border-l-black border-t border-b border-r border-gray-300' 
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border border-transparent'
+                    ? 'text-black border-b-2 border-b-black' 
+                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
                 }`}
                 style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
               >
@@ -897,10 +913,10 @@ export default function Page() {
               </button>
               <button
                 onClick={() => setActiveTab('scoring')}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full ${
+                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
                   activeTab === 'scoring' 
-                    ? 'bg-white text-black border-l-4 border-l-black border-t border-b border-r border-gray-300' 
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border border-transparent'
+                    ? 'text-black border-b-2 border-b-black' 
+                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
                 }`}
                 style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
               >
@@ -908,10 +924,10 @@ export default function Page() {
               </button>
               <button
                 onClick={() => setActiveTab('faq')}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg transition-colors w-full ${
+                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
                   activeTab === 'faq' 
-                    ? 'bg-white text-black border-l-4 border-l-black border-t border-b border-r border-gray-300' 
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 border border-transparent'
+                    ? 'text-black border-b-2 border-b-black' 
+                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
                 }`}
                 style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
               >

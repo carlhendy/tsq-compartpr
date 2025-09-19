@@ -16,14 +16,14 @@ export default function RootLayout({children}:{children:React.ReactNode}){
       </head>
       <body style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
         {/* Simple Header */}
-        <header className="px-6 py-6 border-b border-gray-600 bg-black">
+        <header className="px-6 py-6 border-b border-gray-200 bg-white">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <a href="https://storeratings.co" className="flex items-center">
-              <span className="text-white text-2xl tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <span className="text-black text-2xl tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 storeratings.co
               </span>
             </a>
-            <a href="https://storeratings.co/about/" className="text-white text-2xl hover:text-gray-300 transition-colors tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            <a href="https://storeratings.co/about/" className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors tracking-wide" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
               about
             </a>
           </div>
