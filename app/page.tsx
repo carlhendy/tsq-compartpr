@@ -498,7 +498,7 @@ export default function Page() {
       </header>
       
       {/* Hero - Centered Layout */}
-      <section className="pt-12 sm:pt-16 pb-16 px-6 bg-gray-100">
+      <section className="pt-6 sm:pt-8 pb-16 px-6 bg-gray-100">
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
@@ -538,8 +538,51 @@ export default function Page() {
             </div>
           </div>
           
+          {/* Why Care About Google Store Ratings Section - Full Width White Background */}
+          <div className="w-full bg-white border-t border-b border-gray-200 py-6 mb-0 -mx-6">
+            {/* Header */}
+            <div className="text-center mb-4">
+              <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+                Why Care About Google Store Ratings?
+              </h1>
+            </div>
+          
+          {/* Stats Section */}
+          <div className="mb-0">
+            <div className="max-w-4xl mx-auto px-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center">
+                {/* Text Column */}
+                <div className="flex justify-center md:justify-start">
+                  <div style={{
+                    textAlign: 'center',
+                    padding: '2rem',
+                    background: '#fff',
+                    maxWidth: '500px',
+                    margin: '2rem auto'
+                  }}>
+                    <div className="text-2xl sm:text-4xl font-bold mb-4 whitespace-nowrap">8% Increase in Sales</div>
+                    <p className="text-lg sm:text-xl mb-4" style={{ margin: '0.5rem 0' }}>
+                      Businesses using the Top Quality Store widget saw this lift.
+                    </p>
+                    <div className="text-base sm:text-lg" style={{ color: '#666' }}>Google, September 2025</div>
+                  </div>
+                </div>
+                
+                {/* Image Column */}
+                <div className="flex justify-center md:justify-end">
+                  <img 
+                    src="/top-quality-store-widget-embedded.gif" 
+                    alt="Widget Preview" 
+                    className="max-w-full h-auto rounded-lg shadow-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          
           {/* Quick Start Section */}
-          <div id="examples-section" className="mb-4 sm:mb-8">
+          <div id="examples-section" className="mt-8 sm:mt-12 mb-4 sm:mb-8">
             <div className="pt-0 pb-6 sm:pb-12 px-6">
               <div className="mx-auto max-w-6xl">
                 
@@ -609,48 +652,6 @@ export default function Page() {
 
           </div>
           
-          {/* Why Care About Google Store Ratings Section - Full Width White Background */}
-          <div className="w-full bg-white border-t border-b border-gray-200 py-8 mb-4 sm:mb-8 -mx-6">
-            {/* Header */}
-            <div className="text-center mb-4">
-              <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
-                Why Care About Google Store Ratings?
-              </h1>
-            </div>
-          
-          {/* Stats Section */}
-          <div className="mb-4 sm:mb-8">
-            <div className="max-w-4xl mx-auto px-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center">
-                {/* Text Column */}
-                <div className="flex justify-center md:justify-start">
-                  <div style={{
-                    textAlign: 'center',
-                    padding: '2rem',
-                    background: '#fff',
-                    maxWidth: '500px',
-                    margin: '2rem auto'
-                  }}>
-                    <div className="text-2xl sm:text-4xl font-bold mb-4 whitespace-nowrap">8% Increase in Sales</div>
-                    <p className="text-lg sm:text-xl mb-4" style={{ margin: '0.5rem 0' }}>
-                      Businesses using the Top Quality Store widget saw this lift.
-                    </p>
-                    <div className="text-base sm:text-lg" style={{ color: '#666' }}>Google, September 2025</div>
-                  </div>
-                </div>
-                
-                {/* Image Column */}
-                <div className="flex justify-center md:justify-end">
-                  <img 
-                    src="/top-quality-store-widget-embedded.gif" 
-                    alt="Widget Preview" 
-                    className="max-w-full h-auto rounded-lg shadow-sm"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
           
           {/* Now Create Your Own section */}
           <div id="now-create-your-own" className="mb-6 text-center">
