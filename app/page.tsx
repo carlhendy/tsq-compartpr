@@ -505,13 +505,41 @@ export default function Page() {
             <h1 className="text-black mb-6 leading-tight text-2xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
               Compare Google Store Ratings
             </h1>
-            <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-8 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            <p className="text-base sm:text-lg text-gray-700 mb-8 sm:mb-12 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
               Benchmark your rating against competitors - using hidden Google insights.
             </p>
+            
+            {/* Two Large Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
+              <button
+                onClick={() => {
+                  const element = document.getElementById('examples-section');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+                className="w-full sm:w-auto px-8 py-4 bg-white text-black border-2 border-black rounded-lg text-lg font-bold hover:bg-black hover:text-white transition-all duration-200 tracking-wide"
+                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+              >
+                See Examples
+              </button>
+              <button
+                onClick={() => {
+                  const element = document.getElementById('now-create-your-own');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+                className="w-full sm:w-auto px-8 py-4 bg-black text-white border-2 border-black rounded-lg text-lg font-bold hover:bg-white hover:text-black transition-all duration-200 tracking-wide"
+                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+              >
+                Create Your Own
+              </button>
+            </div>
           </div>
           
           {/* Quick Start Section */}
-          <div className="mb-4 sm:mb-8">
+          <div id="examples-section" className="mb-4 sm:mb-8">
             <div className="pt-0 pb-6 sm:pb-12 px-6">
               <div className="mx-auto max-w-6xl">
                 
