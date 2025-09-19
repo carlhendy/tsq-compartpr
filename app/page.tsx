@@ -493,12 +493,11 @@ export default function Page() {
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
-            <h1 className="text-black mb-3 leading-tight text-3xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
-              World's Most Advanced<br />
-              Google Store Ratings Tool
+            <h1 className="text-black mb-6 leading-tight text-2xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
+              Compare Google Store Ratings
             </h1>
-            <p className="text-sm text-gray-600 mb-8" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-              (And only)
+            <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-8 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              Built by AI - but not powered by AI.
             </p>
           </div>
           
@@ -575,7 +574,7 @@ export default function Page() {
           
           {/* Why Care About Google Store Ratings header */}
           <div className="mb-2 sm:mb-3 text-center">
-            <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+            <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
               Why Care About Google Store Ratings?
             </h1>
           </div>
