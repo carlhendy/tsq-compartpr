@@ -568,7 +568,10 @@ export default function Page() {
                     <p className="text-lg sm:text-xl mb-4" style={{ margin: '0.5rem 0' }}>
                       Businesses using the Top Quality Store widget saw this lift.
                     </p>
-                    <div className="text-base sm:text-lg" style={{ color: '#666' }}>Google, September 2025</div>
+                    <div className="text-base sm:text-lg flex items-center justify-center" style={{ color: '#666' }}>
+                      <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="h-4 sm:h-5 mr-2" />
+                      September 2025
+                    </div>
                   </div>
                 </div>
                 
