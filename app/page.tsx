@@ -570,11 +570,18 @@ export default function Page() {
                 
                 {/* Image Column */}
                 <div className="flex justify-center md:justify-end order-1 md:order-2">
-                  <img 
-                    src="/top-quality-store-widget-embedded.gif" 
-                    alt="Widget Preview" 
-                    className="w-full max-w-sm sm:max-w-md md:max-w-lg h-auto rounded-lg shadow-sm"
-                  />
+                  <div className="w-full max-w-sm sm:max-w-md md:max-w-lg bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+                    <div className="text-center">
+                      <div className="text-sm font-semibold text-gray-700 mb-2">Top Quality Store</div>
+                      <div className="flex items-center justify-center space-x-1 mb-2">
+                        <div className="w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+                          <span className="text-xs text-white">★</span>
+                        </div>
+                        <span className="text-sm text-gray-600">on Google</span>
+                      </div>
+                      <div className="text-xs text-gray-500">Mobile-optimized widget</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
