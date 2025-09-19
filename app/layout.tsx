@@ -14,9 +14,9 @@ export default function RootLayout({children}:{children:React.ReactNode}){
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+      <body className="bg-gray-100" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
         {/* Simple Header */}
-        <header className="px-6 py-6 border-b border-gray-200 bg-white">
+        <header className="px-6 py-6 border-b border-gray-200 bg-gray-100">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <a href="https://storeratings.co" className="flex items-center">
               <span className="text-black text-2xl tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>

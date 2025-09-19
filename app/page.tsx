@@ -447,9 +447,9 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-gray-100">
       {/* Hero - Centered Layout */}
-      <section className="pt-12 sm:pt-16 pb-16 px-6 bg-white">
+      <section className="pt-12 sm:pt-16 pb-16 px-6 bg-gray-100">
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
