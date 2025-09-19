@@ -553,10 +553,10 @@ export default function Page() {
           
             {/* Stats Section */}
             <div className="max-w-4xl mx-auto px-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                 {/* Text Column */}
-                <div className="flex justify-center md:justify-start order-2 md:order-1">
-                  <div className="text-center px-4 py-6 bg-white max-w-sm sm:max-w-md mx-auto md:mx-0">
+                <div className="flex justify-center order-2 md:order-1">
+                  <div className="text-center px-4 py-6 bg-white max-w-sm sm:max-w-md mx-auto">
                     <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">8% Increase in Sales</div>
                     <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-6 leading-relaxed">
                       Businesses using the Top Quality Store widget saw this lift.
@@ -570,18 +570,11 @@ export default function Page() {
                 
                 {/* Image Column */}
                 <div className="flex justify-center md:justify-end order-1 md:order-2">
-                  <div className="w-full max-w-sm sm:max-w-md md:max-w-lg bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-                    <div className="text-center">
-                      <div className="text-sm font-semibold text-gray-700 mb-2">Top Quality Store</div>
-                      <div className="flex items-center justify-center space-x-1 mb-2">
-                        <div className="w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
-                          <span className="text-xs text-white">★</span>
-                        </div>
-                        <span className="text-sm text-gray-600">on Google</span>
-                      </div>
-                      <div className="text-xs text-gray-500">Mobile-optimized widget</div>
-                    </div>
-                  </div>
+                  <img 
+                    src="/top-quality-store-widget-embedded.gif" 
+                    alt="Widget Preview" 
+                    className="w-full max-w-sm sm:max-w-md md:max-w-lg h-auto rounded-lg shadow-sm"
+                  />
                 </div>
               </div>
             </div>
