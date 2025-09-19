@@ -594,11 +594,11 @@ export default function Page() {
                     maxWidth: '400px',
                     margin: '2rem auto'
                   }}>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>8% Increase in Sales</div>
+                    <div className="text-lg sm:text-2xl font-bold">8% Increase in Sales</div>
                     <p style={{ margin: '0.5rem 0' }}>
                       Businesses using the Top Quality Store widget saw this lift.
                     </p>
-                    <div style={{ fontSize: '0.85rem', color: '#666' }}>Google, September 25</div>
+                    <div style={{ fontSize: '0.85rem', color: '#666' }}>Google, September 2025</div>
                   </div>
                 </div>
                 
