@@ -468,7 +468,7 @@ export default function Page() {
               <div className="mx-auto max-w-6xl">
                 
                 {/* Examples, Flags, and Logos Container */}
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6 max-w-2xl mx-auto">
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-1 max-w-2xl mx-auto">
                   {/* Examples and Flags Row */}
                   <div className="flex items-center justify-center gap-6 mb-6">
                     {/* Examples Text */}
@@ -534,7 +534,7 @@ export default function Page() {
           </div>
           
           {/* Why Care About Google Store Ratings header */}
-          <div className="mb-6 text-center">
+          <div className="mb-3 text-center">
             <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
               Why Care About Google Store Ratings?
             </h1>
