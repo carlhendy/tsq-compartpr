@@ -284,7 +284,7 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq'>('signals');
+  const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq' | 'badge'>('signals');
   const [selectedCountry, setSelectedCountry] = useState<CountryKey>('UK');
   const [showAboutSlider, setShowAboutSlider] = useState<boolean>(false);
   const resultsTableRef = useRef<HTMLDivElement>(null);
@@ -982,6 +982,13 @@ export default function Page() {
       )}
 
 
+      {/* Resources header */}
+      <div className="mb-2 sm:mb-3 text-center">
+        <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+          Resources
+        </h1>
+      </div>
+
       {/* Tabbed Information Section */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -1020,6 +1027,17 @@ export default function Page() {
                 style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
               >
                 <h3 className="font-semibold tracking-wide">Frequently Asked Questions</h3>
+              </button>
+              <button
+                onClick={() => setActiveTab('badge')}
+                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
+                  activeTab === 'badge' 
+                    ? 'text-black border-b-2 border-b-black' 
+                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
+                }`}
+                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+              >
+                <h3 className="font-semibold tracking-wide">How to Get a Google Top Quality Store Badge</h3>
               </button>
             </div>
           </div>
@@ -1165,6 +1183,59 @@ export default function Page() {
                       <p className="mt-1 text-base text-slate-600">
                         We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
                         (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'badge' && (
+                  <div className="divide-y divide-slate-100">
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-base">What is the Top Quality Store badge?</h3>
+                      <p className="mt-1 text-base text-slate-600">
+                        The Top Quality Store badge highlights online stores that provide an excellent shopping experience, based on Google's quality signals such as delivery speed, return policies, and customer satisfaction.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-base">Which countries can get the badge?</h3>
+                      <p className="mt-1 text-base text-slate-600">
+                        Currently, the Top Quality Store badge is available only in the following countries:
+                      </p>
+                      <p className="mt-2 text-base text-slate-600">
+                        <strong>AU, CA, GB, IN, JP, NZ, US</strong> — Quality signals available, Overall Quality Score, Top Quality Store badge eligibility
+                      </p>
+                      <p className="text-base text-slate-600">
+                        <strong>Rest of World</strong> — Quality signals available, Overall Quality Score, No badge available
+                      </p>
+                      <p className="mt-2 text-base text-slate-600">
+                        Check <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's official documentation</a> for country-specific availability.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-base">How do I qualify for the badge?</h3>
+                      <p className="mt-1 text-base text-slate-600">
+                        Your store needs to meet Google's high standards across key signals, such as:
+                      </p>
+                      <ul className="mt-2 text-base text-slate-600 list-disc list-inside space-y-1">
+                        <li>Fast and reliable delivery times</li>
+                        <li>Clear, customer-friendly return policies</li>
+                        <li>Good review scores and ratings</li>
+                        <li>Smooth checkout experience (wallets, payment options)</li>
+                      </ul>
+                      <p className="mt-2 text-base text-slate-600">
+                        See <a href="https://brodieclark.com/google-top-quality-store-badge/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Brodie Clark's guide</a> for a detailed breakdown of what's measured.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-base">How can I display the badge on my site?</h3>
+                      <p className="mt-1 text-base text-slate-600">
+                        Once you qualify, you can use <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's Top Quality Store widget</a> to showcase your badge on your website.
+                      </p>
+                    </div>
+                    <div className="px-5 py-4">
+                      <h3 className="font-medium text-slate-900 text-base">How often is my eligibility updated?</h3>
+                      <p className="mt-1 text-base text-slate-600">
+                        Google updates quality scores regularly. If you improve your shipping, returns, or reviews, you may become eligible for the badge in the next update cycle.
                       </p>
                     </div>
                   </div>
