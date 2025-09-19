@@ -295,6 +295,8 @@ export default function Page() {
     const placeholder = document.getElementById('about-button-placeholder');
     if (placeholder && aboutButtonRef.current) {
       placeholder.appendChild(aboutButtonRef.current);
+      // Show the button only after it's been moved to the header
+      aboutButtonRef.current.style.display = 'block';
     }
   }, []);
 
@@ -481,13 +483,20 @@ export default function Page() {
       <button 
         ref={aboutButtonRef}
         onClick={() => setShowAboutSlider(true)}
-        className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors tracking-wide" 
-        style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+        className="bg-black text-white px-6 py-3 rounded-md text-base font-semibold hover:bg-gray-800 transition-colors tracking-wide min-w-[100px]" 
+        style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', display: 'none' }}
       >
         about
       </button>
 
     <main className="min-h-screen bg-gray-100">
+      {/* Header with About Button */}
+      <header className="w-full bg-gray-100 py-4 px-6">
+        <div className="max-w-4xl mx-auto flex justify-end">
+          <div id="about-button-placeholder"></div>
+        </div>
+      </header>
+      
       {/* Hero - Centered Layout */}
       <section className="pt-12 sm:pt-16 pb-16 px-6 bg-gray-100">
         <div className="mx-auto max-w-4xl">
@@ -497,7 +506,7 @@ export default function Page() {
               Compare Google Store Ratings
             </h1>
             <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-8 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-              Built by AI - but not powered by AI.
+              Benchmark your rating against competitors - using hidden Google insights.
             </p>
           </div>
           
@@ -507,7 +516,7 @@ export default function Page() {
               <div className="mx-auto max-w-6xl">
                 
                 {/* Examples, Flags, and Logos Container */}
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-1 max-w-2xl mx-auto">
+                <div className="mb-1 max-w-2xl mx-auto">
                   {/* Examples and Flags Row */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-6">
                     {/* Examples Text */}
@@ -572,12 +581,14 @@ export default function Page() {
 
           </div>
           
-          {/* Why Care About Google Store Ratings header */}
-          <div className="mb-2 sm:mb-3 text-center">
-            <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
-              Why Care About Google Store Ratings?
-            </h1>
-          </div>
+          {/* Why Care About Google Store Ratings Section - Full Width White Background */}
+          <div className="w-full bg-white border-t border-b border-gray-200 py-8 mb-4 sm:mb-8 -mx-6">
+            {/* Header */}
+            <div className="text-center mb-4">
+              <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+                Why Care About Google Store Ratings?
+              </h1>
+            </div>
           
           {/* Stats Section */}
           <div className="mb-4 sm:mb-8">
@@ -587,18 +598,16 @@ export default function Page() {
                 <div className="flex justify-center md:justify-start">
                   <div style={{
                     textAlign: 'center',
-                    padding: '1.5rem',
-                    border: '1px solid #ddd',
-                    borderRadius: '12px',
+                    padding: '2rem',
                     background: '#fff',
-                    maxWidth: '400px',
+                    maxWidth: '500px',
                     margin: '2rem auto'
                   }}>
-                    <div className="text-lg sm:text-2xl font-bold">8% Increase in Sales</div>
-                    <p style={{ margin: '0.5rem 0' }}>
+                    <div className="text-2xl sm:text-4xl font-bold mb-4 whitespace-nowrap">8% Increase in Sales</div>
+                    <p className="text-lg sm:text-xl mb-4" style={{ margin: '0.5rem 0' }}>
                       Businesses using the Top Quality Store widget saw this lift.
                     </p>
-                    <div style={{ fontSize: '0.85rem', color: '#666' }}>Google, September 2025</div>
+                    <div className="text-base sm:text-lg" style={{ color: '#666' }}>Google, September 2025</div>
                   </div>
                 </div>
                 
@@ -613,13 +622,14 @@ export default function Page() {
               </div>
             </div>
           </div>
+          </div>
           
           {/* Now Create Your Own section */}
           <div id="now-create-your-own" className="mb-6 text-center">
             <div className="flex items-start justify-center gap-4 mb-4">
               <span className="text-2xl mt-2" style={{transform: 'scaleX(-1)'}}>⤵</span>
               <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
-                Now Create Your Own
+                Create Your Own
               </h1>
               <span className="text-2xl mt-2">⤵</span>
             </div>
@@ -629,7 +639,7 @@ export default function Page() {
           </div>
           
           {/* Centered Input Boxes */}
-          <div className="w-full max-w-lg mx-auto">
+          <div className="w-full max-w-2xl mx-auto">
             <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
               {/* Domains - Vertical Stack */}
               <div className="space-y-3 mb-4">
