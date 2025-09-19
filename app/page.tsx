@@ -284,11 +284,16 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasCompared, setHasCompared] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'signals' | 'scoring' | 'faq' | 'badge'>('signals');
   const [selectedCountry, setSelectedCountry] = useState<CountryKey>('UK');
   const [showAboutSlider, setShowAboutSlider] = useState<boolean>(false);
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const resultsTableRef = useRef<HTMLDivElement>(null);
   const aboutButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Accordion toggle function
+  const toggleAccordion = (section: string) => {
+    setOpenAccordion(openAccordion === section ? null : section);
+  };
 
   // Move about button to header and set up event listeners
   useEffect(() => {
@@ -308,7 +313,6 @@ export default function Page() {
     setHasCompared(false);
     setCopied(false);
     setSelectedCountry('UK');
-    setActiveTab('signals');
     
     // Scroll to the "Now Create Your Own" section
     setTimeout(() => {
@@ -1028,311 +1032,271 @@ export default function Page() {
         </h1>
       </div>
 
-      {/* Tabbed Information Section */}
+      {/* FAQ Block Section */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-          {/* Left Side - Tab Buttons */}
-          <div className="lg:col-span-1">
-            <div className="space-y-3">
-              <button
-                onClick={() => setActiveTab('signals')}
-                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
-                  activeTab === 'signals' 
-                    ? 'text-black border-b-2 border-b-black' 
-                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
+        <div className="space-y-6">
+          {/* FAQ Block 1: How Google Might Interpret These Signals */}
+          <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
+            <button
+              onClick={() => toggleAccordion('signals')}
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                How Google Might Interpret These Signals?
+              </h3>
+              <svg
+                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                  openAccordion === 'signals' ? 'rotate-180' : ''
                 }`}
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <h3 className="font-semibold tracking-wide">How Google Might Interpret These Signals?</h3>
-              </button>
-              <button
-                onClick={() => setActiveTab('scoring')}
-                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
-                  activeTab === 'scoring' 
-                    ? 'text-black border-b-2 border-b-black' 
-                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
-                }`}
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-              >
-                <h3 className="font-semibold tracking-wide">How Are These Scores Calculated?</h3>
-              </button>
-              <button
-                onClick={() => setActiveTab('faq')}
-                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
-                  activeTab === 'faq' 
-                    ? 'text-black border-b-2 border-b-black' 
-                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
-                }`}
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-              >
-                <h3 className="font-semibold tracking-wide">Frequently Asked Questions</h3>
-              </button>
-              <button
-                onClick={() => setActiveTab('badge')}
-                className={`flex items-center gap-2 px-4 py-3 transition-colors w-full ${
-                  activeTab === 'badge' 
-                    ? 'text-black border-b-2 border-b-black' 
-                    : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-b-black'
-                }`}
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-              >
-                <h3 className="font-semibold tracking-wide">How to Get a Google Top Quality Store Badge</h3>
-              </button>
-            </div>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {openAccordion === 'signals' && (
+              <div className="px-6 pb-6">
+                <div className="overflow-x-auto">
+                <table className="min-w-[800px] w-full text-left text-base">
+                  <tbody className="divide-y divide-slate-100">
+                    {EXPLAINER.map((r, idx) => (
+                      <tr key={idx} className="[&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
+                        <td className="font-medium text-slate-900 text-base">{r.m}</td>
+                        <td className="text-slate-700 text-base">{r.w}</td>
+                        <td className="text-slate-600 text-base">{r.t}</td>
+                        <td className="text-slate-600 text-base">{r.q}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Right Side - Tab Content */}
-          <div className="lg:col-span-3">
-            <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-4 sm:p-6 min-h-[240px]">
-              <div className="overflow-x-auto">
-                {activeTab === 'signals' && (
-                  <table className="min-w-[800px] w-full text-left text-base">
-                    <tbody className="divide-y divide-slate-100">
-                      {EXPLAINER.map((r, idx) => (
-                        <tr key={idx} className="[&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
-                          <td className="font-medium text-slate-900 text-base">{r.m}</td>
-                          <td className="text-slate-700 text-base">{r.w}</td>
-                          <td className="text-slate-600 text-base">{r.t}</td>
-                          <td className="text-slate-600 text-base">{r.q}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-
-                {activeTab === 'scoring' && (
-                  <div className="px-6 py-4">
-                    <p className="text-slate-700 mb-4 text-base">
-                      These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
-                      The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
-                      Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
-                    </p>
-                    
-                    <h3 className="text-base font-semibold text-slate-800 mb-3">Scoring Breakdown:</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Returns Quality</span>
-                          <span className="text-slate-600 font-mono text-base">25%</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Shipping Quality</span>
-                          <span className="text-slate-600 font-mono text-base">20%</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Competitive Pricing</span>
-                          <span className="text-slate-600 font-mono text-base">20%</span>
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Website Quality</span>
-                          <span className="text-slate-600 font-mono text-base">10%</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Payment Wallets</span>
-                          <span className="text-slate-600 font-mono text-base">5%</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Top Quality Store Badge</span>
-                          <span className="text-slate-600 font-mono text-base">15%</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <h3 className="text-base font-semibold text-slate-800 mb-3">Grade Values:</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-                      <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                        <div className="font-semibold text-green-800 text-base">Exceptional</div>
-                        <div className="text-sm text-green-600">100 points</div>
-                      </div>
-                      <div className="text-center py-2 px-3 bg-green-50 rounded-lg border border-green-200">
-                        <div className="font-semibold text-green-800 text-base">Great</div>
-                        <div className="text-sm text-green-600">85 points</div>
-                      </div>
-                      <div className="text-center py-2 px-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <div className="font-semibold text-yellow-800 text-base">Good</div>
-                        <div className="text-sm text-yellow-600">70 points</div>
-                      </div>
-                      <div className="text-center py-2 px-3 bg-orange-50 rounded-lg border border-orange-200">
-                        <div className="font-semibold text-orange-800 text-base">Fair</div>
-                        <div className="text-sm text-orange-600">40 points</div>
-                      </div>
-                      <div className="text-center py-2 px-3 bg-red-50 rounded-lg border border-red-200">
-                        <div className="font-semibold text-red-800 text-base">Poor</div>
-                        <div className="text-sm text-red-600">20 points</div>
-                      </div>
-                    </div>
-
-                    <h3 className="text-base font-semibold text-slate-800 mb-3">Bonuses:</h3>
-                    <ul className="list-disc list-inside text-slate-700 space-y-2 mb-4 text-base">
-                      <li><strong>Return Window Bonus:</strong> +5 points for 30+ days, +3 points for 28+ days</li>
-                      <li><strong>Top Quality Store Badge:</strong> +15 points (major weighting)</li>
-                      <li><strong>Payment Wallets:</strong> Scored based on unique wallet count (max 3 wallets = 100%)</li>
-                    </ul>
-
-                    <p className="text-base text-slate-600 italic">
-                      Final scores are capped at 100 points and rounded to the nearest integer. 
-                      Stores are ranked by TSQ score, with tie-breakers based on competitive pricing, returns quality, shipping quality, and wallet count.
-                    </p>
+          {/* FAQ Block 2: How Are These Scores Calculated */}
+          <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
+            <button
+              onClick={() => toggleAccordion('scoring')}
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                How Are These Scores Calculated?
+              </h3>
+              <svg
+                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                  openAccordion === 'scoring' ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {openAccordion === 'scoring' && (
+              <div className="px-6 pb-6">
+              <p className="text-slate-700 mb-4 text-base">
+                These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals.
+                The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
+                Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
+              </p>
+              
+              <h4 className="text-base font-semibold text-slate-800 mb-3">Scoring Breakdown:</h4>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-700 text-base">Returns Quality</span>
+                    <span className="text-slate-600 font-mono text-base">25%</span>
                   </div>
-                )}
-
-                {activeTab === 'faq' && (
-                  <div className="divide-y divide-slate-100">
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">Where do these signals come from?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">What does "Top Quality Store" mean?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">How often are results updated?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">Why don't I see all wallets or grades for my store?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">Can I export the results?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">Why does a store have a rating but no review count?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">How do we collect and display the quality signals for store websites from google.com/storepages?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
-                        (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
-                      </p>
-                    </div>
+                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-700 text-base">Shipping Quality</span>
+                    <span className="text-slate-600 font-mono text-base">20%</span>
                   </div>
-                )}
-
-                {activeTab === 'badge' && (
-                  <div className="divide-y divide-slate-100">
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">What is the Top Quality Store badge?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        The Top Quality Store badge highlights online stores that provide an excellent shopping experience, based on Google's quality signals such as delivery speed, return policies, and customer satisfaction.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">Which countries can get the badge?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        Currently, the Top Quality Store badge is available only in the following countries:
-                      </p>
-                      <p className="mt-2 text-base text-slate-600">
-                        <strong>AU, CA, GB, IN, JP, NZ, US</strong> — Quality signals available, Overall Quality Score, Top Quality Store badge eligibility
-                      </p>
-                      <p className="text-base text-slate-600">
-                        <strong>Rest of World</strong> — Quality signals available, Overall Quality Score, No badge available
-                      </p>
-                      <p className="mt-2 text-base text-slate-600">
-                        Check <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's official documentation</a> for country-specific availability.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">How do I qualify for the badge?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        Your store needs to meet Google's high standards across key signals, such as:
-                      </p>
-                      <ul className="mt-2 text-base text-slate-600 list-disc list-inside space-y-1">
-                        <li>Fast and reliable delivery times</li>
-                        <li>Clear, customer-friendly return policies</li>
-                        <li>Good review scores and ratings</li>
-                        <li>Smooth checkout experience (wallets, payment options)</li>
-                      </ul>
-                      <p className="mt-2 text-base text-slate-600">
-                        See <a href="https://brodieclark.com/google-top-quality-store-badge/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Brodie Clark's guide</a> for a detailed breakdown of what's measured.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">How can I display the badge on my site?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        Once you qualify, you can use <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's Top Quality Store widget</a> to showcase your badge on your website.
-                      </p>
-                    </div>
-                    <div className="px-5 py-4">
-                      <h3 className="font-medium text-slate-900 text-base">How often is my eligibility updated?</h3>
-                      <p className="mt-1 text-base text-slate-600">
-                        Google updates quality scores regularly. If you improve your shipping, returns, or reviews, you may become eligible for the badge in the next update cycle.
-                      </p>
-                    </div>
+                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-700 text-base">Competitive Pricing</span>
+                    <span className="text-slate-600 font-mono text-base">15%</span>
                   </div>
-                )}
+                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-700 text-base">Website Quality</span>
+                    <span className="text-slate-600 font-mono text-base">15%</span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-700 text-base">Wallets</span>
+                    <span className="text-slate-600 font-mono text-base">10%</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-700 text-base">Rating</span>
+                    <span className="text-slate-600 font-mono text-base">10%</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium text-slate-700 text-base">Reviews</span>
+                    <span className="text-slate-600 font-mono text-base">5%</span>
+                  </div>
+                </div>
               </div>
-            </div>
+              
+              <p className="text-slate-600 text-sm">
+                <strong>Note:</strong> These percentages are estimates based on observed patterns in Google's scoring. The actual algorithm may vary.
+              </p>
+              </div>
+            )}
+          </div>
+
+          {/* FAQ Block 3: Frequently Asked Questions */}
+          <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
+            <button
+              onClick={() => toggleAccordion('faq')}
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                Frequently Asked Questions
+              </h3>
+              <svg
+                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                  openAccordion === 'faq' ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {openAccordion === 'faq' && (
+              <div className="px-6 pb-6">
+              <div className="space-y-6">
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">Where do these signals come from?</h4>
+                  <p className="text-base text-slate-600">
+                    From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">What does "Top Quality Store" mean?</h4>
+                  <p className="text-base text-slate-600">
+                    It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">How often are results updated?</h4>
+                  <p className="text-base text-slate-600">
+                    Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">Why don't I see all wallets or grades for my store?</h4>
+                  <p className="text-base text-slate-600">
+                    Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">Can I export the results?</h4>
+                  <p className="text-base text-slate-600">
+                    You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">Why does a store have a rating but no review count?</h4>
+                  <p className="text-base text-slate-600">
+                    Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">How do we collect and display the quality signals for store websites from google.com/storepages?</h4>
+                  <p className="text-base text-slate-600">
+                    We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
+                    (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
+                  </p>
+                </div>
+              </div>
+              </div>
+            )}
+          </div>
+
+          {/* FAQ Block 4: How to Get a Google Top Quality Store Badge */}
+          <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
+            <button
+              onClick={() => toggleAccordion('badge')}
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                How to Get a Google Top Quality Store Badge
+              </h3>
+              <svg
+                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                  openAccordion === 'badge' ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {openAccordion === 'badge' && (
+              <div className="px-6 pb-6">
+              <div className="space-y-6">
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">What is the Top Quality Store badge?</h4>
+                  <p className="text-base text-slate-600">
+                    The Top Quality Store badge highlights online stores that provide an excellent shopping experience, based on Google's quality signals such as delivery speed, return policies, and customer satisfaction.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">Which countries can get the badge?</h4>
+                  <p className="text-base text-slate-600 mb-2">
+                    Currently, the Top Quality Store badge is available only in the following countries:
+                  </p>
+                  <p className="text-base text-slate-600 mb-2">
+                    <strong>AU, CA, GB, IN, JP, NZ, US</strong> — Quality signals available, Overall Quality Score, Top Quality Store badge eligibility
+                  </p>
+                  <p className="text-base text-slate-600 mb-2">
+                    <strong>Rest of World</strong> — Quality signals available, Overall Quality Score, No badge available
+                  </p>
+                  <p className="text-base text-slate-600">
+                    Check <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's official documentation</a> for country-specific availability.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">How do I qualify for the badge?</h4>
+                  <p className="text-base text-slate-600 mb-2">
+                    Your store needs to meet Google's high standards across key signals, such as:
+                  </p>
+                  <ul className="text-base text-slate-600 list-disc list-inside space-y-1 mb-2">
+                    <li>Fast and reliable delivery times</li>
+                    <li>Clear, customer-friendly return policies</li>
+                    <li>Good review scores and ratings</li>
+                    <li>Smooth checkout experience (wallets, payment options)</li>
+                  </ul>
+                  <p className="text-base text-slate-600">
+                    See <a href="https://brodieclark.com/google-top-quality-store-badge/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Brodie Clark's guide</a> for a detailed breakdown of what's measured.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">How can I display the badge on my site?</h4>
+                  <p className="text-base text-slate-600">
+                    Once you qualify, you can use <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's Top Quality Store widget</a> to showcase your badge on your website.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-slate-900 text-base mb-2">How often is my eligibility updated?</h4>
+                  <p className="text-base text-slate-600">
+                    Google updates quality scores regularly. If you improve your shipping, returns, or reviews, you may become eligible for the badge in the next update cycle.
+                  </p>
+                </div>
+              </div>
+              </div>
+            )}
           </div>
         </div>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Where do these signals come from?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "From Google's public storepages surface for each domain and region. We don't scrape private data or guess values." }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What does \"Top Quality Store\" mean?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.)." }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How often are results updated?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time." }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Why don't I see all wallets or grades for my store?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—)." }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Can I export the results?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "You can copy the table using the \"Copy results\" button and paste into a spreadsheet. CSV export is on the roadmap." }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Why does a store have a rating but no review count?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count." }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How do we collect and display the quality signals for store websites from google.com/storepages?",
-                  "acceptedAnswer": { "@type": "Answer", "text": "We query google.com/storepages for each domain (per region) via a US‑based serverless API. Displayed \"quality\" grades (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page." }
-                }
-              ]
-            })
-          }}
-        />
       </section>
 
-      {/* About Slider */}
-      {showAboutSlider && (
+      {/* About Slider */}      {showAboutSlider && (
         <>
           {/* Overlay */}
           <div 
