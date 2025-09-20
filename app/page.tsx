@@ -506,7 +506,7 @@ export default function Page() {
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
-            <h1 className="text-black mb-6 leading-tight text-2xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
+            <h1 className="text-black mb-6 leading-tight text-4xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
               Compare Google Store Ratings
             </h1>
             <p className="text-base sm:text-lg text-gray-700 mb-8 sm:mb-12 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
