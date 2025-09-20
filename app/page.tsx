@@ -758,11 +758,11 @@ export default function Page() {
                <table className="min-w-[1000px] w-full table-fixed text-left">
                  <thead className="bg-gray-50 border-b-2 border-gray-200">
                    <tr className="[&>th]:px-4 [&>th]:py-3 [&>th]:align-middle [&>th]:border-r [&>th]:border-gray-200 [&>th:first-child]:border-r-0 [&>th:last-child]:border-r-0 [&>th]:h-16">
-                     <th className="w-[16%] text-left font-semibold text-gray-900 sticky left-0 bg-gray-50 z-10">Store</th>
+                     <th className="w-[12%] text-left font-semibold text-gray-900 sticky left-0 bg-gray-50 z-10">Store</th>
                      {sortedRows.map((row, i) => {
                        const s: Signals = row.signals || {};
                        return (
-                         <th key={i} className="w-[10%] text-center">
+                         <th key={i} className="w-[11%] text-center">
                            <div className="flex flex-col items-center gap-2 p-1">
                              <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
                                {s?.logo_url ? (
