@@ -543,7 +543,7 @@ export default function Page() {
           </div>
           
           {/* Why Care About Google Store Ratings Section - Full Width White Background */}
-          <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0 -mx-6">
+          <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0">
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8 px-6">
               <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
