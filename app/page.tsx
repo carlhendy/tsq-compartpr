@@ -1029,7 +1029,7 @@ export default function Page() {
       </div>
 
       {/* FAQ Block Section */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-8 pb-16">
+      <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-8 pb-16">
         <div className="space-y-6">
           {/* FAQ Block 1: How Google Might Interpret These Signals */}
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
