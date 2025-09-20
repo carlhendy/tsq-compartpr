@@ -1330,20 +1330,8 @@ export default function Page() {
                     Carl Hendy
                   </h2>
                   
-                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    A vibe coding project of Carl Hendy, founder of <a href="https://audits.com" className="text-black font-semibold hover:underline">audits.com</a> who specialises in ecommerce SEO audits for brands as John Lewis, Ralph Lauren, Marks and Spencer and Groupon.
-                  </p>
-                  
-                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    Acted as an advisor to several global Venture Capital and Private Equity firms, supporting portfolio companies with organic growth through due diligence assessments and strategic guidance.
-                  </p>
-                  
-                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    Previously served as Co-Owner, Strategist, and Board Member at an award-winning SEO agency (later acquired by a leading digital group). He has also held senior roles including Global Head of SEO at the UK's largest SEO agency and VP of SEO at Europe's largest independent digital marketing agency.
-                  </p>
-                  
-                  {/* LinkedIn Link */}
-                  <div className="pt-4 space-y-3">
+                  {/* Connect Buttons */}
+                  <div className="pt-2 space-y-3">
                     <a
                       href="https://www.linkedin.com/in/carlhendy/"
                       target="_blank"
@@ -1368,6 +1356,18 @@ export default function Page() {
                       Visit Audits.com
                     </a>
                   </div>
+                  
+                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    A vibe coding project of Carl Hendy, founder of <a href="https://audits.com" className="text-black font-semibold hover:underline">audits.com</a> who specialises in ecommerce SEO audits for brands as John Lewis, Ralph Lauren, Marks and Spencer and Groupon.
+                  </p>
+                  
+                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    Acted as an advisor to several global Venture Capital and Private Equity firms, supporting portfolio companies with organic growth through due diligence assessments and strategic guidance.
+                  </p>
+                  
+                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    Previously served as Co-Owner, Strategist, and Board Member at an award-winning SEO agency (later acquired by a leading digital group). He has also held senior roles including Global Head of SEO at the UK's largest SEO agency and VP of SEO at Europe's largest independent digital marketing agency.
+                  </p>
                 </div>
               </div>
             </div>
