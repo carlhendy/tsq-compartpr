@@ -546,7 +546,7 @@ export default function Page() {
           <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0 -mx-6">
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8 px-6">
-              <h1 className="text-xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+              <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
                 Why Care About Google Store Ratings?
               </h1>
             </div>
@@ -556,11 +556,12 @@ export default function Page() {
               <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                 {/* Text Column */}
                 <div className="flex justify-center order-2 md:order-1">
-                  <div className="text-center px-4 py-6 bg-white max-w-sm sm:max-w-md mx-auto">
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">8% Increase in Sales</div>
-                    <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-6 leading-relaxed">
-                      Businesses using the Top Quality Store widget saw this lift.
-                    </p>
+                  <div className="text-center px-4 py-6 bg-white max-w-sm mx-auto">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 whitespace-nowrap">8% Increase in Sales</div>
+                    <div className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-6 leading-tight text-center max-w-xs mx-auto">
+                      <div>Businesses using the Top Quality Store</div>
+                      <div>widget saw this lift.</div>
+                    </div>
                     <div className="text-base sm:text-lg md:text-xl flex items-center justify-center" style={{ color: '#666' }}>
                       <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="h-4 sm:h-5 md:h-6 mr-2" />
                       September 2025
@@ -656,7 +657,7 @@ export default function Page() {
           <div id="now-create-your-own" className="mb-6 text-center">
             <div className="flex items-start justify-center gap-4 mb-4">
               <span className="text-2xl mt-2" style={{transform: 'scaleX(-1)'}}>⤵</span>
-              <h1 className="text-2xl sm:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+              <h1 className="text-2xl sm:text-3xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
                 Create Your Own
               </h1>
               <span className="text-2xl mt-2">⤵</span>
@@ -1022,7 +1023,7 @@ export default function Page() {
 
       {/* Resources header */}
       <div className="mb-2 sm:mb-3 text-center">
-        <h1 className="text-lg sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+        <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
           Resources
         </h1>
       </div>
