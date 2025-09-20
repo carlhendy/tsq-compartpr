@@ -556,11 +556,11 @@ export default function Page() {
               <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                 {/* Text Column */}
                 <div className="flex justify-center order-2 md:order-1">
-                  <div className="text-center px-4 py-6 bg-white max-w-sm mx-auto">
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 whitespace-nowrap">8% Increase in Sales</div>
-                    <div className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-6 leading-tight text-center max-w-xs mx-auto">
-                      <div>Businesses using the Top Quality Store</div>
-                      <div>widget saw this lift.</div>
+                  <div className="text-center px-4 py-6 bg-white max-w-md mx-auto">
+                    <div className="text-xl sm:text-2xl md:text-3xl mb-4 sm:mb-6 leading-relaxed text-center max-w-4xl mx-auto">
+                      <div className="border-l-4 border-green-500 pl-6 italic">
+                        <div>"Businesses using the Top Quality Store widget saw an <span className="font-bold text-green-600">8% increase</span> in sales."</div>
+                      </div>
                     </div>
                     <div className="text-base sm:text-lg md:text-xl flex items-center justify-center" style={{ color: '#666' }}>
                       <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google" className="h-4 sm:h-5 md:h-6 mr-2" />
