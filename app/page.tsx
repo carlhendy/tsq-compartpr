@@ -589,61 +589,64 @@ export default function Page() {
                 {/* Examples, Flags, and Logos Container */}
                 <div className="mb-1 max-w-2xl mx-auto">
                   {/* Examples and Flags Row */}
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-6">
+                  <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 mb-6">
                     {/* Examples Text */}
                     <div className="flex items-center">
                       <span className="text-black font-semibold tracking-wide text-sm sm:text-base" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Click on any of the examples:</span>
                     </div>
 
-                    {/* Flags Row */}
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <button
-                        onClick={() => setSelectedCountry('UK')}
-                        className={`h-10 sm:h-12 px-2 sm:px-3 text-left transition-colors flex items-center gap-1 sm:gap-2 ${
-                          selectedCountry === 'UK'
-                            ? 'border-b-2 border-b-black text-black'
-                            : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
-                        }`}
-                      >
-                        <span className="text-base sm:text-lg">🇬🇧</span>
-                        <span className="font-semibold text-xs sm:text-sm">UK</span>
-                      </button>
-                      <button
-                        onClick={() => setSelectedCountry('US')}
-                        className={`h-10 sm:h-12 px-2 sm:px-3 text-left transition-colors flex items-center gap-1 sm:gap-2 ${
-                          selectedCountry === 'US'
-                            ? 'border-b-2 border-b-black text-black'
-                            : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
-                        }`}
-                      >
-                        <span className="text-base sm:text-lg">🇺🇸</span>
-                        <span className="font-semibold text-xs sm:text-sm">USA</span>
-                      </button>
-                      <button
-                        onClick={() => setSelectedCountry('AU')}
-                        className={`h-10 sm:h-12 px-2 sm:px-3 text-left transition-colors flex items-center gap-1 sm:gap-2 ${
-                          selectedCountry === 'AU'
-                            ? 'border-b-2 border-b-black text-black'
-                            : 'text-gray-700 hover:text-black hover:border-b-2 hover:border-b-black'
-                        }`}
-                      >
-                        <span className="text-base sm:text-lg">🇦🇺</span>
-                        <span className="font-semibold text-xs sm:text-sm">AU</span>
-                      </button>
-                    </div>
-                  </div>
+                    {/* Flags Row with Connected Icons */}
+                    <div className="flex flex-col items-center">
+                      {/* Flags */}
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => setSelectedCountry('UK')}
+                          className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
+                            selectedCountry === 'UK'
+                              ? 'bg-white border border-gray-300 border-b-0 text-black font-bold'
+                              : 'bg-gray-100 text-gray-700 hover:text-black'
+                          }`}
+                        >
+                          <span className="text-lg sm:text-xl">🇬🇧</span>
+                          <span className="font-semibold text-sm sm:text-base">UK</span>
+                        </button>
+                        <button
+                          onClick={() => setSelectedCountry('US')}
+                          className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
+                            selectedCountry === 'US'
+                              ? 'bg-white border border-gray-300 border-b-0 text-black font-bold'
+                              : 'bg-gray-100 text-gray-700 hover:text-black'
+                          }`}
+                        >
+                          <span className="text-lg sm:text-xl">🇺🇸</span>
+                          <span className="font-semibold text-sm sm:text-base">USA</span>
+                        </button>
+                        <button
+                          onClick={() => setSelectedCountry('AU')}
+                          className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
+                            selectedCountry === 'AU'
+                              ? 'bg-white border border-gray-300 border-b-0 text-black font-bold'
+                              : 'bg-gray-100 text-gray-700 hover:text-black'
+                          }`}
+                        >
+                          <span className="text-lg sm:text-xl">🇦🇺</span>
+                          <span className="font-semibold text-sm sm:text-base">AU</span>
+                        </button>
+                      </div>
 
-                  {/* Logos Row */}
-                  <div className="flex items-center justify-center">
-                    <CategoryFavicons 
-                      brands={
-                        selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
-                        selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
-                        QUICK_START_CATEGORIES.AU['Electronics']
-                      }
-                      country={selectedCountry}
-                      onBrandClick={handleBrandClick}
-                    />
+                      {/* Connected Icons Container */}
+                      <div className="px-4 py-3 border-l border-r border-b border-gray-300 transition-all duration-200 bg-white rounded-lg">
+                        <CategoryFavicons 
+                          brands={
+                            selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
+                            selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                            QUICK_START_CATEGORIES.AU['Electronics']
+                          }
+                          country={selectedCountry}
+                          onBrandClick={handleBrandClick}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
