@@ -581,6 +581,212 @@ export default function Page() {
             </div>
           </div>
           
+          {/* Examples vs Create Your Own Section */}
+          <div className="w-full py-6 sm:py-8 mb-4 sm:mb-8 mt-8 sm:mt-12">
+            <div className="max-w-[1600px] mx-auto px-6">
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Examples Column */}
+                <div className="text-center flex-1 lg:w-1/2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black mb-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    Examples
+            </h2>
+                  
+                  {/* Examples Text */}
+                  <div className="mb-6">
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      Click on any of the examples:
+                    </p>
+                  </div>
+
+                  {/* Flags and Logos Container */}
+                  <div className="flex flex-col items-center">
+                    {/* Tab list baseline (single line behind all tabs) */}
+                    <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300">
+                      <button
+                        onClick={() => setSelectedCountry('UK')}
+                        className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
+                          selectedCountry === 'UK'
+                            ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                            : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
+                        }`}
+                      >
+                        <span className="text-3xl sm:text-4xl">🇬🇧</span>
+                      </button>
+                      <button
+                        onClick={() => setSelectedCountry('US')}
+                        className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
+                          selectedCountry === 'US'
+                            ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                            : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
+                        }`}
+                      >
+                        <span className="text-3xl sm:text-4xl">🇺🇸</span>
+                      </button>
+                      <button
+                        onClick={() => setSelectedCountry('AU')}
+                        className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
+                          selectedCountry === 'AU'
+                            ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                            : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
+                        }`}
+                      >
+                        <span className="text-3xl sm:text-4xl">🇦🇺</span>
+                      </button>
+                    </div>
+
+                    {/* Panel/container - sits under the active tab */}
+                    <div className="px-4 py-3 border border-gray-300 relative z-[1] -mt-px bg-white rounded-lg">
+                      <div className="flex items-center justify-center gap-1 sm:gap-2 flex-nowrap">
+                    {(selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
+                      selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                      QUICK_START_CATEGORIES.AU['Electronics']).map((brand, index) => (
+                      <button 
+                        key={brand} 
+                        className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
+                        onClick={() => {
+                          console.log(`Direct click on ${brand}`);
+                          const category = selectedCountry === 'UK' ? 'Home & Garden' :
+                                        selectedCountry === 'US' ? 'Fashion' : 'Electronics';
+                          handleQuickStart(selectedCountry, category);
+                        }}
+                        title={`Click to analyze ${brand}`}
+                      >
+                        <img
+                          src={getFaviconUrlWithFallback(brand)}
+                          alt={brand}
+                          className="h-full w-full object-contain pointer-events-none"
+                          onLoad={() => console.log(`Logo loaded for ${brand}`)}
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            console.log(`Logo failed for ${brand}, trying fallback`);
+                            // Fallback chain: Clearbit -> Google Favicons -> DuckDuckGo -> Generic
+                            if (img.src.includes('logo.clearbit.com')) {
+                              // Try Google favicons as fallback
+                              img.src = `https://www.google.com/s2/favicons?domain=${brand}&sz=64`;
+                            } else if (img.src.includes('google.com/s2/favicons')) {
+                              // Try DuckDuckGo as fallback
+                              img.src = `https://icons.duckduckgo.com/ip3/${brand}.ico`;
+                            } else {
+                              // Final fallback to generic icon
+                              img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMTAgNUwxNSAxMEwxMCAxNUw1IDEwTDEwIDVaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';
+                            }
+                          }}
+                        />
+                      </button>
+                    ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Create Your Own Column */}
+                <div className="text-center lg:w-1/2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    Create Your Own
+                  </h2>
+                  <p className="text-gray-600 text-sm sm:text-base mb-6">
+                    Enter your own domains below to compare your store ratings with competitors.
+                  </p>
+                  
+                  {/* Input Fields */}
+                  <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
+                    <div className="space-y-3 mb-4">
+                      {domains.map((domain, i) => (
+                        <div key={i} className="relative">
+                          <input
+                            type="text"
+                            value={domain}
+                            onChange={(e) => updateDomain(i, e.target.value)}
+                            placeholder="domain.com"
+                            className="w-full h-12 sm:h-14 border border-gray-300 px-3 pr-10 text-sm sm:text-base outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
+                          />
+                          {domains.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeDomain(i)}
+                              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                              aria-label="Remove field"
+                            >
+                              ×
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Add More Link */}
+                    {domains.length < 5 && (
+                      <div className="text-right mb-4">
+                        <button
+                          type="button"
+                          onClick={addDomain}
+                          className="text-sm text-gray-500 hover:text-gray-700 underline"
+                        >
+                          + Add More
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Country Selector */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <label className="text-xs sm:text-sm text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
+                      <div className="relative flex-1">
+                        <select
+                          id="country-select"
+                          value={country}
+                          onChange={(e) => setCountry(e.target.value)}
+                          className="h-12 sm:h-14 w-full border border-gray-300 bg-white px-3 pr-6 text-sm sm:text-base text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
+                          aria-label="Country"
+                        >
+                          <option value="US">United States</option>
+                          <option value="GB">United Kingdom</option>
+                          <option value="AU">Australia</option>
+                          <option value="CA">Canada</option>
+                          <option value="IE">Ireland</option>
+                          <option value="NZ">New Zealand</option>
+                          <option value="DE">Germany</option>
+                          <option value="FR">France</option>
+                          <option value="ES">Spain</option>
+                          <option value="IT">Italy</option>
+                          <option value="NL">Netherlands</option>
+                          <option value="SE">Sweden</option>
+                          <option value="NO">Norway</option>
+                          <option value="DK">Denmark</option>
+                          <option value="FI">Finland</option>
+                          <option value="PL">Poland</option>
+                          <option value="CZ">Czech Republic</option>
+                          <option value="HU">Hungary</option>
+                          <option value="RO">Romania</option>
+                          <option value="BG">Bulgaria</option>
+                          <option value="HR">Croatia</option>
+                          <option value="SI">Slovenia</option>
+                          <option value="SK">Slovakia</option>
+                          <option value="LT">Lithuania</option>
+                          <option value="LV">Latvia</option>
+                          <option value="EE">Estonia</option>
+                          <option value="GR">Greece</option>
+                          <option value="PT">Portugal</option>
+                          <option value="LU">Luxembourg</option>
+                          <option value="MT">Malta</option>
+                          <option value="CY">Cyprus</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Compare Button */}
+                    <button
+                      onClick={compare}
+                      disabled={loading || domains.some(d => !d.trim())}
+                      className="w-full h-12 sm:h-14 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loading ? 'Comparing...' : '→ Compare'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           {/* Quick Start Section */}
           <div id="examples-section" className="mt-8 sm:mt-12 mb-4 sm:mb-8">
             <div className="pt-0 pb-6 sm:pb-12 px-6">
@@ -593,64 +799,64 @@ export default function Page() {
                     {/* Examples Text */}
                     <div className="flex items-center">
                       <span className="text-black font-semibold tracking-wide text-sm sm:text-base" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Click on any of the examples:</span>
-                    </div>
+                  </div>
 
                     {/* Flags Row with Connected Icons */}
                     <div className="flex flex-col items-center">
                       {/* Flags */}
                       <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300 gap-2">
-                        <button
-                          onClick={() => setSelectedCountry('UK')}
+                    <button
+                      onClick={() => setSelectedCountry('UK')}
                           className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                            selectedCountry === 'UK'
+                        selectedCountry === 'UK'
                               ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                               : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
-                          }`}
-                        >
+                      }`}
+                    >
                           <span className="text-3xl sm:text-4xl">🇬🇧</span>
-                        </button>
-                        <button
-                          onClick={() => setSelectedCountry('US')}
+                    </button>
+                    <button
+                      onClick={() => setSelectedCountry('US')}
                           className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                            selectedCountry === 'US'
+                        selectedCountry === 'US'
                               ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                               : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
-                          }`}
-                        >
+                      }`}
+                    >
                           <span className="text-3xl sm:text-4xl">🇺🇸</span>
-                        </button>
-                        <button
-                          onClick={() => setSelectedCountry('AU')}
+                    </button>
+                    <button
+                      onClick={() => setSelectedCountry('AU')}
                           className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                            selectedCountry === 'AU'
+                        selectedCountry === 'AU'
                               ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                               : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
-                          }`}
-                        >
+                      }`}
+                    >
                           <span className="text-3xl sm:text-4xl">🇦🇺</span>
-                        </button>
-                      </div>
+                    </button>
+                  </div>
 
                       {/* Connected Icons Container */}
                       <div className="px-4 py-3 border border-gray-300 transition-all duration-200 bg-white rounded-lg relative z-[1] -mt-px">
-                        <CategoryFavicons 
-                          brands={
-                            selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
-                            selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
-                            QUICK_START_CATEGORIES.AU['Electronics']
-                          }
+                    <CategoryFavicons 
+                      brands={
+                        selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
+                        selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                        QUICK_START_CATEGORIES.AU['Electronics']
+                      } 
                           country={selectedCountry}
                           onBrandClick={handleBrandClick}
-                        />
+                    />
                       </div>
                     </div>
+                  </div>
+                  </div>
+
                   </div>
                 </div>
 
               </div>
-            </div>
-
-          </div>
           
           
           {/* Now Create Your Own section */}
@@ -1033,7 +1239,7 @@ export default function Page() {
         <div className="space-y-6">
           {/* FAQ Block 1: How Google Might Interpret These Signals */}
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
-            <button
+              <button
               onClick={() => toggleAccordion('signals')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
@@ -1050,22 +1256,22 @@ export default function Page() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-            </button>
+              </button>
             {openAccordion === 'signals' && (
               <div className="px-6 pb-6">
-                <div className="overflow-x-auto">
-                <table className="min-w-[800px] w-full text-left text-base">
-                  <tbody className="divide-y divide-slate-100">
-                    {EXPLAINER.map((r, idx) => (
-                      <tr key={idx} className="[&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
-                        <td className="font-medium text-slate-900 text-base">{r.m}</td>
-                        <td className="text-slate-700 text-base">{r.w}</td>
-                        <td className="text-slate-600 text-base">{r.t}</td>
-                        <td className="text-slate-600 text-base">{r.q}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="overflow-x-auto">
+                  <table className="min-w-[800px] w-full text-left text-base">
+                    <tbody className="divide-y divide-slate-100">
+                      {EXPLAINER.map((r, idx) => (
+                        <tr key={idx} className="[&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
+                          <td className="font-medium text-slate-900 text-base">{r.m}</td>
+                          <td className="text-slate-700 text-base">{r.w}</td>
+                          <td className="text-slate-600 text-base">{r.t}</td>
+                          <td className="text-slate-600 text-base">{r.q}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             )}
@@ -1093,54 +1299,54 @@ export default function Page() {
             </button>
             {openAccordion === 'scoring' && (
               <div className="px-6 pb-6">
-              <p className="text-slate-700 mb-4 text-base">
-                These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals.
-                The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
-                Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
-              </p>
-              
+                    <p className="text-slate-700 mb-4 text-base">
+                      These are <strong>crude scores</strong> designed to provide a quick comparison between stores based on Google's public quality signals. 
+                      The TSQ (Trust & Quality) scoring system uses a weighted approach to evaluate store performance across key metrics.
+                      Note: Reviews and ratings are displayed but not factored into the TSQ score to avoid over-weighting star ratings when review counts are missing.
+                    </p>
+                    
               <h4 className="text-base font-semibold text-slate-800 mb-3">Scoring Breakdown:</h4>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700 text-base">Returns Quality</span>
-                    <span className="text-slate-600 font-mono text-base">25%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700 text-base">Shipping Quality</span>
-                    <span className="text-slate-600 font-mono text-base">20%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700 text-base">Competitive Pricing</span>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-base">Returns Quality</span>
+                          <span className="text-slate-600 font-mono text-base">25%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-base">Shipping Quality</span>
+                          <span className="text-slate-600 font-mono text-base">20%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="font-medium text-slate-700 text-base">Competitive Pricing</span>
                     <span className="text-slate-600 font-mono text-base">15%</span>
                   </div>
                   <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
                     <span className="font-medium text-slate-700 text-base">Website Quality</span>
                     <span className="text-slate-600 font-mono text-base">15%</span>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
                     <span className="font-medium text-slate-700 text-base">Wallets</span>
-                    <span className="text-slate-600 font-mono text-base">10%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                          <span className="text-slate-600 font-mono text-base">10%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
                     <span className="font-medium text-slate-700 text-base">Rating</span>
                     <span className="text-slate-600 font-mono text-base">10%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
                     <span className="font-medium text-slate-700 text-base">Reviews</span>
                     <span className="text-slate-600 font-mono text-base">5%</span>
-                  </div>
-                </div>
-              </div>
-              
+                        </div>
+                      </div>
+                    </div>
+
               <p className="text-slate-600 text-sm">
                 <strong>Note:</strong> These percentages are estimates based on observed patterns in Google's scoring. The actual algorithm may vary.
-              </p>
-              </div>
-            )}
+                    </p>
+                  </div>
+                )}
           </div>
 
           {/* FAQ Block 3: Frequently Asked Questions */}
@@ -1169,50 +1375,50 @@ export default function Page() {
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">Where do these signals come from?</h4>
                   <p className="text-base text-slate-600">
-                    From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
-                  </p>
-                </div>
+                        From Google's public <span className="font-mono">storepages</span> surface for each domain and region. We don't scrape private data or guess values.
+                      </p>
+                    </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">What does "Top Quality Store" mean?</h4>
                   <p className="text-base text-slate-600">
-                    It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
-                  </p>
-                </div>
+                        It's Google's badge indicating strong trust/quality across core commerce signals (shipping, returns, reviews, policy clarity, payments, etc.).
+                      </p>
+                    </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">How often are results updated?</h4>
                   <p className="text-base text-slate-600">
-                    Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
-                  </p>
-                </div>
+                        Whenever you click Compare we fetch fresh data. Google's public indicators may change at any time.
+                      </p>
+                    </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">Why don't I see all wallets or grades for my store?</h4>
                   <p className="text-base text-slate-600">
-                    Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
-                  </p>
-                </div>
+                        Some signals are only shown by Google in certain regions or for eligible stores. If Google doesn't show it, we display a dash (—).
+                      </p>
+                    </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">Can I export the results?</h4>
                   <p className="text-base text-slate-600">
-                    You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
-                  </p>
-                </div>
+                        You can copy the table using the "Copy results" button and paste into a spreadsheet. CSV export is on the roadmap.
+                      </p>
+                    </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">Why does a store have a rating but no review count?</h4>
                   <p className="text-base text-slate-600">
-                    Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
-                  </p>
-                </div>
+                        Because Google can show a seller rating based on a longer time period, but usually needs around 10 recent reviews before showing a review count.
+                      </p>
+                    </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">How do we collect and display the quality signals for store websites from google.com/storepages?</h4>
                   <p className="text-base text-slate-600">
-                    We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
-                    (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
-                  </p>
+                        We query <span className="font-mono">google.com/storepages</span> for each domain (per region) via a US‑based serverless API. Displayed "quality" grades
+                        (Exceptional/Great/Good/etc.) are Google's public indicators on the Store page.
+                      </p>
                 </div>
+                    </div>
+                  </div>
+                )}
               </div>
-              </div>
-            )}
-          </div>
 
           {/* FAQ Block 4: How to Get a Google Top Quality Store Badge */}
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
@@ -1242,7 +1448,7 @@ export default function Page() {
                   <p className="text-base text-slate-600">
                     The Top Quality Store badge highlights online stores that provide an excellent shopping experience, based on Google's quality signals such as delivery speed, return policies, and customer satisfaction.
                   </p>
-                </div>
+            </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">Which countries can get the badge?</h4>
                   <p className="text-base text-slate-600 mb-2">
@@ -1257,7 +1463,7 @@ export default function Page() {
                   <p className="text-base text-slate-600">
                     Check <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's official documentation</a> for country-specific availability.
                   </p>
-                </div>
+          </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">How do I qualify for the badge?</h4>
                   <p className="text-base text-slate-600 mb-2">
@@ -1272,7 +1478,7 @@ export default function Page() {
                   <p className="text-base text-slate-600">
                     See <a href="https://brodieclark.com/google-top-quality-store-badge/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Brodie Clark's guide</a> for a detailed breakdown of what's measured.
                   </p>
-                </div>
+        </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">How can I display the badge on my site?</h4>
                   <p className="text-base text-slate-600">
