@@ -350,13 +350,15 @@ export default function Page() {
     setDomains(brands);
     setCountry(countryCode);
     
-    // Trigger comparison with the new values directly
+    // Start comparison (don't wait for it)
     compareWithValues(brands, countryCode);
     
-    // Scroll to results table if it exists
-    if (resultsTableRef.current) {
-      resultsTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // Scroll to results table immediately
+    setTimeout(() => {
+      if (resultsTableRef.current) {
+        resultsTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 200);
   };
 
   const handleBrandClick = (brand: string, country: CountryKey) => {
@@ -529,7 +531,7 @@ export default function Page() {
               </button>
               <button
                 onClick={() => {
-                  const element = document.getElementById('now-create-your-own');
+                  const element = document.getElementById('examples-section');
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
@@ -584,7 +586,7 @@ export default function Page() {
       </section>
       
       {/* NEW Examples vs Create Your Own Section */}
-      <div className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-2 sm:-mt-1">
+      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-2 sm:-mt-1">
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Examples Column */}
