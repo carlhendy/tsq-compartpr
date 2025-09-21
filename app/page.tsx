@@ -774,48 +774,28 @@ export default function Page() {
                        return (
                          <th key={i} className="w-[11%] text-center">
                            <div className="flex flex-col items-center gap-2 p-1">
-                             <div className="h-10 w-10 flex-shrink-0 overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
-                               {s?.logo_url ? (
-                                 // eslint-disable-next-line @next/next/no-img-element
-                                 <img 
-                                   src={s.logo_url} 
-                                   alt="" 
-                                   className="h-full w-full object-cover" 
-                                   onError={(e) => {
-                                     const img = e.target as HTMLImageElement;
-                                     // Try our robust favicon service as fallback
-                                     img.src = getResultsFaviconUrl(row.domain);
-                                   }}
-                                 />
-                               ) : (
-                                 // eslint-disable-next-line @next/next/no-img-element
-                                 <img 
-                                   src={getResultsFaviconUrl(row.domain)} 
-                                   alt="" 
-                                   className="h-full w-full object-cover"
-                                   onError={(e) => {
-                                     const img = e.target as HTMLImageElement;
-                                     // Try alternative favicon services with different approaches
-                                     if (img.src.includes('duckduckgo.com')) {
-                                       // Try favicon.io service
-                                       img.src = `https://favicons.githubusercontent.com/${row.domain}`;
-                                     } else if (img.src.includes('favicons.githubusercontent.com')) {
-                                       // Try direct favicon from website
-                                       img.src = `https://${row.domain}/favicon.ico`;
-                                     } else if (img.src.includes('google.com/s2/favicons')) {
-                                       // Try DuckDuckGo with different domain format
-                                       if (row.domain === 'bhphotovideo.com') {
-                                         img.src = `https://icons.duckduckgo.com/ip3/www.${row.domain}.ico`;
-                                       } else {
-                                         img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
-                                       }
-                                     } else {
-                                       // Try one more Google service attempt with different parameters
-                                       img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64&t=2`;
-                                     }
-                                   }}
-                                 />
-                               )}
+                             <div className="h-12 w-12 flex-shrink-0 overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
+                               <img 
+                                 src={getFaviconUrlWithFallback(row.domain)} 
+                                 alt="" 
+                                 className="h-full w-full object-contain" 
+                                 onError={(e) => {
+                                   const img = e.target as HTMLImageElement;
+                                   if (img.src.includes('logo.clearbit.com')) {
+                                     // Try Google favicons
+                                     img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64`;
+                                   } else if (img.src.includes('google.com/s2/favicons')) {
+                                     // Try favicon.io service
+                                     img.src = `https://favicons.githubusercontent.com/${row.domain}`;
+                                   } else if (img.src.includes('favicons.githubusercontent.com')) {
+                                     // Try direct favicon from website
+                                     img.src = `https://${row.domain}/favicon.ico`;
+                                   } else {
+                                     // Try DuckDuckGo
+                                     img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
+                                   }
+                                 }}
+                               />
                              </div>
                              <div className="flex items-center gap-1">
                      <a
