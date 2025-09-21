@@ -598,13 +598,13 @@ export default function Page() {
                     {/* Flags Row with Connected Icons */}
                     <div className="flex flex-col items-center">
                       {/* Flags */}
-                      <div className="flex items-center">
+                      <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300">
                         <button
                           onClick={() => setSelectedCountry('UK')}
                           className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
                             selectedCountry === 'UK'
-                              ? 'bg-white border border-gray-300 border-b-0 text-black font-bold'
-                              : 'bg-gray-100 text-gray-700 hover:text-black'
+                              ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                              : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
                           }`}
                         >
                           <span className="text-lg sm:text-xl">🇬🇧</span>
@@ -614,8 +614,8 @@ export default function Page() {
                           onClick={() => setSelectedCountry('US')}
                           className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
                             selectedCountry === 'US'
-                              ? 'bg-white border border-gray-300 border-b-0 text-black font-bold'
-                              : 'bg-gray-100 text-gray-700 hover:text-black'
+                              ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                              : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
                           }`}
                         >
                           <span className="text-lg sm:text-xl">🇺🇸</span>
@@ -625,8 +625,8 @@ export default function Page() {
                           onClick={() => setSelectedCountry('AU')}
                           className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
                             selectedCountry === 'AU'
-                              ? 'bg-white border border-gray-300 border-b-0 text-black font-bold'
-                              : 'bg-gray-100 text-gray-700 hover:text-black'
+                              ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                              : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
                           }`}
                         >
                           <span className="text-lg sm:text-xl">🇦🇺</span>
@@ -635,7 +635,7 @@ export default function Page() {
                       </div>
 
                       {/* Connected Icons Container */}
-                      <div className="px-4 py-3 border-l border-r border-b border-gray-300 transition-all duration-200 bg-white rounded-lg">
+                      <div className="px-4 py-3 border border-gray-300 transition-all duration-200 bg-white rounded-lg relative z-[1] -mt-px">
                         <CategoryFavicons 
                           brands={
                             selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
