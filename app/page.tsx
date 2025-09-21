@@ -580,63 +580,58 @@ export default function Page() {
               </div>
             </div>
           </div>
-          
-          {/* Examples vs Create Your Own Section */}
-          <div className="w-full py-6 sm:py-8 mb-4 sm:mb-8 mt-8 sm:mt-12">
-            <div className="max-w-[1600px] mx-auto px-6">
-              <div className="flex flex-col lg:flex-row gap-8">
-                {/* Examples Column */}
-                <div className="text-center flex-1 lg:w-1/2">
-                  <h2 className="text-xl sm:text-2xl font-bold text-black mb-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    Examples
-            </h2>
-                  
-                  {/* Examples Text */}
-                  <div className="mb-6">
-                    <p className="text-gray-600 text-sm sm:text-base">
-                      Click on any of the examples:
-                    </p>
-                  </div>
-
-                  {/* Flags and Logos Container */}
-                  <div className="flex flex-col items-center">
-                    {/* Tab list baseline (single line behind all tabs) */}
-                    <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300">
-                      <button
-                        onClick={() => setSelectedCountry('UK')}
-                        className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                          selectedCountry === 'UK'
-                            ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
-                            : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
-                        }`}
-                      >
-                        <span className="text-3xl sm:text-4xl">🇬🇧</span>
-                      </button>
-                      <button
-                        onClick={() => setSelectedCountry('US')}
-                        className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                          selectedCountry === 'US'
-                            ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
-                            : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
-                        }`}
-                      >
-                        <span className="text-3xl sm:text-4xl">🇺🇸</span>
-                      </button>
-                      <button
-                        onClick={() => setSelectedCountry('AU')}
-                        className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                          selectedCountry === 'AU'
-                            ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
-                            : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
-                        }`}
-                      >
-                        <span className="text-3xl sm:text-4xl">🇦🇺</span>
-                      </button>
-                    </div>
-
-                    {/* Panel/container - sits under the active tab */}
-                    <div className="px-4 py-3 border border-gray-300 relative z-[1] -mt-px bg-white rounded-lg">
-                      <div className="flex items-center justify-center gap-1 sm:gap-2 flex-nowrap">
+        </div>
+      </section>
+      
+      {/* NEW Examples vs Create Your Own Section */}
+      <div className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-2 sm:-mt-1">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Examples Column */}
+            <div className="text-center">
+              <h2 className="text-xl sm:text-2xl font-bold text-black mb-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                Examples
+              </h2>
+              <div className="mb-6">
+                <p className="text-gray-600 text-sm sm:text-base">
+                  Click on any of the examples:
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300">
+                  <button
+                    onClick={() => setSelectedCountry('UK')}
+                    className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
+                      selectedCountry === 'UK'
+                        ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                        : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
+                    }`}
+                  >
+                    <span className="text-3xl sm:text-4xl">🇬🇧</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedCountry('US')}
+                    className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
+                      selectedCountry === 'US'
+                        ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                        : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
+                    }`}
+                  >
+                    <span className="text-3xl sm:text-4xl">🇺🇸</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedCountry('AU')}
+                    className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
+                      selectedCountry === 'AU'
+                        ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
+                        : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
+                    }`}
+                  >
+                    <span className="text-3xl sm:text-4xl">🇦🇺</span>
+                  </button>
+                </div>
+                <div className="px-4 py-3 border border-gray-300 relative z-[1] -mt-px bg-white rounded-lg">
+                  <div className="flex items-center justify-center gap-1 sm:gap-2 flex-nowrap">
                     {(selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
                       selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
                       QUICK_START_CATEGORIES.AU['Electronics']).map((brand, index) => (
@@ -644,7 +639,6 @@ export default function Page() {
                         key={brand} 
                         className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
                         onClick={() => {
-                          console.log(`Direct click on ${brand}`);
                           const category = selectedCountry === 'UK' ? 'Home & Garden' :
                                         selectedCountry === 'US' ? 'Fashion' : 'Electronics';
                           handleQuickStart(selectedCountry, category);
@@ -655,253 +649,46 @@ export default function Page() {
                           src={getFaviconUrlWithFallback(brand)}
                           alt={brand}
                           className="h-full w-full object-contain pointer-events-none"
-                          onLoad={() => console.log(`Logo loaded for ${brand}`)}
-                          onError={(e) => {
-                            const img = e.target as HTMLImageElement;
-                            console.log(`Logo failed for ${brand}, trying fallback`);
-                            // Fallback chain: Clearbit -> Google Favicons -> DuckDuckGo -> Generic
-                            if (img.src.includes('logo.clearbit.com')) {
-                              // Try Google favicons as fallback
-                              img.src = `https://www.google.com/s2/favicons?domain=${brand}&sz=64`;
-                            } else if (img.src.includes('google.com/s2/favicons')) {
-                              // Try DuckDuckGo as fallback
-                              img.src = `https://icons.duckduckgo.com/ip3/${brand}.ico`;
-                            } else {
-                              // Final fallback to generic icon
-                              img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0YzRjNGNCIvPgo8cGF0aCBkPSJNMTAgNUwxNSAxMEwxMCAxNUw1IDEwTDEwIDVaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';
-                            }
-                          }}
                         />
                       </button>
                     ))}
-                      </div>
-                    </div>
                   </div>
                 </div>
-                
-                {/* Create Your Own Column */}
-                <div className="text-center lg:w-1/2">
-                  <h2 className="text-xl sm:text-2xl font-bold text-black mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    Create Your Own
-                  </h2>
-                  <p className="text-gray-600 text-sm sm:text-base mb-6">
-                    Enter your own domains below to compare your store ratings with competitors.
-                  </p>
-                  
-                  {/* Input Fields */}
-                  <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
-                    <div className="space-y-3 mb-4">
-                      {domains.map((domain, i) => (
-                        <div key={i} className="relative">
-                          <input
-                            type="text"
-                            value={domain}
-                            onChange={(e) => updateDomain(i, e.target.value)}
-                            placeholder="domain.com"
-                            className="w-full h-12 sm:h-14 border border-gray-300 px-3 pr-10 text-sm sm:text-base outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
-                          />
-                          {domains.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => removeDomain(i)}
-                              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
-                              aria-label="Remove field"
-                            >
-                              ×
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {/* Add More Link */}
-                    {domains.length < 5 && (
-                      <div className="text-right mb-4">
+              </div>
+            </div>
+            
+            {/* Create Your Own Column */}
+            <div className="text-center">
+              <h2 className="text-xl sm:text-2xl font-bold text-black mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                Create Your Own
+              </h2>
+              <p className="text-gray-600 text-sm sm:text-base mb-6">
+                Enter your own domains below to compare your store ratings with competitors.
+              </p>
+              <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
+                <div className="space-y-3 mb-4">
+                  {domains.map((domain, i) => (
+                    <div key={i} className="relative">
+                      <input
+                        type="text"
+                        value={domain}
+                        onChange={(e) => updateDomain(i, e.target.value)}
+                        placeholder="domain.com"
+                        className="w-full h-12 sm:h-14 border border-gray-300 px-3 pr-10 text-sm sm:text-base outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
+                      />
+                      {domains.length > 1 && (
                         <button
                           type="button"
-                          onClick={addDomain}
-                          className="text-sm text-gray-500 hover:text-gray-700 underline"
+                          onClick={() => removeDomain(i)}
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                          aria-label="Remove field"
                         >
-                          + Add More
+                          ×
                         </button>
-                      </div>
-                    )}
-
-                    {/* Country Selector */}
-                    <div className="flex items-center gap-3 mb-4">
-                      <label className="text-xs sm:text-sm text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
-                      <div className="relative flex-1">
-                        <select
-                          id="country-select"
-                          value={country}
-                          onChange={(e) => setCountry(e.target.value)}
-                          className="h-12 sm:h-14 w-full border border-gray-300 bg-white px-3 pr-6 text-sm sm:text-base text-gray-700 outline-none focus:border-gray-600 focus:ring-0 appearance-none cursor-pointer rounded"
-                          aria-label="Country"
-                        >
-                          <option value="US">United States</option>
-                          <option value="GB">United Kingdom</option>
-                          <option value="AU">Australia</option>
-                          <option value="CA">Canada</option>
-                          <option value="IE">Ireland</option>
-                          <option value="NZ">New Zealand</option>
-                          <option value="DE">Germany</option>
-                          <option value="FR">France</option>
-                          <option value="ES">Spain</option>
-                          <option value="IT">Italy</option>
-                          <option value="NL">Netherlands</option>
-                          <option value="SE">Sweden</option>
-                          <option value="NO">Norway</option>
-                          <option value="DK">Denmark</option>
-                          <option value="FI">Finland</option>
-                          <option value="PL">Poland</option>
-                          <option value="CZ">Czech Republic</option>
-                          <option value="HU">Hungary</option>
-                          <option value="RO">Romania</option>
-                          <option value="BG">Bulgaria</option>
-                          <option value="HR">Croatia</option>
-                          <option value="SI">Slovenia</option>
-                          <option value="SK">Slovakia</option>
-                          <option value="LT">Lithuania</option>
-                          <option value="LV">Latvia</option>
-                          <option value="EE">Estonia</option>
-                          <option value="GR">Greece</option>
-                          <option value="PT">Portugal</option>
-                          <option value="LU">Luxembourg</option>
-                          <option value="MT">Malta</option>
-                          <option value="CY">Cyprus</option>
-                        </select>
-                      </div>
+                      )}
                     </div>
-
-                    {/* Compare Button */}
-                    <button
-                      onClick={compare}
-                      disabled={loading || domains.some(d => !d.trim())}
-                      className="w-full h-12 sm:h-14 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {loading ? 'Comparing...' : '→ Compare'}
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Quick Start Section */}
-          <div id="examples-section" className="mt-8 sm:mt-12 mb-4 sm:mb-8">
-            <div className="pt-0 pb-6 sm:pb-12 px-6">
-              <div className="mx-auto max-w-6xl">
-                
-                {/* Examples, Flags, and Logos Container */}
-                <div className="mb-1 max-w-2xl mx-auto">
-                  {/* Examples and Flags Row */}
-                  <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 mb-6">
-                    {/* Examples Text */}
-                    <div className="flex items-center">
-                      <span className="text-black font-semibold tracking-wide text-sm sm:text-base" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Click on any of the examples:</span>
-                  </div>
-
-                    {/* Flags Row with Connected Icons */}
-                    <div className="flex flex-col items-center">
-                      {/* Flags */}
-                      <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300 gap-2">
-                    <button
-                      onClick={() => setSelectedCountry('UK')}
-                          className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                        selectedCountry === 'UK'
-                              ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
-                              : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
-                      }`}
-                    >
-                          <span className="text-3xl sm:text-4xl">🇬🇧</span>
-                    </button>
-                    <button
-                      onClick={() => setSelectedCountry('US')}
-                          className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                        selectedCountry === 'US'
-                              ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
-                              : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
-                      }`}
-                    >
-                          <span className="text-3xl sm:text-4xl">🇺🇸</span>
-                    </button>
-                    <button
-                      onClick={() => setSelectedCountry('AU')}
-                          className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                        selectedCountry === 'AU'
-                              ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
-                              : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
-                      }`}
-                    >
-                          <span className="text-3xl sm:text-4xl">🇦🇺</span>
-                    </button>
-                  </div>
-
-                      {/* Connected Icons Container */}
-                      <div className="px-4 py-3 border border-gray-300 transition-all duration-200 bg-white rounded-lg relative z-[1] -mt-px">
-                    <CategoryFavicons 
-                      brands={
-                        selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
-                        selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
-                        QUICK_START_CATEGORIES.AU['Electronics']
-                      } 
-                          country={selectedCountry}
-                          onBrandClick={handleBrandClick}
-                    />
-                      </div>
-                    </div>
-                  </div>
-                  </div>
-
-                  </div>
-                </div>
-
-              </div>
-          
-          
-          {/* Now Create Your Own section */}
-          <div id="now-create-your-own" className="mb-6 text-center">
-            <div className="flex items-start justify-center gap-4 mb-4">
-              <span className="text-2xl mt-2" style={{transform: 'scaleX(-1)'}}>⤵</span>
-              <h1 className="text-2xl sm:text-3xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
-                Create Your Own
-              </h1>
-              <span className="text-2xl mt-2">⤵</span>
-            </div>
-            <h2 className="text-lg sm:text-xl text-black max-w-lg mx-auto tracking-wide font-bold" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.4', fontWeight: '700' }}>
-              Compare up to five ecommerce sites in your country and see their Google store ratings.
-            </h2>
-          </div>
-          
-          {/* Centered Input Boxes */}
-          <div className="w-full max-w-2xl mx-auto">
-            <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
-              {/* Domains - Vertical Stack */}
-              <div className="space-y-3 mb-4">
-                {domains.map((d, i) => (
-                  <div key={i} className="relative">
-                    <input
-                      type="text"
-                      value={d}
-                      onChange={(e) => updateDomain(i, e.target.value)}
-                      placeholder="domain.com"
-                      className="w-full h-12 sm:h-14 border border-gray-300 px-3 pr-10 text-sm sm:text-base outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
-                    />
-                    {domains.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeDomain(i)}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
-                        aria-label="Remove field"
-                      >
-                        ×
-                      </button>
-                    )}
-                  </div>
-                ))}
-                </div>
-                
-                {/* Add More Link */}
                 {domains.length < 5 && (
                   <div className="text-right mb-4">
                     <button
@@ -913,8 +700,6 @@ export default function Page() {
                     </button>
                   </div>
                 )}
-
-                {/* Country Selector */}
                 <div className="flex items-center gap-3 mb-4">
                   <label className="text-xs sm:text-sm text-gray-600 whitespace-nowrap" htmlFor="country-select">Country:</label>
                   <div className="relative flex-1">
@@ -933,28 +718,44 @@ export default function Page() {
                       <option value="NZ">New Zealand</option>
                       <option value="DE">Germany</option>
                       <option value="FR">France</option>
+                      <option value="ES">Spain</option>
+                      <option value="IT">Italy</option>
+                      <option value="NL">Netherlands</option>
+                      <option value="SE">Sweden</option>
+                      <option value="NO">Norway</option>
+                      <option value="DK">Denmark</option>
+                      <option value="FI">Finland</option>
+                      <option value="PL">Poland</option>
+                      <option value="CZ">Czech Republic</option>
+                      <option value="HU">Hungary</option>
+                      <option value="RO">Romania</option>
+                      <option value="BG">Bulgaria</option>
+                      <option value="HR">Croatia</option>
+                      <option value="SI">Slovenia</option>
+                      <option value="SK">Slovakia</option>
+                      <option value="LT">Lithuania</option>
+                      <option value="LV">Latvia</option>
+                      <option value="EE">Estonia</option>
+                      <option value="GR">Greece</option>
+                      <option value="PT">Portugal</option>
+                      <option value="LU">Luxembourg</option>
+                      <option value="MT">Malta</option>
+                      <option value="CY">Cyprus</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                      <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
                   </div>
                 </div>
-
-                {/* Compare Button */}
                 <button
                   onClick={compare}
-                  disabled={loading}
-                  className="w-full h-12 sm:h-14 px-6 text-white bg-black text-sm sm:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-all duration-200 rounded-md tracking-wide"
-                  style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+                  disabled={loading || domains.some(d => !d.trim())}
+                  className="w-full h-12 sm:h-14 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Comparing...' : 'Compare Stores'}
+                  {loading ? 'Comparing...' : '→ Compare'}
                 </button>
               </div>
             </div>
           </div>
-      </section>
+        </div>
+      </div>
 
       {/* Results */}
       {hasCompared && (
@@ -1604,4 +1405,6 @@ export default function Page() {
     </>
   );
 }
+
+
 
