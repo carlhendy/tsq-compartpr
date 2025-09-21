@@ -225,58 +225,6 @@ const validationUrl = (domain: string, country: string) => {
   return `https://www.google.com/storepages?q=${encodeURIComponent(domain)}&c=${c}&v=19`;
 };
 
-// Function to detect ecommerce platform
-const detectEcommercePlatform = async (domain: string): Promise<string> => {
-  try {
-    const response = await fetch(`https://${domain}`, {
-      method: 'HEAD',
-      mode: 'no-cors',
-    });
-    
-    // Since we can't access the response body due to CORS, we'll use a different approach
-    // We can detect based on common patterns in the domain or use a service
-    const domainLower = domain.toLowerCase();
-    
-    // Common ecommerce platform indicators
-    if (domainLower.includes('shopify') || domainLower.includes('.myshopify.com')) {
-      return 'Shopify';
-    }
-    if (domainLower.includes('woocommerce') || domainLower.includes('wordpress')) {
-      return 'WooCommerce';
-    }
-    if (domainLower.includes('magento')) {
-      return 'Magento';
-    }
-    if (domainLower.includes('bigcommerce')) {
-      return 'BigCommerce';
-    }
-    if (domainLower.includes('squarespace')) {
-      return 'Squarespace';
-    }
-    if (domainLower.includes('wix')) {
-      return 'Wix';
-    }
-    if (domainLower.includes('prestashop')) {
-      return 'PrestaShop';
-    }
-    if (domainLower.includes('opencart')) {
-      return 'OpenCart';
-    }
-    if (domainLower.includes('drupal') && domainLower.includes('commerce')) {
-      return 'Drupal Commerce';
-    }
-    if (domainLower.includes('magento')) {
-      return 'Magento';
-    }
-    
-    // Try to detect based on common meta tags or scripts
-    // This would require a backend service due to CORS restrictions
-    return 'Unknown';
-  } catch (error) {
-    console.log(`Error detecting platform for ${domain}:`, error);
-    return 'Unknown';
-  }
-};
 
 // Component to show brand favicons for a category
 const CategoryFavicons = ({ brands, country, onBrandClick }: { 
@@ -340,7 +288,6 @@ export default function Page() {
   const [selectedCountry, setSelectedCountry] = useState<CountryKey>('UK');
   const [showAboutSlider, setShowAboutSlider] = useState<boolean>(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
-  const [platforms, setPlatforms] = useState<Record<string, string>>({});
   const resultsTableRef = useRef<HTMLDivElement>(null);
   const aboutButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -429,19 +376,6 @@ export default function Page() {
     setHasCompared(true);
     setRows([]);
     const entries = domainList.map((d) => d.trim()).filter(Boolean).slice(0, 5);
-    
-    // Detect platforms for all domains
-    const platformPromises = entries.map(async (d) => {
-      const platform = await detectEcommercePlatform(d);
-      return { domain: d, platform };
-    });
-    const platformResults = await Promise.all(platformPromises);
-    const platformMap = platformResults.reduce((acc, { domain, platform }) => {
-      acc[domain] = platform;
-      return acc;
-    }, {} as Record<string, string>);
-    setPlatforms(platformMap);
-    
     const promises = entries.map(async (d) => {
       try {
         const r = await fetch(`/api/storepage?domain=${encodeURIComponent(d)}&country=${countryCode}`);
@@ -463,19 +397,6 @@ export default function Page() {
     setHasCompared(true);
     setRows([]);
     const entries = domains.map((d) => d.trim()).filter(Boolean).slice(0, 5);
-    
-    // Detect platforms for all domains
-    const platformPromises = entries.map(async (d) => {
-      const platform = await detectEcommercePlatform(d);
-      return { domain: d, platform };
-    });
-    const platformResults = await Promise.all(platformPromises);
-    const platformMap = platformResults.reduce((acc, { domain, platform }) => {
-      acc[domain] = platform;
-      return acc;
-    }, {} as Record<string, string>);
-    setPlatforms(platformMap);
-    
     const promises = entries.map(async (d) => {
       try {
         const r = await fetch(`/api/storepage?domain=${encodeURIComponent(d)}&country=${country}`);
@@ -526,7 +447,7 @@ export default function Page() {
 
   const copyResults = async () => {
     try {
-      const headers = ['Store','Score','Top Quality Store','Ecommerce Platform','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
+      const headers = ['Store','Score','Top Quality Store','Shipping (quality)','Returns (quality)','Competitive pricing','Website quality','Wallets','Rating','Reviews'];
       const lines: string[] = [headers.join('\t')];
       for (let i = 0; i < sortedRows.length; i++) {
         const row = sortedRows[i];
@@ -545,7 +466,6 @@ export default function Page() {
           row.domain || '—',
           row.error ? '—' : String(tsqScore),
           row.error ? 'Error' : (s?.tqs_badge === true ? 'Yes' : s?.tqs_badge === false ? 'No' : '—'),
-          platforms[row.domain] || 'Unknown',
           delivery ? `${shipGrade} (${delivery})` : shipGrade,
           returnWindow ? `${returnsGrade} (${returnWindow})` : returnsGrade,
           pricingGrade,
@@ -954,23 +874,6 @@ export default function Page() {
                                : tqs === false
                                  ? badge('No', 'red')
                                  : badge('—', 'slate')}
-                         </td>
-                       );
-                     })}
-                   </tr>
-                   
-                   {/* Ecommerce Platform Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
-                     <td className="text-left font-semibold text-gray-900">Ecommerce Platform</td>
-                     {sortedRows.map((row, i) => {
-                       const platform = platforms[row.domain] || 'Unknown';
-                       return (
-                         <td key={i} className="text-center">
-                           {row.error
-                             ? badge('Error', 'red')
-                             : platform === 'Unknown'
-                               ? badge('Unknown', 'slate')
-                               : badge(platform, 'green')}
                          </td>
                        );
                      })}
