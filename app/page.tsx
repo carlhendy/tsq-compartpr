@@ -586,7 +586,7 @@ export default function Page() {
       </section>
       
       {/* NEW Examples vs Create Your Own Section */}
-      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-6 sm:-mt-4">
+      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-12 sm:-mt-8">
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Examples Column */}
@@ -632,14 +632,14 @@ export default function Page() {
                     <span className="text-3xl sm:text-4xl">🇦🇺</span>
                   </button>
                 </div>
-                <div className="px-4 py-3 border border-gray-300 relative z-[1] -mt-px bg-white rounded-lg">
-                  <div className="flex items-center justify-center gap-1 sm:gap-2 flex-nowrap">
+                <div className="px-2 sm:px-4 py-3 border border-gray-300 relative z-[1] -mt-px bg-white rounded-lg w-full max-w-sm sm:max-w-none mx-auto">
+                  <div className="flex items-center justify-center gap-2 sm:gap-2 flex-nowrap">
                     {(selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
                       selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
                       QUICK_START_CATEGORIES.AU['Electronics']).map((brand, index) => (
                       <button 
                         key={brand} 
-                        className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
+                        className="h-12 w-12 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
                         onClick={() => {
                           const category = selectedCountry === 'UK' ? 'Home & Garden' :
                                         selectedCountry === 'US' ? 'Fashion' : 'Electronics';
