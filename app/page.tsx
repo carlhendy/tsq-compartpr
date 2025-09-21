@@ -586,12 +586,12 @@ export default function Page() {
       </section>
       
       {/* NEW Examples vs Create Your Own Section */}
-      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-2 sm:-mt-1">
+      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-6 sm:-mt-4">
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Examples Column */}
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl font-bold text-black mb-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight mb-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
                 Examples
               </h2>
               <div className="mb-6">
@@ -661,7 +661,7 @@ export default function Page() {
             
             {/* Create Your Own Column */}
             <div className="text-center">
-              <h2 className="text-xl sm:text-2xl font-bold text-black mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
                 Create Your Own
               </h2>
               <p className="text-gray-600 text-sm sm:text-base mb-6">
