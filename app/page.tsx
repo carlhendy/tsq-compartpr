@@ -598,39 +598,36 @@ export default function Page() {
                     {/* Flags Row with Connected Icons */}
                     <div className="flex flex-col items-center">
                       {/* Flags */}
-                      <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300">
+                      <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300 gap-2">
                         <button
                           onClick={() => setSelectedCountry('UK')}
-                          className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
+                          className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
                             selectedCountry === 'UK'
                               ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                               : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
                           }`}
                         >
-                          <span className="text-lg sm:text-xl">🇬🇧</span>
-                          <span className="font-semibold text-sm sm:text-base">UK</span>
+                          <span className="text-3xl sm:text-4xl">🇬🇧</span>
                         </button>
                         <button
                           onClick={() => setSelectedCountry('US')}
-                          className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
+                          className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
                             selectedCountry === 'US'
                               ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                               : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
                           }`}
                         >
-                          <span className="text-lg sm:text-xl">🇺🇸</span>
-                          <span className="font-semibold text-sm sm:text-base">USA</span>
+                          <span className="text-3xl sm:text-4xl">🇺🇸</span>
                         </button>
                         <button
                           onClick={() => setSelectedCountry('AU')}
-                          className={`px-4 py-3 transition-all duration-200 flex items-center gap-2 sm:gap-3 rounded-t-lg ${
+                          className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
                             selectedCountry === 'AU'
                               ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                               : 'bg-gray-100 text-gray-700 hover:text-black border-0 shadow-none'
                           }`}
                         >
-                          <span className="text-lg sm:text-xl">🇦🇺</span>
-                          <span className="font-semibold text-sm sm:text-base">AU</span>
+                          <span className="text-3xl sm:text-4xl">🇦🇺</span>
                         </button>
                       </div>
 
