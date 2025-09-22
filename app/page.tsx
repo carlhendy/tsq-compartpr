@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import SplitRow from './components/SplitRow';
 
 
 // --- Wallet pills renderer (no dependencies) ---
@@ -289,22 +290,13 @@ export default function Page() {
   const [showAboutSlider, setShowAboutSlider] = useState<boolean>(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const resultsTableRef = useRef<HTMLDivElement>(null);
-  const aboutButtonRef = useRef<HTMLButtonElement>(null);
 
   // Accordion toggle function
   const toggleAccordion = (section: string) => {
     setOpenAccordion(openAccordion === section ? null : section);
   };
 
-  // Move about button to header and set up event listeners
-  useEffect(() => {
-    const placeholder = document.getElementById('about-button-placeholder');
-    if (placeholder && aboutButtonRef.current) {
-      placeholder.appendChild(aboutButtonRef.current);
-      // Show the button only after it's been moved to the header
-      aboutButtonRef.current.style.display = 'block';
-    }
-  }, []);
+  // No need to move the button - it's already in the right place
 
   const handleStartAgain = () => {
     setDomains(['asos.com', 'boohoo.com', 'next.co.uk']);
@@ -486,37 +478,46 @@ export default function Page() {
 
   return (
     <>
-      {/* Blue Background */}
-      <div style={{ 
-        position: 'absolute', 
-        top: 0, 
-        left: 0, 
-        right: 0, 
-        height: '100vh', 
-        background: 'linear-gradient(to bottom, #151B3C 0%, #151B3C 65%, #F3F9FF 65%, #F3F9FF 100%)',
-        zIndex: 1 
-      }}></div>
-      
-      {/* About Button - will be moved to header */}
-      <button 
-        ref={aboutButtonRef}
-        onClick={() => setShowAboutSlider(true)}
-        className="text-white px-6 py-3 rounded-md text-base font-semibold transition-colors tracking-wide min-w-[100px]"
-        style={{ fontFamily: 'Manrope, sans-serif', display: 'none', backgroundColor: '#2e5ce5' }}
-      >
-        about
-      </button>
 
-    <main className="min-h-screen relative" style={{ zIndex: 10 }}>
-      {/* Header with About Button */}
-      <header className="relative z-10 w-full bg-transparent py-4 px-6">
-        <div className="max-w-4xl mx-auto flex justify-end">
-          <div id="about-button-placeholder"></div>
+    <main className="min-h-screen relative" style={{ backgroundColor: '#151B3C' }}>
+      {/* Fixed Header */}
+      <div 
+        style={{ 
+          backgroundColor: '#151B3C',
+          width: '100%',
+          padding: '16px 24px',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 1000
+        }}
+      >
+        <div style={{ maxWidth: '1024px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ color: 'white', fontSize: '18px', fontWeight: 'bold', fontFamily: 'Manrope, sans-serif' }}>
+            STORE RATINGS
+          </div>
+          <button 
+            onClick={() => setShowAboutSlider(true)}
+            style={{ 
+              fontFamily: 'Manrope, sans-serif', 
+              backgroundColor: '#2e5ce5',
+              color: 'white',
+              padding: '12px 24px',
+              borderRadius: '6px',
+              fontSize: '16px',
+              fontWeight: '600',
+              border: 'none',
+              cursor: 'pointer',
+              minWidth: '100px'
+            }}
+          >
+            about
+          </button>
         </div>
-      </header>
+      </div>
       
       {/* Hero - Centered Layout */}
-      <section className="relative z-10 pt-6 sm:pt-8 pb-16 px-6 bg-transparent">
+      <section className="relative z-10 pt-40 pb-2 px-6" style={{ backgroundColor: '#151B3C' }}>
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
@@ -555,9 +556,14 @@ export default function Page() {
               </button>
             </div>
           </div>
-          
+        </div>
+      </section>
+
+      {/* SplitRow with White Card */}
+      <SplitRow splitAt={50} className="pt-1 pb-6">
+        <div className="mx-auto max-w-4xl px-6">
           {/* Why Care About Google Store Ratings Section - Full Width White Background */}
-          <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0 relative" style={{ zIndex: 10 }}>
+          <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0 relative">
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8 px-6">
               <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
@@ -572,7 +578,7 @@ export default function Page() {
           
             {/* Stats Section */}
             <div className="relative z-10 max-w-4xl mx-auto px-6">
-              <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center w-full">
                 {/* Text Column */}
                 <div className="flex justify-center order-2 md:order-1">
                   <div className="text-center px-4 py-6 bg-white max-w-md mx-auto rounded-lg">
@@ -600,10 +606,10 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </section>
+      </SplitRow>
       
       {/* NEW Examples vs Create Your Own Section */}
-      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-12 sm:-mt-8" style={{ backgroundColor: '#F3F9FF' }}>
+      <div id="examples-section" className="w-full py-6 sm:py-8" style={{ backgroundColor: '#F3F9FF' }}>
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Examples Column */}
@@ -779,7 +785,7 @@ export default function Page() {
 
       {/* Results */}
       {hasCompared && (
-        <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12 mt-8">
+        <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12">
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
             <div className="overflow-x-auto">
                <table className="min-w-[1000px] w-full table-fixed text-left">
@@ -1029,58 +1035,17 @@ export default function Page() {
         </section>
       )}
 
-
       {/* Resources Section - Full Width Background */}
-      <div className="w-full" style={{ backgroundColor: '#F3F9FF' }}>
-        <div className="mb-2 sm:mb-3 text-center py-2">
-          <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
+      <div className="w-full pt-12 pb-8" style={{ backgroundColor: '#F3F9FF' }}>
+        <div className="mb-2 sm:mb-3 text-center">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
             Resources
-          </h1>
+          </h2>
         </div>
 
         {/* FAQ Block Section */}
         <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-8 pb-16">
         <div className="space-y-6">
-          {/* FAQ Block 1: How Google Might Interpret These Signals */}
-          <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
-              <button
-              onClick={() => toggleAccordion('signals')}
-              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
-            >
-              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
-                How Google Might Interpret These Signals?
-              </h3>
-              <svg
-                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
-                  openAccordion === 'signals' ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-              </button>
-            {openAccordion === 'signals' && (
-              <div className="px-6 pb-6">
-              <div className="overflow-x-auto">
-                  <table className="min-w-[800px] w-full text-left text-base">
-                    <tbody className="divide-y divide-slate-100">
-                      {EXPLAINER.map((r, idx) => (
-                        <tr key={idx} className="[&>td]:align-middle [&>td]:px-2 sm:[&>td]:px-4 [&>td]:py-4 [&>td]:h-16">
-                          <td className="font-medium text-slate-900 text-base">{r.m}</td>
-                          <td className="text-slate-700 text-base">{r.w}</td>
-                          <td className="text-slate-600 text-base">{r.t}</td>
-                          <td className="text-slate-600 text-base">{r.q}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* FAQ Block 2: How Are These Scores Calculated */}
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
             <button
@@ -1378,16 +1343,17 @@ export default function Page() {
       </section>
       </div>
 
-      {/* About Slider */}      {showAboutSlider && (
+      {/* About Slider */}
+      {showAboutSlider && (
         <>
           {/* Overlay */}
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 bg-black bg-opacity-50 z-[1001]"
             onClick={() => setShowAboutSlider(false)}
           />
           
           {/* Slider */}
-          <div className="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out">
+          <div className="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[1002] transform transition-transform duration-300 ease-in-out">
             <div className="p-6 h-full overflow-y-auto">
               {/* Close Button */}
               <div className="flex justify-end mb-6">

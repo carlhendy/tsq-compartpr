@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { --bg: #f8fafc; }
+:root { --bg: #151B3C; }
 html, body { height: 100%; }
 body { background: var(--bg); }
 
