@@ -502,7 +502,7 @@ export default function Page() {
         ref={aboutButtonRef}
         onClick={() => setShowAboutSlider(true)}
         className="text-white px-6 py-3 rounded-md text-base font-semibold transition-colors tracking-wide min-w-[100px]"
-        style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', display: 'none', backgroundColor: '#2e5ce5' }}
+        style={{ fontFamily: 'Manrope, sans-serif', display: 'none', backgroundColor: '#2e5ce5' }}
       >
         about
       </button>
@@ -520,10 +520,10 @@ export default function Page() {
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
-            <h1 className="text-white mb-6 leading-tight text-4xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
+            <h1 className="text-white mb-6 leading-tight text-4xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Manrope, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
               Compare Google Store Ratings
             </h1>
-            <p className="text-base sm:text-lg text-white mb-8 sm:mb-12 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            <p className="text-base sm:text-lg text-white mb-8 sm:mb-12 font-medium" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Benchmark your rating against competitors - using hidden Google insights.
             </p>
             
@@ -537,7 +537,7 @@ export default function Page() {
                   }
                 }}
                 className="w-full sm:w-auto px-8 py-4 text-white border-2 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide"
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', backgroundColor: '#2e5ce5', borderColor: '#2e5ce5' }}
+                style={{ fontFamily: 'Manrope, sans-serif', backgroundColor: '#2e5ce5', borderColor: '#2e5ce5' }}
               >
                 See Examples
               </button>
@@ -549,7 +549,7 @@ export default function Page() {
                   }
                 }}
                 className="w-full sm:w-auto px-8 py-4 text-blue-600 border-2 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide"
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', backgroundColor: 'white', borderColor: '#2e5ce5' }}
+                style={{ fontFamily: 'Manrope, sans-serif', backgroundColor: 'white', borderColor: '#2e5ce5' }}
               >
                 Create Your Own
               </button>
@@ -560,8 +560,13 @@ export default function Page() {
           <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0 relative" style={{ zIndex: 10 }}>
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8 px-6">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
-                Why Care About Google Store Ratings?
+              <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
+                Why <span className="relative" style={{ color: '#2e5ce5', fontFamily: 'Manrope, sans-serif' }}>
+                  Care
+                  <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 100 12" preserveAspectRatio="none">
+                    <path d="M5,8 Q50,3 95,8" stroke="#2e5ce5" strokeWidth="3" fill="none" strokeLinecap="round" />
+                  </svg>
+                </span> About Google Store Ratings?
               </h1>
             </div>
           
@@ -603,7 +608,7 @@ export default function Page() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Examples Column */}
             <div className="text-center">
-              <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight mb-6" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+              <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight mb-6" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
                 Examples
               </h2>
               <div className="mb-6">
@@ -673,7 +678,7 @@ export default function Page() {
           
             {/* Create Your Own Column */}
             <div className="text-center">
-              <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+              <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight mb-4" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
                 Create Your Own
               </h2>
               <p className="text-gray-600 text-sm sm:text-base mb-6">
@@ -1028,7 +1033,7 @@ export default function Page() {
       {/* Resources Section - Full Width Background */}
       <div className="w-full" style={{ backgroundColor: '#F3F9FF' }}>
         <div className="mb-2 sm:mb-3 text-center py-8">
-          <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+          <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
             Resources
           </h1>
         </div>
@@ -1042,7 +1047,7 @@ export default function Page() {
               onClick={() => toggleAccordion('signals')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
-              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 How Google Might Interpret These Signals?
               </h3>
               <svg
@@ -1082,7 +1087,7 @@ export default function Page() {
               onClick={() => toggleAccordion('scoring')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
-              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 How Are These Scores Calculated?
               </h3>
               <svg
@@ -1154,7 +1159,7 @@ export default function Page() {
               onClick={() => toggleAccordion('faq')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
-              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 Frequently Asked Questions
               </h3>
               <svg
@@ -1225,7 +1230,7 @@ export default function Page() {
               onClick={() => toggleAccordion('badge')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
-              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 How to Get a Google Top Quality Store Badge
               </h3>
               <svg
@@ -1301,7 +1306,7 @@ export default function Page() {
               onClick={() => toggleAccordion('public-vs-merchant')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
-              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 Public Store Ratings vs Merchant Center Metrics
               </h3>
               <svg
@@ -1407,7 +1412,7 @@ export default function Page() {
                 
                 {/* Text Content */}
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                  <h2 className="text-2xl font-bold text-black" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Carl Hendy
                   </h2>
                   
@@ -1438,18 +1443,18 @@ export default function Page() {
                     </a>
           </div>
                   
-                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Manrope, sans-serif' }}>
                     A vibe coding project of Carl Hendy, founder of <a href="https://audits.com" className="text-black font-semibold hover:underline">audits.com</a> who specialises in ecommerce SEO audits for brands as John Lewis, Ralph Lauren, Marks and Spencer and Groupon.
                   </p>
                   
-                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Manrope, sans-serif' }}>
                     Acted as an advisor to several global Venture Capital and Private Equity firms, supporting portfolio companies with organic growth through due diligence assessments and strategic guidance.
                   </p>
                   
-                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                  <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Manrope, sans-serif' }}>
                     Previously served as Co-Owner, Strategist, and Board Member at an award-winning SEO agency (later acquired by a leading digital group). He has also held senior roles including Global Head of SEO at the UK's largest SEO agency and VP of SEO at Europe's largest independent digital marketing agency.
                   </p>
-                </div>
+        </div>
               </div>
             </div>
           </div>
