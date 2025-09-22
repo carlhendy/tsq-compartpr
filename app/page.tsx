@@ -562,8 +562,8 @@ export default function Page() {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
-                className="w-full sm:w-auto px-8 py-4 text-blue-600 border-2 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide"
-                style={{ fontFamily: 'Manrope, sans-serif', backgroundColor: 'white', borderColor: '#2e5ce5' }}
+                className="w-full sm:w-auto px-8 py-4 text-blue-600 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide"
+                style={{ fontFamily: 'Manrope, sans-serif', backgroundColor: 'white' }}
               >
                 Create Your Own
               </button>
