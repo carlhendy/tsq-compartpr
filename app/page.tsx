@@ -1032,7 +1032,7 @@ export default function Page() {
 
       {/* Resources Section - Full Width Background */}
       <div className="w-full" style={{ backgroundColor: '#F3F9FF' }}>
-        <div className="mb-2 sm:mb-3 text-center py-8">
+        <div className="mb-2 sm:mb-3 text-center py-2">
           <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Manrope, sans-serif', fontWeight: '900' }}>
             Resources
           </h1>
