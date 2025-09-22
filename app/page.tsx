@@ -1025,7 +1025,7 @@ export default function Page() {
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
               <button
               onClick={() => toggleAccordion('signals')}
-              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[80px]"
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
               <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 How Google Might Interpret These Signals?
@@ -1065,7 +1065,7 @@ export default function Page() {
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
             <button
               onClick={() => toggleAccordion('scoring')}
-              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[80px]"
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
               <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 How Are These Scores Calculated?
@@ -1137,7 +1137,7 @@ export default function Page() {
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
             <button
               onClick={() => toggleAccordion('faq')}
-              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[80px]"
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
               <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 Frequently Asked Questions
@@ -1208,7 +1208,7 @@ export default function Page() {
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
             <button
               onClick={() => toggleAccordion('badge')}
-              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[80px]"
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
               <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 How to Get a Google Top Quality Store Badge
@@ -1284,7 +1284,7 @@ export default function Page() {
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
             <button
               onClick={() => toggleAccordion('public-vs-merchant')}
-              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[80px]"
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors min-h-[100px]"
             >
               <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 Public Store Ratings vs Merchant Center Metrics
