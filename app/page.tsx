@@ -493,7 +493,7 @@ export default function Page() {
         left: 0, 
         right: 0, 
         height: '100vh', 
-        background: 'linear-gradient(to bottom, #151B3C 0%, #151B3C 65%, #F3F9FF 65%, #F3F9FF 100%)',
+        background: 'linear-gradient(to bottom, #151B3C 0%, #151B3C 50%, #F3F9FF 50%, #F3F9FF 100%)',
         zIndex: 1 
       }}></div>
       
