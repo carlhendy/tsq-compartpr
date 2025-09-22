@@ -356,9 +356,9 @@ export default function Page() {
     
     // Scroll to results table immediately
     setTimeout(() => {
-      if (resultsTableRef.current) {
-        resultsTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+    if (resultsTableRef.current) {
+      resultsTableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     }, 200);
   };
 
@@ -490,7 +490,7 @@ export default function Page() {
       <button 
         ref={aboutButtonRef}
         onClick={() => setShowAboutSlider(true)}
-        className="bg-black text-white px-6 py-3 rounded-md text-base font-semibold hover:bg-gray-800 transition-colors tracking-wide min-w-[100px]" 
+        className="bg-green-600 text-white px-6 py-3 rounded-md text-base font-semibold hover:bg-green-700 transition-colors tracking-wide min-w-[100px]" 
         style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', display: 'none' }}
       >
         about
@@ -525,7 +525,7 @@ export default function Page() {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
-                className="w-full sm:w-auto px-8 py-4 bg-white text-black border-2 border-black rounded-lg text-lg font-bold hover:bg-black hover:text-white transition-all duration-200 tracking-wide"
+                className="w-full sm:w-auto px-8 py-4 bg-green-600 text-white border-2 border-green-600 rounded-lg text-lg font-bold hover:bg-green-700 hover:text-white transition-all duration-200 tracking-wide"
                 style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
               >
                 See Examples
@@ -537,7 +537,7 @@ export default function Page() {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
-                className="w-full sm:w-auto px-8 py-4 bg-black text-white border-2 border-black rounded-lg text-lg font-bold hover:bg-white hover:text-black transition-all duration-200 tracking-wide"
+                className="w-full sm:w-auto px-8 py-4 bg-white text-green-600 border-2 border-green-600 rounded-lg text-lg font-bold hover:bg-green-600 hover:text-white transition-all duration-200 tracking-wide"
                 style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
               >
                 Create Your Own
@@ -570,8 +570,8 @@ export default function Page() {
                       September 2025
                     </div>
                   </div>
-                </div>
-                
+                  </div>
+
                 {/* Image Column */}
                 <div className="flex justify-center md:justify-end order-1 md:order-2">
                   <img 
@@ -602,43 +602,43 @@ export default function Page() {
               </div>
               <div className="flex flex-col items-center">
                 <div className="flex items-center relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-px before:bg-gray-300">
-                  <button
-                    onClick={() => setSelectedCountry('UK')}
+                    <button
+                      onClick={() => setSelectedCountry('UK')}
                     className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                      selectedCountry === 'UK'
+                        selectedCountry === 'UK'
                         ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                         : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
-                    }`}
-                  >
+                      }`}
+                    >
                     <span className="text-3xl sm:text-4xl">🇬🇧</span>
-                  </button>
-                  <button
-                    onClick={() => setSelectedCountry('US')}
+                    </button>
+                    <button
+                      onClick={() => setSelectedCountry('US')}
                     className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                      selectedCountry === 'US'
+                        selectedCountry === 'US'
                         ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                         : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
-                    }`}
-                  >
+                      }`}
+                    >
                     <span className="text-3xl sm:text-4xl">🇺🇸</span>
-                  </button>
-                  <button
-                    onClick={() => setSelectedCountry('AU')}
+                    </button>
+                    <button
+                      onClick={() => setSelectedCountry('AU')}
                     className={`px-4 py-3 transition-all duration-200 flex items-center justify-center rounded-t-lg ${
-                      selectedCountry === 'AU'
+                        selectedCountry === 'AU'
                         ? 'bg-white text-black font-bold border border-gray-300 border-b-0 relative z-[2] after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-[1px] after:h-[2px] after:bg-white'
                         : 'bg-transparent text-gray-700 hover:text-black border-0 shadow-none'
-                    }`}
-                  >
+                      }`}
+                    >
                     <span className="text-3xl sm:text-4xl">🇦🇺</span>
-                  </button>
-                </div>
+                    </button>
+                  </div>
                 <div className="px-2 sm:px-4 py-3 border border-gray-300 relative z-[1] -mt-px bg-white rounded-lg w-full max-w-sm sm:max-w-none mx-auto">
                   <div className="flex items-center justify-center gap-2 sm:gap-2 flex-nowrap">
                     {(selectedCountry === 'UK' ? QUICK_START_CATEGORIES.UK['Home & Garden'] :
-                      selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
+                        selectedCountry === 'US' ? QUICK_START_CATEGORIES.US['Fashion'] :
                       QUICK_START_CATEGORIES.AU['Electronics']).map((brand, index) => (
-                      <button 
+                    <button
                         key={brand} 
                         className="h-12 w-12 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 rounded-lg overflow-hidden bg-white shadow-sm border border-gray-200 flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow duration-200"
                         onClick={() => {
@@ -653,13 +653,13 @@ export default function Page() {
                           alt={brand}
                           className="h-full w-full object-contain pointer-events-none"
                         />
-                      </button>
+                    </button>
                     ))}
-                  </div>
                 </div>
               </div>
             </div>
-            
+          </div>
+          
             {/* Create Your Own Column */}
             <div className="text-center">
               <h2 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight mb-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
@@ -671,26 +671,26 @@ export default function Page() {
               <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
                 <div className="space-y-3 mb-4">
                   {domains.map((domain, i) => (
-                    <div key={i} className="relative">
-                      <input
+                  <div key={i} className="relative">
+                    <input
                         type="text"
                         value={domain}
-                        onChange={(e) => updateDomain(i, e.target.value)}
-                        placeholder="domain.com"
+                      onChange={(e) => updateDomain(i, e.target.value)}
+                      placeholder="domain.com"
                         className="w-full h-12 sm:h-14 border border-gray-300 px-3 pr-10 text-sm sm:text-base outline-none placeholder:text-gray-400 focus:border-gray-600 focus:ring-0 rounded"
-                      />
-                      {domains.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeDomain(i)}
-                          className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
-                          aria-label="Remove field"
-                        >
-                          ×
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                    />
+                    {domains.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeDomain(i)}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                        aria-label="Remove field"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+                ))}
                 </div>
                 {domains.length < 5 && (
                   <div className="text-right mb-4">
@@ -745,12 +745,12 @@ export default function Page() {
                       <option value="MT">Malta</option>
                       <option value="CY">Cyprus</option>
                     </select>
+                    </div>
                   </div>
-                </div>
                 <button
                   onClick={compare}
                   disabled={loading || domains.some(d => !d.trim())}
-                  className="w-full h-12 sm:h-14 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full h-12 sm:h-14 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Comparing...' : '→ Compare'}
                 </button>
@@ -775,27 +775,27 @@ export default function Page() {
                          <th key={i} className="w-[11%] text-center">
                            <div className="flex flex-col items-center gap-2 p-1">
                              <div className="h-12 w-12 flex-shrink-0 overflow-hidden bg-white rounded-lg shadow-sm border border-gray-200">
-                               <img 
+                                 <img 
                                  src={getFaviconUrlWithFallback(row.domain)} 
-                                 alt="" 
+                                   alt="" 
                                  className="h-full w-full object-contain" 
-                                 onError={(e) => {
-                                   const img = e.target as HTMLImageElement;
+                                   onError={(e) => {
+                                     const img = e.target as HTMLImageElement;
                                    if (img.src.includes('logo.clearbit.com')) {
                                      // Try Google favicons
                                      img.src = `https://www.google.com/s2/favicons?domain=${row.domain}&sz=64`;
                                    } else if (img.src.includes('google.com/s2/favicons')) {
-                                     // Try favicon.io service
-                                     img.src = `https://favicons.githubusercontent.com/${row.domain}`;
-                                   } else if (img.src.includes('favicons.githubusercontent.com')) {
-                                     // Try direct favicon from website
-                                     img.src = `https://${row.domain}/favicon.ico`;
-                                   } else {
+                                       // Try favicon.io service
+                                       img.src = `https://favicons.githubusercontent.com/${row.domain}`;
+                                     } else if (img.src.includes('favicons.githubusercontent.com')) {
+                                       // Try direct favicon from website
+                                       img.src = `https://${row.domain}/favicon.ico`;
+                                       } else {
                                      // Try DuckDuckGo
-                                     img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
-                                   }
-                                 }}
-                               />
+                                         img.src = `https://icons.duckduckgo.com/ip3/${row.domain}.ico`;
+                                     }
+                                   }}
+                                 />
                              </div>
                              <div className="flex items-center gap-1">
                      <a
@@ -990,7 +990,7 @@ export default function Page() {
           <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
             <button
               onClick={copyResults}
-              className="inline-flex items-center justify-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 active:translate-y-px w-full sm:w-auto"
               aria-label="Copy table results"
               title="Copy table results"
             >
@@ -999,7 +999,7 @@ export default function Page() {
             </button>
             <button
               onClick={handleStartAgain}
-              className="inline-flex items-center justify-center gap-2 bg-black px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:translate-y-px w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 active:translate-y-px w-full sm:w-auto"
               aria-label="Start again"
               title="Start again"
             >
