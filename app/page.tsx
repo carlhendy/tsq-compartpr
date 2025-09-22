@@ -493,9 +493,22 @@ export default function Page() {
         }}
       >
         <div style={{ maxWidth: '1024px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ color: 'white', fontSize: '18px', fontWeight: 'bold', fontFamily: 'Manrope, sans-serif' }}>
+          <a 
+            href="https://storeratings.co" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ 
+              color: 'white', 
+              fontSize: '18px', 
+              fontWeight: 'bold', 
+              fontFamily: 'Manrope, sans-serif',
+              textDecoration: 'none',
+              cursor: 'pointer'
+            }}
+            className="hover:opacity-80 transition-opacity duration-200"
+          >
             STORE RATINGS
-          </div>
+          </a>
           <button 
             onClick={() => setShowAboutSlider(true)}
             style={{ 
