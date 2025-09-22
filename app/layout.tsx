@@ -18,7 +18,8 @@ export default function RootLayout({children}:{children:React.ReactNode}){
         {/* Simple Header */}
         <header className="px-6 py-6 border-b border-gray-200 bg-white">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="https://storeratings.co" className="flex items-center">
+          <a href="https://storeratings.co" className="flex items-center gap-1">
+            <img src="/shopping-star.svg" alt="Shopping bag with star" className="w-12 h-12" />
             <span className="text-black text-2xl tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
               storeratings.co
             </span>
