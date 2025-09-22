@@ -785,7 +785,7 @@ export default function Page() {
 
       {/* Results */}
       {hasCompared && (
-        <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pb-12">
+        <section ref={resultsTableRef} className="mx-auto max-w-6xl px-6 pt-16 pb-12">
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm p-2">
             <div className="overflow-x-auto">
                <table className="min-w-[1000px] w-full table-fixed text-left">
@@ -1013,24 +1013,24 @@ export default function Page() {
           <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
             <button
               onClick={copyResults}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white border-2 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-white border-2 rounded-lg text-base font-semibold transition-all duration-200 tracking-wide w-full sm:w-auto"
               style={{ fontFamily: 'Manrope, sans-serif', backgroundColor: '#2e5ce5', borderColor: '#2e5ce5' }}
               aria-label="Copy table results"
               title="Copy table results"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
               {copied ? 'Copied!' : 'Copy Results'}
             </button>
             <button
               onClick={handleStartAgain}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white border-2 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-white border-2 rounded-lg text-base font-semibold transition-all duration-200 tracking-wide w-full sm:w-auto"
               style={{ fontFamily: 'Manrope, sans-serif', backgroundColor: '#2e5ce5', borderColor: '#2e5ce5' }}
               aria-label="Start again"
               title="Start again"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               Start Again
