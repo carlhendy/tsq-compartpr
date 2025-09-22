@@ -1443,16 +1443,12 @@ export default function Page() {
       {/* Footer */}
       <footer className="border-t border-black py-16 px-4 sm:px-6 text-center text-black bg-white">
         <div className="mb-4 text-base">
-          <div>
-            Badly vibe coded by{' '}
-            <a href="https://carlhendy.com" target="_blank" rel="noreferrer" className="text-black underline hover:no-underline font-normal inline-block">
-              Carl Hendy
-            </a>
-            {' '}founder of{' '}
-            <a href="https://audits.com" target="_blank" rel="noreferrer" className="text-black underline hover:no-underline font-normal inline-block">
-              Audits.com
-            </a>.
-          </div>
+          <button 
+            onClick={() => setShowAboutSlider(true)}
+            className="text-green-600 underline hover:no-underline font-normal inline-block cursor-pointer"
+          >
+            About
+          </button>
         </div>
         <p className="mx-auto max-w-3xl text-sm text-black">
           Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
