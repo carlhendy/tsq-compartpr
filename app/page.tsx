@@ -1467,7 +1467,7 @@ export default function Page() {
           <button 
             onClick={() => setShowAboutSlider(true)}
             className="underline hover:no-underline font-normal inline-block cursor-pointer"
-            style={{ color: '#2e5ce5' }}
+            style={{ color: 'white' }}
           >
             About
           </button>
