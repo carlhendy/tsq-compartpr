@@ -486,33 +486,44 @@ export default function Page() {
 
   return (
     <>
+      {/* Blue Background */}
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        height: '100vh', 
+        background: 'linear-gradient(to bottom, #151B3C 0%, #151B3C 65%, #F3F9FF 65%, #F3F9FF 100%)',
+        zIndex: 1 
+      }}></div>
+      
       {/* About Button - will be moved to header */}
       <button 
         ref={aboutButtonRef}
         onClick={() => setShowAboutSlider(true)}
-        className="bg-green-600 text-white px-6 py-3 rounded-md text-base font-semibold hover:bg-green-700 transition-colors tracking-wide min-w-[100px]" 
-        style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', display: 'none' }}
+        className="text-white px-6 py-3 rounded-md text-base font-semibold transition-colors tracking-wide min-w-[100px]"
+        style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', display: 'none', backgroundColor: '#2e5ce5' }}
       >
         about
       </button>
 
-    <main className="min-h-screen bg-gray-100">
+    <main className="min-h-screen relative" style={{ zIndex: 10 }}>
       {/* Header with About Button */}
-      <header className="w-full bg-gray-100 py-4 px-6">
+      <header className="relative z-10 w-full bg-transparent py-4 px-6">
         <div className="max-w-4xl mx-auto flex justify-end">
           <div id="about-button-placeholder"></div>
         </div>
       </header>
       
       {/* Hero - Centered Layout */}
-      <section className="pt-6 sm:pt-8 pb-16 px-6 bg-gray-100">
+      <section className="relative z-10 pt-6 sm:pt-8 pb-16 px-6 bg-transparent">
         <div className="mx-auto max-w-4xl">
           {/* Centered Text Content */}
           <div className="text-center mb-12">
-            <h1 className="text-black mb-6 leading-tight text-4xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
+            <h1 className="text-white mb-6 leading-tight text-4xl sm:text-4xl md:text-6xl tracking-tight font-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', lineHeight: '1.1', fontWeight: '900' }}>
               Compare Google Store Ratings
             </h1>
-            <p className="text-base sm:text-lg text-gray-700 mb-8 sm:mb-12 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            <p className="text-base sm:text-lg text-white mb-8 sm:mb-12 font-medium" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
               Benchmark your rating against competitors - using hidden Google insights.
             </p>
             
@@ -525,8 +536,8 @@ export default function Page() {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
-                className="w-full sm:w-auto px-8 py-4 bg-green-600 text-white border-2 border-green-600 rounded-lg text-lg font-bold hover:bg-green-700 hover:text-white transition-all duration-200 tracking-wide"
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+                className="w-full sm:w-auto px-8 py-4 text-white border-2 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide"
+                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', backgroundColor: '#2e5ce5', borderColor: '#2e5ce5' }}
               >
                 See Examples
               </button>
@@ -537,8 +548,8 @@ export default function Page() {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
-                className="w-full sm:w-auto px-8 py-4 bg-white text-green-600 border-2 border-green-600 rounded-lg text-lg font-bold hover:bg-green-600 hover:text-white transition-all duration-200 tracking-wide"
-                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+                className="w-full sm:w-auto px-8 py-4 text-blue-600 border-2 rounded-lg text-lg font-bold transition-all duration-200 tracking-wide"
+                style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', backgroundColor: 'white', borderColor: '#2e5ce5' }}
               >
                 Create Your Own
               </button>
@@ -546,7 +557,7 @@ export default function Page() {
           </div>
           
           {/* Why Care About Google Store Ratings Section - Full Width White Background */}
-          <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0">
+          <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm py-6 sm:py-8 mb-0 relative" style={{ zIndex: 10 }}>
             {/* Header */}
             <div className="text-center mb-6 sm:mb-8 px-6">
               <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
@@ -555,14 +566,14 @@ export default function Page() {
             </div>
           
             {/* Stats Section */}
-            <div className="max-w-4xl mx-auto px-6">
+            <div className="relative z-10 max-w-4xl mx-auto px-6">
               <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                 {/* Text Column */}
                 <div className="flex justify-center order-2 md:order-1">
-                  <div className="text-center px-4 py-6 bg-white max-w-md mx-auto">
+                  <div className="text-center px-4 py-6 bg-white max-w-md mx-auto rounded-lg">
                     <div className="text-xl sm:text-2xl md:text-3xl mb-4 sm:mb-6 leading-relaxed text-center max-w-4xl mx-auto">
-                      <div className="border-l-4 border-green-500 pl-6 italic">
-                        <div>"Businesses using the Top Quality Store widget saw an <span className="font-bold text-green-600">8% increase</span> in sales."</div>
+                      <div className="border-l-4 pl-6 italic" style={{ borderLeftColor: '#2e5ce5' }}>
+                        <div>"Businesses using the <span className="font-bold" style={{ color: '#2e5ce5' }}>Top Quality Store</span> widget saw an <span className="font-bold" style={{ color: '#2e5ce5' }}>8% increase</span> in sales."</div>
                       </div>
                     </div>
                     <div className="text-base sm:text-lg md:text-xl flex items-center justify-center" style={{ color: '#666' }}>
@@ -587,7 +598,7 @@ export default function Page() {
       </section>
       
       {/* NEW Examples vs Create Your Own Section */}
-      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-12 sm:-mt-8">
+      <div id="examples-section" className="w-full py-6 sm:py-8 mb-4 sm:mb-8 -mt-12 sm:-mt-8" style={{ backgroundColor: '#F3F9FF' }}>
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Examples Column */}
@@ -750,7 +761,8 @@ export default function Page() {
                 <button
                   onClick={compare}
                   disabled={loading || domains.some(d => !d.trim())}
-                  className="w-full h-12 sm:h-14 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full h-12 sm:h-14 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: '#2e5ce5' }}
                 >
                   {loading ? 'Comparing...' : '→ Compare'}
                 </button>
@@ -990,7 +1002,8 @@ export default function Page() {
           <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
             <button
               onClick={copyResults}
-              className="inline-flex items-center justify-center gap-2 bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 active:translate-y-px w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white shadow-sm active:translate-y-px w-full sm:w-auto"
+              style={{ backgroundColor: '#2e5ce5' }}
               aria-label="Copy table results"
               title="Copy table results"
             >
@@ -999,7 +1012,8 @@ export default function Page() {
             </button>
             <button
               onClick={handleStartAgain}
-              className="inline-flex items-center justify-center gap-2 bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 active:translate-y-px w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white shadow-sm active:translate-y-px w-full sm:w-auto"
+              style={{ backgroundColor: '#2e5ce5' }}
               aria-label="Start again"
               title="Start again"
             >
@@ -1011,15 +1025,16 @@ export default function Page() {
       )}
 
 
-      {/* Resources header */}
-      <div className="mb-2 sm:mb-3 text-center">
-        <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
-          Resources
-        </h1>
-      </div>
+      {/* Resources Section - Full Width Background */}
+      <div className="w-full" style={{ backgroundColor: '#F3F9FF' }}>
+        <div className="mb-2 sm:mb-3 text-center py-8">
+          <h1 className="text-2xl sm:text-2xl md:text-3xl text-black font-black tracking-tight" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', fontWeight: '900' }}>
+            Resources
+          </h1>
+        </div>
 
-      {/* FAQ Block Section */}
-      <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-8 pb-16">
+        {/* FAQ Block Section */}
+        <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-8 pb-16">
         <div className="space-y-6">
           {/* FAQ Block 1: How Google Might Interpret These Signals */}
           <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
@@ -1356,6 +1371,7 @@ export default function Page() {
           </div>
         </div>
       </section>
+      </div>
 
       {/* About Slider */}      {showAboutSlider && (
         <>
@@ -1392,7 +1408,7 @@ export default function Page() {
                 {/* Text Content */}
                 <div className="space-y-4">
                   <h2 className="text-2xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    Carl Hendy
+              Carl Hendy
                   </h2>
                   
                   {/* Connect Buttons */}
@@ -1420,7 +1436,7 @@ export default function Page() {
                       </svg>
                       Visit Audits.com
                     </a>
-                  </div>
+          </div>
                   
                   <p className="text-gray-700 leading-relaxed" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                     A vibe coding project of Carl Hendy, founder of <a href="https://audits.com" className="text-black font-semibold hover:underline">audits.com</a> who specialises in ecommerce SEO audits for brands as John Lewis, Ralph Lauren, Marks and Spencer and Groupon.
@@ -1441,16 +1457,17 @@ export default function Page() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-black py-16 px-4 sm:px-6 text-center text-black bg-white">
+      <footer className="py-16 px-4 sm:px-6 text-center text-white" style={{ backgroundColor: '#151B3C' }}>
         <div className="mb-4 text-base">
           <button 
             onClick={() => setShowAboutSlider(true)}
-            className="text-green-600 underline hover:no-underline font-normal inline-block cursor-pointer"
+            className="underline hover:no-underline font-normal inline-block cursor-pointer"
+            style={{ color: '#2e5ce5' }}
           >
             About
           </button>
         </div>
-        <p className="mx-auto max-w-3xl text-sm text-black">
+        <p className="mx-auto max-w-3xl text-sm text-white">
           Disclaimer: This is a non‑profit, non‑commercial demo. Ratings, review counts and quality grades are displayed from Google's public
           <span className="font-mono"> storepages </span> surface (per region) and may change at any time. This site is not affiliated with Google.
         </p>
@@ -1459,6 +1476,3 @@ export default function Page() {
     </>
   );
 }
-
-
-
