@@ -1027,7 +1027,7 @@ export default function Page() {
               onClick={() => toggleAccordion('signals')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
-              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 How Google Might Interpret These Signals?
               </h3>
               <svg
@@ -1067,7 +1067,7 @@ export default function Page() {
               onClick={() => toggleAccordion('scoring')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
-              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 How Are These Scores Calculated?
               </h3>
               <svg
@@ -1139,7 +1139,7 @@ export default function Page() {
               onClick={() => toggleAccordion('faq')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
-              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 Frequently Asked Questions
               </h3>
               <svg
@@ -1210,7 +1210,7 @@ export default function Page() {
               onClick={() => toggleAccordion('badge')}
               className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
-              <h3 className="text-xl font-bold text-black" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 How to Get a Google Top Quality Store Badge
               </h3>
               <svg
@@ -1276,6 +1276,81 @@ export default function Page() {
                   </p>
                 </div>
               </div>
+              </div>
+            )}
+          </div>
+
+          {/* FAQ Block 5: Public Store Ratings vs Merchant Center Metrics */}
+          <div className="border border-gray-300 bg-white rounded-lg shadow-sm">
+            <button
+              onClick={() => toggleAccordion('public-vs-merchant')}
+              className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-xl font-bold text-black pr-4" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                Public Store Ratings vs Merchant Center Metrics
+              </h3>
+              <svg
+                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                  openAccordion === 'public-vs-merchant' ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {openAccordion === 'public-vs-merchant' && (
+              <div className="px-6 pb-6">
+                <div className="space-y-4">
+                  <p className="text-base text-slate-600">
+                    The public store ratings and badges you see in Google Search and Shopping results are different from the detailed metrics available in Google Merchant Center. Here's how they compare:
+                  </p>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border border-gray-300 text-sm">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-900">Aspect</th>
+                          <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-900">Public Store Ratings / Badge</th>
+                          <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-900">Merchant Center (Store Quality / TQS)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="border border-gray-300 px-3 py-2 font-medium text-gray-900">Visibility</td>
+                          <td className="border border-gray-300 px-3 py-2">Shown to shoppers in Search, Shopping, ads (stars, review count).</td>
+                          <td className="border border-gray-300 px-3 py-2">Visible only to merchant inside GMC dashboard.</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 px-3 py-2 font-medium text-gray-900">Detail Level</td>
+                          <td className="border border-gray-300 px-3 py-2">Overall rating (1–5 stars) + review count, sometimes qualifiers (e.g. "Fast shipping").</td>
+                          <td className="border border-gray-300 px-3 py-2">Full breakdown: shipping, returns, browsing, purchase experience, trend data.</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 px-3 py-2 font-medium text-gray-900">Data Sources</td>
+                          <td className="border border-gray-300 px-3 py-2">Customer reviews (Google Customer Reviews + partners).</td>
+                          <td className="border border-gray-300 px-3 py-2">Reviews <strong>plus</strong> offer data (shipping, returns), site UX metrics, images, promotions, performance data.</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 px-3 py-2 font-medium text-gray-900">Metrics Included</td>
+                          <td className="border border-gray-300 px-3 py-2">Reviews, rating, review count threshold (100–150+ recent reviews).</td>
+                          <td className="border border-gray-300 px-3 py-2">Adds internal metrics: delivery cost/time, return experience, promotion rejection rate, image quality, Core Web Vitals, checkout UX, etc.</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 px-3 py-2 font-medium text-gray-900">Updates</td>
+                          <td className="border border-gray-300 px-3 py-2">Updates as new reviews meet thresholds; slower to change.</td>
+                          <td className="border border-gray-300 px-3 py-2">Updates frequently (often daily) with impression-weighted scoring.</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 px-3 py-2 font-medium text-gray-900">Impact</td>
+                          <td className="border border-gray-300 px-3 py-2">Affects shopper trust, CTR, can boost visibility in Search/Shopping.</td>
+                          <td className="border border-gray-300 px-3 py-2">Determines eligibility for badges, feature access, and ranking signals behind the scenes.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             )}
           </div>
