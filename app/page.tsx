@@ -842,7 +842,7 @@ export default function Page() {
                  </thead>
                  <tbody className="text-sm text-slate-800 bg-white">
                    {/* TSQ Score Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Score (out of 100)</td>
                      {sortedRows.map((row, i) => {
                        const tsqScore = row.signals ? computeTsqScore(row.signals) : 0;
@@ -864,7 +864,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Top Quality Store Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Top Quality Store</td>
                      {sortedRows.map((row, i) => {
                        const tqs = row.signals?.tqs_badge;
@@ -883,7 +883,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Shipping Quality Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Shipping (quality)</td>
                      {sortedRows.map((row, i) => {
                        const s = row.signals;
@@ -906,7 +906,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Returns Quality Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Returns (quality)</td>
                      {sortedRows.map((row, i) => {
                        const s = row.signals;
@@ -929,7 +929,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Competitive Pricing Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Competitive pricing</td>
                      {sortedRows.map((row, i) => {
                        const pricingGrade = getAny(row.signals, ['section_grades.pricing','pricing_quality','pricingGrade']);
@@ -942,7 +942,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Website Quality Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Website quality</td>
                      {sortedRows.map((row, i) => {
                        const websiteGrade = getAny(row.signals, ['section_grades.website','website_quality','websiteGrade']);
@@ -955,7 +955,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Payment Wallets Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Wallets</td>
                      {sortedRows.map((row, i) => {
                        const wallets = getAny(row.signals, ['e_wallets','wallets','payment_wallets']);
@@ -968,7 +968,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Rating Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Rating</td>
                      {sortedRows.map((row, i) => {
                        const rating = getAny(row.signals, ['store_rating','rating','storeRating']);
@@ -987,7 +987,7 @@ export default function Page() {
                    </tr>
                    
                    {/* Reviews Row */}
-                   <tr className="[&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
+                   <tr className="table-row-hover [&>td]:px-4 [&>td]:py-3 [&>td]:align-middle hover:bg-blue-50 [&>td]:border-r [&>td]:border-gray-200 [&>td:first-child]:border-r-0 [&>td:last-child]:border-r-0 [&>td:first-child]:sticky [&>td:first-child]:left-0 [&>td:first-child]:z-10 [&>td:first-child]:bg-white [&>td]:h-16">
                      <td className="text-left font-semibold text-gray-900">Reviews</td>
                      {sortedRows.map((row, i) => {
                        const reviews = getAny(row.signals, ['review_count','reviews','reviewCount']);

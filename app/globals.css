@@ -8,3 +8,8 @@ body { background: var(--bg); }
 
 /* Improve inputs/buttons a bit */
 input, select, button { outline: none; }
+
+/* Table row hover for sticky first column */
+.table-row-hover:hover td:first-child {
+  background-color: #eff6ff !important;
+}
