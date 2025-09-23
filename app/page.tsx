@@ -339,6 +339,18 @@ export default function Page() {
     const brands = QUICK_START_CATEGORIES[country][category];
     const countryCode = country === 'UK' ? 'GB' : country;
     
+    // Track quick start event with Plausible
+    if (typeof window !== 'undefined' && window.plausible) {
+      window.plausible('Quick Start', {
+        props: {
+          category: category,
+          country: country,
+          domains: brands.join(','),
+          domain_count: brands.length
+        }
+      });
+    }
+    
     // Update state
     setDomains(brands);
     setCountry(countryCode);
@@ -367,6 +379,18 @@ export default function Page() {
     setLoading(true);
     setHasCompared(true);
     setRows([]);
+    
+    // Track comparison event with Plausible
+    if (typeof window !== 'undefined' && window.plausible) {
+      window.plausible('Comparison', {
+        props: {
+          domains: domainList.join(','),
+          domain_count: domainList.length,
+          country: countryCode
+        }
+      });
+    }
+    
     const entries = domainList.map((d) => d.trim()).filter(Boolean).slice(0, 5);
     const promises = entries.map(async (d) => {
       try {
@@ -388,6 +412,18 @@ export default function Page() {
     setLoading(true);
     setHasCompared(true);
     setRows([]);
+    
+    // Track comparison event with Plausible
+    if (typeof window !== 'undefined' && window.plausible) {
+      window.plausible('Comparison', {
+        props: {
+          domains: domains.join(','),
+          domain_count: domains.length,
+          country: country
+        }
+      });
+    }
+    
     const entries = domains.map((d) => d.trim()).filter(Boolean).slice(0, 5);
     const promises = entries.map(async (d) => {
       try {
