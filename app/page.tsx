@@ -1290,7 +1290,7 @@ export default function Page() {
                     <strong>Rest of World</strong> — Quality signals available, Overall Quality Score, No badge available
                   </p>
                   <p className="text-base text-slate-600">
-                    Check <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's official documentation</a> for country-specific availability.
+                    Check <a href="https://support.google.com/merchants/answer/14261098?hl=en" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's official documentation</a> for country-specific availability.
                   </p>
           </div>
                 <div>
@@ -1305,13 +1305,13 @@ export default function Page() {
                     <li>Smooth checkout experience (wallets, payment options)</li>
                   </ul>
                   <p className="text-base text-slate-600">
-                    See <a href="https://brodieclark.com/google-top-quality-store-badge/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Brodie Clark's guide</a> for a detailed breakdown of what's measured.
+                    See <a href="https://brodieclark.com/top-quality-store-google/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Brodie Clark's guide</a> for a detailed breakdown of what's measured.
                   </p>
         </div>
                 <div>
                   <h4 className="font-medium text-slate-900 text-base mb-2">How can I display the badge on my site?</h4>
                   <p className="text-base text-slate-600">
-                    Once you qualify, you can use <a href="https://developers.google.com/shopping-content/guides/top-quality-store" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's Top Quality Store widget</a> to showcase your badge on your website.
+                    Once you qualify, you can use <a href="https://developers.google.com/search/blog/2025/09/store-widget" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google's Top Quality Store widget</a> to showcase your badge on your website.
                   </p>
                 </div>
                 <div>
