@@ -3,6 +3,13 @@
 import { useState, useRef, useEffect } from 'react';
 import SplitRow from './components/SplitRow';
 
+// Type declaration for Plausible analytics
+declare global {
+  interface Window {
+    plausible?: (event: string, options?: { props?: Record<string, any> }) => void;
+  }
+}
+
 
 // --- Wallet pills renderer (no dependencies) ---
 const WALLET_COLORS: Record<string, { bg: string; text: string }> = {
