@@ -1138,35 +1138,39 @@ export default function Page() {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Returns Quality</span>
-                          <span className="text-slate-600 font-mono text-base">25%</span>
+                        <div className="flex justify-between items-center py-2 px-3 bg-green-50 rounded-lg">
+                          <span className="font-medium text-green-800 text-base">Returns Quality</span>
+                          <span className="text-green-600 font-mono text-base">25%</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Shipping Quality</span>
-                          <span className="text-slate-600 font-mono text-base">20%</span>
+                        <div className="flex justify-between items-center py-2 px-3 bg-blue-50 rounded-lg">
+                          <span className="font-medium text-blue-800 text-base">Shipping Quality</span>
+                          <span className="text-blue-600 font-mono text-base">20%</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                          <span className="font-medium text-slate-700 text-base">Competitive Pricing</span>
-                    <span className="text-slate-600 font-mono text-base">15%</span>
+                        <div className="flex justify-between items-center py-2 px-3 bg-purple-50 rounded-lg">
+                          <span className="font-medium text-purple-800 text-base">Competitive Pricing</span>
+                    <span className="text-purple-600 font-mono text-base">15%</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700 text-base">Website Quality</span>
-                    <span className="text-slate-600 font-mono text-base">15%</span>
+                  <div className="flex justify-between items-center py-2 px-3 bg-orange-50 rounded-lg">
+                    <span className="font-medium text-orange-800 text-base">Website Quality</span>
+                    <span className="text-orange-600 font-mono text-base">15%</span>
                         </div>
                       </div>
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700 text-base">Wallets</span>
-                          <span className="text-slate-600 font-mono text-base">10%</span>
+                        <div className="flex justify-between items-center py-2 px-3 bg-indigo-50 rounded-lg">
+                    <span className="font-medium text-indigo-800 text-base">Wallets</span>
+                          <span className="text-indigo-600 font-mono text-base">10%</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700 text-base">Rating</span>
-                    <span className="text-slate-600 font-mono text-base">10%</span>
+                        <div className="flex justify-between items-center py-2 px-3 bg-pink-50 rounded-lg">
+                    <span className="font-medium text-pink-800 text-base">Rating</span>
+                    <span className="text-pink-600 font-mono text-base">10%</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 px-3 bg-slate-50 rounded-lg">
-                    <span className="font-medium text-slate-700 text-base">Reviews</span>
-                    <span className="text-slate-600 font-mono text-base">5%</span>
+                        <div className="flex justify-between items-center py-2 px-3 bg-teal-50 rounded-lg">
+                    <span className="font-medium text-teal-800 text-base">Reviews</span>
+                    <span className="text-teal-600 font-mono text-base">5%</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 px-3 bg-yellow-50 rounded-lg border-2 border-yellow-200">
+                    <span className="font-medium text-yellow-800 text-base">Top Quality Store Bonus</span>
+                    <span className="text-yellow-600 font-mono text-base">15 pts</span>
                         </div>
                       </div>
                     </div>
