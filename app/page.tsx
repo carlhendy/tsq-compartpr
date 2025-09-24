@@ -745,6 +745,13 @@ export default function Page() {
               </h2>
               <p className="text-gray-600 text-sm sm:text-base mb-6">
                 Enter your own domains below to compare your store ratings with competitors.
+                <span className="relative group ml-1">
+                  <span className="inline-flex items-center justify-center w-4 h-4 bg-black text-white text-xs font-bold rounded-full cursor-help">i</span>
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none w-64 z-10">
+                    Only enter websites that are online stores or ecommerce sites. Google does not provide scores for non-transactional websites.
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                </span>
               </p>
               <div className="bg-white p-4 sm:p-6 border border-gray-300 rounded-lg shadow-sm">
                 <div className="space-y-3 mb-4">
